@@ -47,8 +47,11 @@ x = np.array([  0.00000000e+00,   8.82678000e-03,   3.25615100e-02,
 x0 = np.array([ min(x), 0.039, 0.10, max(x)])
 
 myPWLF = pwlf.piecewise_lin_fit(x,y)
-myPWLF.fitWithBreaks(x0)
-#myPWLF.seperateData(x0)
+#myPWLF.fitWithBreaks(x0)
+##myPWLF.seperateData(x0)
+
+res = myPWLF.fit(3)
+
 xHat = np.linspace(min(x), max(x), num=10000)
 yHat = myPWLF.predict(xHat)
 
