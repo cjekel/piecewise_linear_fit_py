@@ -243,9 +243,9 @@ class piecewise_lin_fit:
         
         if len(kwargs) == 0:
             res = differential_evolution(self.fitWithBreaksOpt, bounds, strategy='best1bin',
-                    maxiter=1000, popsize=500, tol=0.000001, mutation=(0.5, 1), 
-                    recombination=0.7, seed=None, callback=None, disp=False, 
-                    polish=True, init='latinhypercube', atol=0)
+                    maxiter=1000, popsize=30, tol=1e-3, mutation=(0.5, 1), 
+                    recombination=0.7, seed=None, callback=None, disp=True, 
+                    polish=True, init='latinhypercube', atol=1e-4)
         else:
             res = differential_evolution(self.fitWithBreaksOpt, bounds, **kwargs)
         print(res)
