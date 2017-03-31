@@ -188,17 +188,94 @@ class piecewise_lin_fit:
             yHat.append(m*(j-breaks[i]) + p[i])
         yHat = np.concatenate(yHat)
         return yHat
-    
-    def fit(self, numberOfBreakPoints):
-        #   a function which uses differntial evolution to finds the optimum
-        #   location of break points for a given numberOfBreakPoints by minimizing
-        #   the sum of the square of the errors
         
-        res = differential_evolution(self.fitWithBreaks, bounds, strategy='best1bin',
+    def fitWithBreaksOpt(self, var):
+        #   same as self.fitWithBreaks, excpet this one is tuned to be used with
+        #   the optimization algorithim
+        var = np.sort(var)
+        if np.isclose(var[0],var[1]) == True:
+            var[1] += 0.00001
+        breaks = np.zeros(len(var)+2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+
+        sepDataX, sepDataY = self.seperateData(breaks)
+        
+        numberOfParameters = self.numberOfParameters
+
+        #   compute matricies corresponding to the system of equations
+        A = np.zeros([numberOfParameters, numberOfParameters])
+        B = np.zeros(numberOfParameters)
+        for i in range(0,numberOfParameters):
+            if i != 0:
+                #   first sum
+                A[i,i-1] = A[i,i-1] - sum((sepDataX[i-1] - breaks[i-1]) * (sepDataX[i-1] - breaks[i])) / ((breaks[i] - breaks[i-1]) ** 2)
+                A[i,i] = A[i,i] + sum((sepDataX[i-1] - breaks[i-1]) ** 2) / ((breaks[i] - breaks[i-1]) ** 2)
+                B[i] = B[i] + (sum(sepDataX[i-1] * sepDataY[i-1]) - breaks[i-1] * sum(sepDataY[i-1])) / (breaks[i] - breaks[i-1])
+        
+            if i != numberOfParameters - 1:
+                #   second sum
+                A[i,i] = A[i,i] + sum(((sepDataX[i] - breaks[i+1]) ** 2)) / ((breaks[i+1] - breaks[i]) ** 2)
+                A[i,i+1] = A[i,i+1] - sum((sepDataX[i] - breaks[i]) * (sepDataX[i] - breaks[i+1])) / ((breaks[i+1] - breaks[i]) ** 2)
+                B[i] = B[i] + (-sum(sepDataX[i] * sepDataY[i]) + breaks[i+1] * sum(sepDataY[i])) / (breaks[i+1] - breaks[i])
+
+        #   calc determinant of A, then pass infinity if the case
+        if np.linalg.det(A) == 0:
+            SSr = np.inf
+        else:
+            p = np.linalg.solve(A,B)
+    
+            yHat = []        
+            for i,j in enumerate(sepDataX):
+                m = (p[i+1] - p[i])/(breaks[i+1]-breaks[i])
+                yHat.append(m*(j-breaks[i]) + p[i])
+            yHat = np.concatenate(yHat)
+    
+            
+            #   calculate the sum of the square of residuals
+            e = self.yData-yHat
+            SSr = np.dot(e.T,e)
+        return SSr
+    
+    def fit(self, numberOfSegments):
+        #   a function which uses differntial evolution to finds the optimum
+        #   location of break points for a given number of line segments by 
+        #   minimizing the sum of the square of the errors
+        self.numberOfSegments = int(numberOfSegments)
+        self.numberOfParameters = self.numberOfSegments+1
+
+        #self.fitBreaks = self.numberOfSegments+1
+        
+        #   set the first and last break x values to be the min and max of x
+        self.break0 = np.min(self.xData)
+        self.breakN = np.max(self.xData)
+        
+        #   calculate the number of variables I have to solve for
+        self.nVar = self.numberOfSegments - 1
+        
+        #   initaite the bounds of the optimization
+        bounds = np.zeros([self.nVar, 2])
+        bounds[:,0] = self.break0
+        bounds[:,1] = self.breakN
+
+        res = differential_evolution(self.fitWithBreaksOpt, bounds, strategy='best1bin',
                 maxiter=1000, popsize=500, tol=0.000001, mutation=(0.5, 1), 
                 recombination=0.7, seed=None, callback=None, disp=False, 
                 polish=True, init='latinhypercube', atol=0)
-        
+        print(res)
+        self.SSr = res.fun
+        var = np.sort(res.x)
+        if np.isclose(var[0],var[1]) == True:
+            var[1] += 0.00001
+        breaks = np.zeros(len(var)+2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+        self.fitBreaks = breaks
+        #   assign p
+        self.fitWithBreaks(self.fitBreaks)
+        return res
 
             
         
