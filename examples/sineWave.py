@@ -17,6 +17,9 @@ myPWLF = pwlf.piecewise_lin_fit(x,y)
 
 #   fit the data for four line segments
 res = myPWLF.fit(16)
+#   Be patient! this one takes some time - It's a difficult problem
+#   using this differential evolution algo + bfgs can be over 500,000.0 function
+#   evaluations
 
 #   predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
