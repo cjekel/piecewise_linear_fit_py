@@ -1,8 +1,9 @@
 # -- coding: utf-8 -- 
 #   import libraris
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.optimize import differential_evolution
+
+#   version 0.0.1
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
@@ -57,20 +58,6 @@ class piecewise_lin_fit:
         self.numberOfParameters = numberOfParameters
         self.numberOfSegments = numberOfSegments
         
-        ##   Seperate Data into Segments
-        #sepDataX = [[] for i in range(numberOfSegments)]
-        #sepDataY = [[] for i in range(numberOfSegments)]
-        #
-        #for i in range(0, numberOfSegments):
-        #    dataX = []
-        #    dataY = []
-        #    for j in range(0,self.nData):
-        #        if self.xData[j] >= breaks[i]:
-        #            if self.xData[j] <= breaks[i+1]:
-        #                dataX.append(self.xData[j])
-        #                dataY.append(self.yData[j])
-        #    sepDataX[i] = np.array(dataX)
-        #    sepDataY[i] = np.array(dataY)   
         sepDataX, sepDataY = self.seperateData(breaks)
         
         #   compute matricies corresponding to the system of equations
@@ -91,17 +78,6 @@ class piecewise_lin_fit:
         
         p = np.linalg.solve(A,B)
 
-        #fig = plt.figure()
-        #ax = fig.add_subplot(111)
-        #plt.plot(self.xData,self.yData,'ok',label='Test 1')
-        #plt.plot(sepDataX[0],sepDataY[0],'ob',label='Test 1')
-        #plt.plot(sepDataX[1],sepDataY[1],'or',label='Test 1')
-        #plt.plot(sepDataX[2],sepDataY[2],'oy',label='Test 1')
-        #plt.plot(breaks[0:2],p[0:2],'-b')
-        #plt.plot(breaks[1:3],p[1:3],'-r')
-        #plt.plot(breaks[2:4],p[2:4],'-y')
-        #plt.show()
-
         yHat = []        
         for i,j in enumerate(sepDataX):
             m = (p[i+1] - p[i])/(breaks[i+1]-breaks[i])
@@ -115,7 +91,7 @@ class piecewise_lin_fit:
 
         self.fitParameters = p
 
-        return SSr
+        return(SSr)
     
     def seperateData(self, breaks):
     #   a function that seperates the data based on the breaks
@@ -141,7 +117,7 @@ class piecewise_lin_fit:
             dataY = np.extract(bTest, dataY)
             sepDataX[i] = np.array(dataX)
             sepDataY[i] = np.array(dataY)  
-        return sepDataX, sepDataY
+        return(sepDataX, sepDataY)
     
     def seperateDataX(self, breaks, x):
     #   a function that seperates the data based on the breaks for given x
@@ -162,7 +138,7 @@ class piecewise_lin_fit:
             bTest = dataX <= breaks[i+1]
             dataX = np.extract(bTest, dataX)
             sepDataX[i] = np.array(dataX)
-        return sepDataX
+        return(sepDataX)
          
     def predict(self, x, *args):#breaks, p):
         #   a function that predicts based on the supplied x values
@@ -175,10 +151,6 @@ class piecewise_lin_fit:
         else:
             p = self.fitParameters
             breaks = self.fitBreaks
-        #if p is None:
-        #    p = self.fitParameters
-        #if breaks is None:
-        #   breaks = self.fitBreaks
         
         #   seperate the data by x on breaks
         sepDataX = self.seperateDataX(breaks,x)
@@ -187,7 +159,7 @@ class piecewise_lin_fit:
             m = (p[i+1] - p[i])/(breaks[i+1]-breaks[i])
             yHat.append(m*(j-breaks[i]) + p[i])
         yHat = np.concatenate(yHat)
-        return yHat
+        return(yHat)
         
     def fitWithBreaksOpt(self, var):
         #   same as self.fitWithBreaks, excpet this one is tuned to be used with
@@ -236,12 +208,22 @@ class piecewise_lin_fit:
             #   calculate the sum of the square of residuals
             e = self.yData-yHat
             SSr = np.dot(e.T,e)
-        return SSr
+        return(SSr)
     
-    def fit(self, numberOfSegments):
+    def fit(self, numberOfSegments, **kwargs):
         #   a function which uses differntial evolution to finds the optimum
         #   location of break points for a given number of line segments by 
         #   minimizing the sum of the square of the errors
+        #   
+        #   input:
+        #   the number of line segments that you want to find 
+        #   the optimum break points for
+        #   ex:
+        #   breaks = fit(3)
+        #
+        #   output:
+        #   returns the break points of the optimal piecewise contionus lines
+        
         self.numberOfSegments = int(numberOfSegments)
         self.numberOfParameters = self.numberOfSegments+1
 
@@ -258,13 +240,18 @@ class piecewise_lin_fit:
         bounds = np.zeros([self.nVar, 2])
         bounds[:,0] = self.break0
         bounds[:,1] = self.breakN
-
-        res = differential_evolution(self.fitWithBreaksOpt, bounds, strategy='best1bin',
-                maxiter=1000, popsize=500, tol=0.000001, mutation=(0.5, 1), 
-                recombination=0.7, seed=None, callback=None, disp=False, 
-                polish=True, init='latinhypercube', atol=0)
+        
+        if len(kwargs) == 0:
+            res = differential_evolution(self.fitWithBreaksOpt, bounds, strategy='best1bin',
+                    maxiter=1000, popsize=500, tol=0.000001, mutation=(0.5, 1), 
+                    recombination=0.7, seed=None, callback=None, disp=False, 
+                    polish=True, init='latinhypercube', atol=0)
+        else:
+            res = differential_evolution(self.fitWithBreaksOpt, bounds, **kwargs)
         print(res)
+        
         self.SSr = res.fun
+        
         var = np.sort(res.x)
         if np.isclose(var[0],var[1]) == True:
             var[1] += 0.00001
@@ -275,9 +262,30 @@ class piecewise_lin_fit:
         self.fitBreaks = breaks
         #   assign p
         self.fitWithBreaks(self.fitBreaks)
-        return res
-
-            
         
-    
-    
+        return(self.fitBreaks)
+        
+    def useCustomOpt(self,numberOfSegments):
+        #   provide the number of line segments you want to use with your
+        #   custom optimization routine
+        #
+        #   then optimize fitWithBreaksOpt(var) where var is a 1D array 
+        #   containing the x locations of your variables
+        #   var has length numberOfSegments - 1, because the two break points
+        #   are always defined (1. the min of x, 2. the max of x)
+        #
+        #   fitWithBreaksOpt(var) will return the sum of the square of the 
+        #   residuals which you'll want to minimize with your optimization 
+        #   routine
+        
+        self.numberOfSegments = int(numberOfSegments)
+        self.numberOfParameters = self.numberOfSegments+1
+
+        #self.fitBreaks = self.numberOfSegments+1
+        
+        #   set the first and last break x values to be the min and max of x
+        self.break0 = np.min(self.xData)
+        self.breakN = np.max(self.xData)
+        
+        #   calculate the number of variables I have to solve for
+        self.nVar = self.numberOfSegments - 1

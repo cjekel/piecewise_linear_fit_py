@@ -1,9 +1,12 @@
+#   use your own custom optimization routine to find the optimial location
+#   of line segment locations
+
+#    import our libraires
 import numpy as np
 import matplotlib.pyplot as plt
 import pwlf
-reload(pwlf)
-import pwlf
 
+#   your data
 y = np.array([  0.00000000e+00,   9.69801700e-03,   2.94350340e-02,
          4.39052750e-02,   5.45343950e-02,   6.74104940e-02,
          8.34831790e-02,   1.02580042e-01,   1.22767939e-01,
@@ -44,25 +47,24 @@ x = np.array([  0.00000000e+00,   8.82678000e-03,   3.25615100e-02,
          6.34390200e-02,   8.51085900e-02,   1.04787860e-01,
          1.22120350e-01,   1.36931660e-01,   1.50958760e-01,
          1.65299640e-01,   1.79942720e-01])
-x0 = np.array([ min(x), 0.039, 0.10, max(x)])
-
+         
 #   initialize piecwise linear fit with your x and y data
 myPWLF = pwlf.piecewise_lin_fit(x,y)
-
-#   fit the data with the specified break points (ie the x locations of where
-#   the line segments should end
-#myPWLF.fitWithBreaks(x0)
-##myPWLF.seperateData(x0)
-
-#res = myPWLF.fit(3)
-
-
-
+              
 #   initilize custom optimization
 numberOfLineSegments = 3
 myPWLF.useCustomOpt(numberOfLineSegments)
+
+#   i have numberOfLineSegments - 1 number of variables
+#   let's guess the correct location of the two unkown variables
+#   (the program defualts to have end segments at x0= min(x) and xn=max(x)
+xGuess = np.zeros(numberOfLineSegments-1)
+xGuess[0] = 0.02
+xGuess[1] = 0.10
+
+#   import custom optimization library
 from scipy.optimize import minimize
-res = minimize(myPWLF.fitWithBreaksOpt, [x0[1], x0[2]])
+res = minimize(myPWLF.fitWithBreaksOpt, xGuess)
 
 #   set up the break point locations
 x0 = np.zeros(numberOfLineSegments+1)
