@@ -3,7 +3,11 @@ A library for fitting a continuous piecewise linear function f(x) to data. Just 
 
 Check out the [examples](https://github.com/cjekel/piecewiseLinearFitPython/tree/master/examples)!
 
+Read the [blog post](http://jekel.me/2017/Fit-a-piecewise-linear-function-to-data/).
+
 ![Example of a continuous piecewise linear fit to a data set.](https://github.com/cjekel/piecewiseLinearFitPython/blob/master/examples/examplePiecewiseFit.png)
+
+![Example of a continuous piecewise linear fit to a sin wave](https://github.com/cjekel/piecewiseLinearFitPython/blob/master/examples/sinWaveFit.png)
 
 # Features
 For a specified number of line segments, you can determine (and predict from) the optimal continuous piecewise linear function f(x). See [this example](https://github.com/cjekel/piecewiseLinearFitPython/blob/master/examples/fitForSpecifiedNumberOfLineSegments.py).
