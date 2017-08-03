@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.optimize import differential_evolution
 
-#   version 0.0.1
+#   version 0.0.2
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
