@@ -26,12 +26,16 @@ Global optimization is used to find the best location for the user defined numbe
 # Why
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
+# Changelog
+- 2017/08/03 gradients (slopes of the line segments) now stored as piecewise_lin_fit.slopes (or myPWLF.slopes) after they have been calculated by performing a fit or predicting
+- 2017/04/01 initial release
+
 # Requirements
-Python 2.7+ (Only Python 2.7 has been tested)
+Python 2.7+ (Python 2.7 and Python 3.4 have been tested)
 
-NumPy (Tested on version 1.11.3)
+NumPy (Tested on version >= 1.11.3 )
 
-SciPy (Tested on version 0.19.0)
+SciPy (Tested on version >= 0.19.0)
 
 # License
 MIT License
