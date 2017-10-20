@@ -3,7 +3,8 @@
 import numpy as np
 from scipy.optimize import differential_evolution
 
-#   version 0.0.2
+# add rudimentary version tracking
+__version__ = '0.0.3'
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
@@ -198,10 +199,7 @@ class piecewise_lin_fit:
                 A[i,i+1] = A[i,i+1] - sum((sepDataX[i] - breaks[i]) * (sepDataX[i] - breaks[i+1])) / ((breaks[i+1] - breaks[i]) ** 2)
                 B[i] = B[i] + (-sum(sepDataX[i] * sepDataY[i]) + breaks[i+1] * sum(sepDataY[i])) / (breaks[i+1] - breaks[i])
 
-        #   calc determinant of A, then pass infinity if the case
-        if np.linalg.det(A) == 0:
-            SSr = np.inf
-        else:
+        try:
             p = np.linalg.solve(A,B)
 
             yHat = []
@@ -216,6 +214,11 @@ class piecewise_lin_fit:
             #   calculate the sum of the square of residuals
             e = self.yData-yHat
             SSr = np.dot(e.T,e)
+        except:
+            # if there is an error in the above calculation
+            # it is likely from A being ill conditioned or indeterminant
+            # this will be more efficent than calculating the determinant
+            SSr = np.inf
         return(SSr)
 
     def fit(self, numberOfSegments, **kwargs):
