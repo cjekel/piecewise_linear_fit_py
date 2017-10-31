@@ -17,6 +17,9 @@ myPWLF = pwlf.piecewise_lin_fit(x,y)
 
 #   fit the data for four line segments
 res = myPWLF.fit(16,disp=True)
+#   i'm passing the argument disp=True to see the progress of the differential
+#   evoultion so you can be sure the program isn't just hanging...
+
 #   Be patient! this one takes some time - It's a difficult problem
 #   using this differential evolution algo + bfgs can be over 500,000.0 function
 #   evaluations
