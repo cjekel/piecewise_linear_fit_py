@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import differential_evolution
 
 # add rudimentary version tracking
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
@@ -113,7 +113,12 @@ class piecewise_lin_fit:
         for i in range(0, self.numberOfSegments):
             dataX = []
             dataY = []
-            aTest = self.xData >= breaks[i]
+            if i == 0:
+                # the first index should always be inclusive
+                aTest = self.xData >= breaks[i]
+            else:
+                # the rest of the indexies should be exclusive
+                aTest = self.xData > breaks[i]
             dataX = np.extract(aTest, self.xData)
             dataY = np.extract(aTest, self.yData)
             bTest = dataX <= breaks[i+1]
@@ -137,7 +142,12 @@ class piecewise_lin_fit:
 
         for i in range(0, self.numberOfSegments):
             dataX = []
-            aTest = x >= breaks[i]
+            if i == 0:
+                # the first index should always be inclusive
+                aTest = x >= breaks[i]
+            else:
+                # the rest of the indexies should be exclusive
+                aTest = x > breaks[i]
             dataX = np.extract(aTest, x)
             bTest = dataX <= breaks[i+1]
             dataX = np.extract(bTest, dataX)
