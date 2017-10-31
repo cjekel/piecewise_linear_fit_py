@@ -27,7 +27,7 @@ Global optimization is used to find the best location for the user defined numbe
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
 # Changelog
-- 2017/10/31 bug fix related to the case where break points exactly equal a data point as per issue https://github.com/cjekel/piecewise_linear_fit_py/issues/1
+- 2017/10/31 bug fix related to the case where break points exactly equal a data point as per issue https://github.com/cjekel/piecewise_linear_fit_py/issues/1 and added attributes .sep_data_x, .sep_data_y, .sep_predict_data_x for troubleshooting issues related to the separation of data points
 - 2017/10/20 remove determinant calculation and use try-except instead, this will offer a larger performance boost for big problems. Change library name to something more Pythonic. Add version attribute.
 - 2017/08/03 gradients (slopes of the line segments) now stored as piecewise_lin_fit.slopes (or myPWLF.slopes) after they have been calculated by performing a fit or predicting
 - 2017/04/01 initial release

@@ -16,7 +16,7 @@ y = np.random.normal(0,0.05, 100) + y
 myPWLF = pwlf.piecewise_lin_fit(x,y)
 
 #   fit the data for four line segments
-res = myPWLF.fit(16)
+res = myPWLF.fit(16,disp=True)
 #   Be patient! this one takes some time - It's a difficult problem
 #   using this differential evolution algo + bfgs can be over 500,000.0 function
 #   evaluations

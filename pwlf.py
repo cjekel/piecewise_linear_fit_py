@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import differential_evolution
 
 # add rudimentary version tracking
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
@@ -60,7 +60,11 @@ class piecewise_lin_fit:
         self.numberOfSegments = numberOfSegments
 
         sepDataX, sepDataY = self.seperateData(breaks)
-
+        
+        # add the seperated data to the object
+        self.sep_data_x = sepDataX
+        self.sep_data_y = sepDataY
+        
         #   compute matricies corresponding to the system of equations
         A = np.zeros([numberOfParameters, numberOfParameters])
         B = np.zeros(numberOfParameters)
@@ -168,6 +172,10 @@ class piecewise_lin_fit:
 
         #   seperate the data by x on breaks
         sepDataX = self.seperateDataX(breaks,x)
+        
+        #    add the seperated data to self
+        self.sep_predict_data_x = sepDataX
+        
         yHat = []
         lineSlopes = []
         for i,j in enumerate(sepDataX):
