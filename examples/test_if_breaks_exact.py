@@ -32,3 +32,9 @@ x0 = x.copy()
 my_fit5 = pwlf.piecewise_lin_fit(x,y)
 x0[2] = 1.6
 ssr5 = my_fit5.fitWithBreaks(x0)
+
+# check if my duplicate is in a different location
+x0 = x.copy()
+my_fit6 = pwlf.piecewise_lin_fit(x,y)
+x0[2] = 1.4
+ssr6 = my_fit6.fitWithBreaks(x0)

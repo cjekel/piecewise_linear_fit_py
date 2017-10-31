@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import differential_evolution
 
 # add rudimentary version tracking
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 #   piecewise linerar fit library
 class piecewise_lin_fit:
