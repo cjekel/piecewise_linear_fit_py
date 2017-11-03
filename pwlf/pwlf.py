@@ -3,11 +3,8 @@
 import numpy as np
 from scipy.optimize import differential_evolution
 
-# add rudimentary version tracking
-__version__ = '0.0.6'
-
 #   piecewise linerar fit library
-class piecewise_lin_fit:
+class piecewise_lin_fit(object):
 
     #   Initiate the libary with the supplied x and y data
     #   where y(x). For now x and y should be 1D numpy arrays.
@@ -22,6 +19,10 @@ class piecewise_lin_fit:
 
         #   calculate the number of data points
         self.nData = len(x)
+        
+        #   set the first and last break x values to be the min and max of x
+        self.break0 = np.min(self.xData)
+        self.breakN = np.max(self.xData)
 
 
     def fitWithBreaks(self, breaks):
@@ -258,9 +259,7 @@ class piecewise_lin_fit:
 
         #self.fitBreaks = self.numberOfSegments+1
 
-        #   set the first and last break x values to be the min and max of x
-        self.break0 = np.min(self.xData)
-        self.breakN = np.max(self.xData)
+
 
         #   calculate the number of variables I have to solve for
         self.nVar = self.numberOfSegments - 1
@@ -312,9 +311,6 @@ class piecewise_lin_fit:
 
         #self.fitBreaks = self.numberOfSegments+1
 
-        #   set the first and last break x values to be the min and max of x
-        self.break0 = np.min(self.xData)
-        self.breakN = np.max(self.xData)
 
         #   calculate the number of variables I have to solve for
         self.nVar = self.numberOfSegments - 1
