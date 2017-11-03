@@ -45,7 +45,7 @@ example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/
 Installation
 ============
 
-You can install with pip.
+You can now install with pip.
 
 ::
 
