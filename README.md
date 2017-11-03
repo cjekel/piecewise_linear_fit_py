@@ -23,17 +23,17 @@ You can use a different optimization algorithm to find the optimal location for 
 You can install with the setup.py however you like.
 
 First clone the repo
-`git clone https://github.com/cjekel/piecewise_linear_fit_py.git`
+```git clone https://github.com/cjekel/piecewise_linear_fit_py.git```
 
 then install with pip
-`sudo pip install piecewise_linear_fit_py/`
+```sudo pip install piecewise_linear_fit_py/```
 
 or easy_install
-`sudo easy_install piecewise_linear_fit_py/`
+```sudo easy_install piecewise_linear_fit_py/```
 
 or using setup.py
-`cd piecewise_linear_fit_py/`
-`sudo python setup.py install`
+```cd piecewise_linear_fit_py/
+sudo python setup.py install```
 
 # How it works
 This is based on a formulation of a piecewise linear least squares fit, where the user must specify the location of break points. A simple derivation of this fit has been done by [Golovchenko (2004)](http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf). The routine for fitting the piecewise linear function is based on Golovchenko's MATLAB code (which I can't seem to find on the internet), which I ported to Python. Alternatively you can view [this code](https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit).

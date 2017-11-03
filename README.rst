@@ -54,8 +54,8 @@ then install with pip ``sudo pip install piecewise_linear_fit_py/``
 
 or easy\_install ``sudo easy_install piecewise_linear_fit_py/``
 
-or using setup.py ``cd piecewise_linear_fit_py/``
-``sudo python setup.py install``
+or using setup.py
+``cd piecewise_linear_fit_py/ sudo python setup.py install``
 
 How it works
 ============
