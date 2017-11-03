@@ -45,17 +45,32 @@ example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/
 Installation
 ============
 
-You can install with the setup.py however you like.
+You can install with pip, easy\_install, or using setup.py.
 
 First clone the repo
-``git clone https://github.com/cjekel/piecewise_linear_fit_py.git``
 
-then install with pip ``sudo pip install piecewise_linear_fit_py/``
+::
 
-or easy\_install ``sudo easy_install piecewise_linear_fit_py/``
+    git clone https://github.com/cjekel/piecewise_linear_fit_py.git
+
+then install with pip
+
+::
+
+    sudo pip install piecewise_linear_fit_py/
+
+or easy\_install
+
+::
+
+    sudo easy_install piecewise_linear_fit_py/
 
 or using setup.py
-``cd piecewise_linear_fit_py/ sudo python setup.py install``
+
+::
+
+    cd piecewise_linear_fit_py/
+    sudo python setup.py install
 
 How it works
 ============

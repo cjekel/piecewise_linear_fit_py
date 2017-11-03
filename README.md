@@ -20,7 +20,7 @@ You can use a different optimization algorithm to find the optimal location for 
 
 # Installation
 
-You can install with the setup.py however you like.
+You can install with pip, easy_install, or using setup.py.
 
 First clone the repo
 ```
