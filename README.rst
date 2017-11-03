@@ -45,9 +45,13 @@ example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/
 Installation
 ============
 
-You can install with pip, easy\_install, or using setup.py.
+You can install with pip.
 
-First clone the repo
+::
+
+    sudo pip install pwlf
+
+Or clone the repo
 
 ::
 

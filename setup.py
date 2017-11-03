@@ -6,7 +6,6 @@ setup(
     author_email='cjekel@gmail.com',
     packages=['pwlf'],
     package_data={'pwlf': ['VERSION']},
-    # scripts=['pwlf/pwlf.py'],
     url='https://github.com/cjekel/piecewise_linear_fit_py',
     license=open('LICENSE').read(),
     description='fit piece-wise linear function to data',

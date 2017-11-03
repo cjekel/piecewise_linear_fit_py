@@ -20,9 +20,12 @@ You can use a different optimization algorithm to find the optimal location for 
 
 # Installation
 
-You can install with pip, easy_install, or using setup.py.
+You can now install with pip.
+```
+sudo pip install pwlf
+```
 
-First clone the repo
+Or clone the repo
 ```
 git clone https://github.com/cjekel/piecewise_linear_fit_py.git
 ```
