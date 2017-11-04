@@ -7,7 +7,7 @@ setup(
     packages=['pwlf'],
     package_data={'pwlf': ['VERSION']},
     url='https://github.com/cjekel/piecewise_linear_fit_py',
-    license=open('LICENSE').read(),
+    license='MIT License',
     description='fit piece-wise linear function to data',
     long_description=open('README.rst').read(),
     platforms=['any'],
