@@ -47,7 +47,7 @@ print('Run time for multi-start', t3-t2, 'seconds')
 #   plot the results
 plt.figure()
 plt.plot(x,y,'o')
-# plt.plot(xHat1,yHat1, '-', label='Diff. evolution')
+plt.plot(xHat1,yHat1, '-', label='Diff. evolution')
 plt.plot(xHat2,yHat2, '-', label='Multi start')
 plt.legend()
 plt.show()
