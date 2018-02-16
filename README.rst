@@ -42,6 +42,15 @@ location for line segments by using the objective function that
 minimizes the sum of square of residuals. See `this
 example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py>`__.
 
+Instead of using differential evolution, you can now use a multi-start
+gradient optimization with fitfast() function. You can specify the
+number of starting points to use. The default is 50. This means that a
+latin hyper cube sampling of 50 is used to run 50 L-BFGS-B
+optimizations. See `this
+example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/sineWave_time_compare.py>`__
+which runs fit() function, then runs the fitfast() to compare the
+runtime differences!
+
 Installation
 ============
 
@@ -109,6 +118,12 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/02/16 Added new fitfast() function which uses multi-start
+   gradient optimization instead of Differential Evolution. It may be
+   substantially faster for your application. Also it would be a good
+   candidate if you don't need the best solution, but just a reasonable
+   fit. Fixed bug in tests function where assert was checking bound, not
+   SSr. New requirement, pyDOE library. New 0.1.0 Version.
 -  2017/11/03 add setup.py, new tests folder and test scripts, new
    version tracking, initialize break0 breakN in the beginning
 -  2017/10/31 bug fix related to the case where break points exactly
@@ -133,6 +148,8 @@ Python 2.7+ (Python 2.7 and Python 3.4 have been tested)
 NumPy (Tested on version >= 1.11.3 )
 
 SciPy (Tested on version >= 0.19.0)
+
+pyDOE (Tested on version >= 0.3.8)
 
 License
 =======
