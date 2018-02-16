@@ -1,7 +1,32 @@
 # -- coding: utf-8 --
+# MIT License
+#
+# Copyright (c) 2017, 2018 Charles Jekel
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+from __future__ import print_function
 #   import libraris
 import numpy as np
 from scipy.optimize import differential_evolution
+from scipy.optimize import fmin_l_bfgs_b
+from pyDOE import lhs
 
 #   piecewise linerar fit library
 class piecewise_lin_fit(object):
@@ -19,7 +44,7 @@ class piecewise_lin_fit(object):
 
         #   calculate the number of data points
         self.nData = len(x)
-        
+
         #   set the first and last break x values to be the min and max of x
         self.break0 = np.min(self.xData)
         self.breakN = np.max(self.xData)
@@ -61,11 +86,11 @@ class piecewise_lin_fit(object):
         self.numberOfSegments = numberOfSegments
 
         sepDataX, sepDataY = self.seperateData(breaks)
-        
+
         # add the seperated data to the object
         self.sep_data_x = sepDataX
         self.sep_data_y = sepDataY
-        
+
         #   compute matricies corresponding to the system of equations
         A = np.zeros([numberOfParameters, numberOfParameters])
         B = np.zeros(numberOfParameters)
@@ -173,10 +198,10 @@ class piecewise_lin_fit(object):
 
         #   seperate the data by x on breaks
         sepDataX = self.seperateDataX(breaks,x)
-        
+
         #    add the seperated data to self
         self.sep_predict_data_x = sepDataX
-        
+
         yHat = []
         lineSlopes = []
         for i,j in enumerate(sepDataX):
@@ -281,6 +306,99 @@ class piecewise_lin_fit(object):
         self.SSr = res.fun
 
         var = np.sort(res.x)
+        if np.isclose(var[0],var[1]) == True:
+            var[1] += 0.00001
+        breaks = np.zeros(len(var)+2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+        self.fitBreaks = breaks
+        #   assign p
+        self.fitWithBreaks(self.fitBreaks)
+
+        return(self.fitBreaks)
+
+    def fitfast(self, numberOfSegments, pop=50, **kwargs):
+        #   a function which uses multi start LBFGSB optimization to find the
+        #   location of break points for a given number of line segments by
+        #   minimizing the sum of the square of the errors.
+        #
+        #   The idea is that we generate 50 random latin hypercube samples
+        #   and run LBFGSB optimization on each one. This isn't garunteed to
+        #   find the global optimum. It's suppose to be a reasonable comprimise
+        #   between speed and quality of fit. Let me know how it works.
+        #
+        #   Since this is based on random sampling, you might want to run it
+        #   multiple times and save the best version... The best version will
+        #   have the lowest self.SSr (sum of square of residuals)
+        #
+        #   There is no garuntee that this will be faster than fit(), however
+        #   you may find it much faster sometimes.
+        #
+        #   input:
+        #   the number of line segments that you want to find
+        #   the optimum break points for
+        #   ex:
+        #   breaks = fitfast(3)
+        #
+        #   output:
+        #   returns the break points of the optimal piecewise contionus lines
+        #
+        #
+        #   The default number of multi start optimizations is 50.
+        #   - Decreasing this number will result in a faster run time.
+        #   - Increasing this number will improve the likelihood of finding
+        #     good results
+        #   - You can specify the number of starts using the following call
+        #
+        #   # finds 3 piecewise line segments with 30 multi start optimizations
+        #   breaks = fitfast(3,30)
+        pop = int(pop)
+
+        self.numberOfSegments = int(numberOfSegments)
+        self.numberOfParameters = self.numberOfSegments+1
+
+        #   calculate the number of variables I have to solve for
+        self.nVar = self.numberOfSegments - 1
+
+        #   initaite the bounds of the optimization
+        bounds = np.zeros([self.nVar, 2])
+        bounds[:,0] = self.break0
+        bounds[:,1] = self.breakN
+
+        #   perform latin hypercube sampling
+        mypop = lhs(self.nVar, samples=pop, criterion='maximin')
+        #   scale the samplign to my vraiable range
+        mypop = mypop*(self.breakN-self.break0) + self.break0
+
+        x = np.zeros((pop,self.nVar))
+        f = np.zeros(pop)
+        d = []
+
+        for i,x0 in enumerate(mypop):
+            if len(kwargs) == 0:
+                resx, resf, resd = fmin_l_bfgs_b(self.fitWithBreaksOpt, x0,
+                        fprime=None, args=(), approx_grad=True, bounds=bounds,
+                        m=10, factr=1e2, pgtol=1e-05, epsilon=1e-08, iprint=-1,
+                        maxfun=15000, maxiter=15000, disp=None, callback=None)
+            else:
+                resx, resf, resd = fmin_l_bfgs_b(self.fitWithBreaksOpt, x0,
+                        fprime=None, approx_grad=True, bounds=bounds, **kwargs)
+            x[i,:] = resx
+            f[i] = resf
+            d.append(resd)
+            print(i+1, 'of '+str(pop)+' complete')
+
+        # find the best result
+        best_ind = np.nanargmin(f)
+        best_val = f[best_ind]
+        best_break = x[best_ind]
+        res = (x[best_ind], f[best_ind], d[best_ind])
+        print(res)
+
+        self.SSr = best_val
+
+        var = np.sort(best_break)
         if np.isclose(var[0],var[1]) == True:
             var[1] += 0.00001
         breaks = np.zeros(len(var)+2)

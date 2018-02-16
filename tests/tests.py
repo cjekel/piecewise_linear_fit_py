@@ -11,23 +11,23 @@ class test_everything(unittest.TestCase):
     # def test_is_five_prime(self):
     #     """Is five successfully determined to be prime?"""
     #     self.assertTrue(is_prime(5))
-    
+
     def test_break_point_spot_on(self):
         # check that I can fit when break poitns spot on a
         my_fit1 = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
         x0 = self.x_small.copy()
         ssr = my_fit1.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr,0.0))
-    
+
     def test_break_point_diff_x0_0(self):
         # check diff loc
         my_fit2 = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
-        x0 = self.x_small.copy()        
+        x0 = self.x_small.copy()
         x0[1] = 1.00001
         x0[2] = 1.50001
         ssr2 = my_fit2.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr2,0.0))
-    
+
     def test_break_point_diff_x0_1(self):
         # check if my duplicate is in a different location
         x0 = self.x_small.copy()
@@ -35,7 +35,7 @@ class test_everything(unittest.TestCase):
         x0[1] = 0.9
         ssr3 = my_fit3.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr3,0.0))
-        
+
     def test_break_point_diff_x0_2(self):
         # check if my duplicate is in a different location
         x0 = self.x_small.copy()
@@ -43,7 +43,7 @@ class test_everything(unittest.TestCase):
         x0[1] = 1.1
         ssr4 = my_fit4.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr4,0.0))
-        
+
     def test_break_point_diff_x0_3(self):
         # check if my duplicate is in a different location
         x0 = self.x_small.copy()
@@ -51,20 +51,20 @@ class test_everything(unittest.TestCase):
         x0[2] = 1.6
         ssr5 = my_fit5.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr5,0.0))
-        
-    def test_break_point_diff_x0_4(self):   
+
+    def test_break_point_diff_x0_4(self):
         # check if my duplicate is in a different location
         x0 = self.x_small.copy()
         my_fit6 = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
         x0[2] = 1.4
         ssr6 = my_fit6.fitWithBreaks(x0)
         self.assertTrue(np.isclose(ssr6,0.0))
-    
+
     def test_diff_evo(self):
         myPWLF = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
         res = myPWLF.fit(4, disp=False)
-        self.assertTrue(np.isclose(res[0],0.0))
-    
+        self.assertTrue(np.isclose(myPWLF.SSr,0.0))
+
     def test_custom_opt(self):
         myPWLF = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
         xGuess = np.array((0.9, 1.1))
@@ -73,7 +73,11 @@ class test_everything(unittest.TestCase):
         print(res)
         self.assertTrue(np.isclose(res['fun'],0.0))
 
-        
+    def test_multi_start_fitfast(self):
+        print('Last test! - multi start (fitfast) test')
+        myPWLF = pwlf.piecewise_lin_fit(self.x_small,self.y_small)
+        res = myPWLF.fitfast(4)
+        self.assertTrue(np.isclose(myPWLF.SSr,0.0))
 
 if __name__ == '__main__':
     unittest.main()
