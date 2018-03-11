@@ -65,7 +65,8 @@ def my_pw_reg(var):
     x0[1:4] = var
     # sort x0 from lowest to highest
     x0 = np.sort(x0)
-    print(x0)
+
+    # fit with these break points
     e = myPWLF.fitWithBreaks(x0)
     return e
 
@@ -75,7 +76,7 @@ bounds = ((np.min(x)+0.0001, np.max(x)-0.0001),
           (np.min(x)+0.0001, np.max(x)-0.0001))
 
 # find the optimum breakpoints for my custom PW regression problem
-res = differential_evolution(my_pw_reg, bounds)
+res = differential_evolution(my_pw_reg, bounds, disp=True)
 
 # re evalue the pwlf from the optimum to save parameters
 my_pw_reg(res.x)
