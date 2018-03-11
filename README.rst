@@ -118,6 +118,9 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/03/11 Added try/execpt behavior for fitWithBreaks function such
+   that the function could be used in an optimzation routine. In general
+   when you have a singular matrix, the function will now return np.inf.
 -  2018/02/16 Added new fitfast() function which uses multi-start
    gradient optimization instead of Differential Evolution. It may be
    substantially faster for your application. Also it would be a good
