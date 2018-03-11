@@ -107,24 +107,31 @@ class piecewise_lin_fit(object):
                 A[i,i+1] = A[i,i+1] - sum((sepDataX[i] - breaks[i]) * (sepDataX[i] - breaks[i+1])) / ((breaks[i+1] - breaks[i]) ** 2)
                 B[i] = B[i] + (-sum(sepDataX[i] * sepDataY[i]) + breaks[i+1] * sum(sepDataY[i])) / (breaks[i+1] - breaks[i])
 
-        p = np.linalg.solve(A,B)
 
-        yHat = []
-        lineSlopes = []
-        for i,j in enumerate(sepDataX):
-            m = (p[i+1] - p[i])/(breaks[i+1]-breaks[i])
-            lineSlopes.append(m)
-            yHat.append(m*(j-breaks[i]) + p[i])
-        yHat = np.concatenate(yHat)
-        self.slopes = np.array(lineSlopes)
+        # try to solve the regression prolbem
+        try:
+            p = np.linalg.solve(A,B)
 
-        #   calculate the sum of the square of residuals
-        e = self.yData-yHat
-        SSr = np.dot(e.T,e)
+            yHat = []
+            lineSlopes = []
+            for i,j in enumerate(sepDataX):
+                m = (p[i+1] - p[i])/(breaks[i+1]-breaks[i])
+                lineSlopes.append(m)
+                yHat.append(m*(j-breaks[i]) + p[i])
+            yHat = np.concatenate(yHat)
+            self.slopes = np.array(lineSlopes)
+
+            #   calculate the sum of the square of residuals
+            e = self.yData-yHat
+            SSr = np.dot(e.T,e)
 
 
-        self.fitParameters = p
-
+            self.fitParameters = p
+        except:
+            # on an error, return SSr = np.print_function
+            # print('ERROR: You might have a singular Matrix!!!')
+            SSr = np.inf
+            # this usually happens when A is singular
         return(SSr)
 
     def seperateData(self, breaks):
