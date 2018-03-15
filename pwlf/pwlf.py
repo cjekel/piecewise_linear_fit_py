@@ -223,8 +223,6 @@ class piecewise_lin_fit(object):
         #   same as self.fitWithBreaks, excpet this one is tuned to be used with
         #   the optimization algorithim
         var = np.sort(var)
-        if np.isclose(var[0],var[1]) == True:
-            var[1] += 0.00001
         breaks = np.zeros(len(var)+2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break0
@@ -313,8 +311,6 @@ class piecewise_lin_fit(object):
         self.SSr = res.fun
 
         var = np.sort(res.x)
-        if np.isclose(var[0],var[1]) == True:
-            var[1] += 0.00001
         breaks = np.zeros(len(var)+2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break0
@@ -406,8 +402,6 @@ class piecewise_lin_fit(object):
         self.SSr = best_val
 
         var = np.sort(best_break)
-        if np.isclose(var[0],var[1]) == True:
-            var[1] += 0.00001
         breaks = np.zeros(len(var)+2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break0
