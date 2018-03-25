@@ -34,9 +34,19 @@ class piecewise_lin_fit(object):
 
     # Initiate the library with the supplied x and y data
     # where y(x). For now x and y should be 1D numpy arrays.
-    def __init__(self, x, y):
+    def __init__(self, x, y, disp_res=False):
         # you must supply the x and y data of which you'll be fitting
         # a continuous piecewise linear model to where y(x)
+        # by default pwlf won't print the optimization results
+        # initialize results printing with print=distribute
+        #
+        # Examples:
+        # # initlize for x, y data
+        # myPWLF = piecewise_lin_fit(x, y)
+        #
+        # # initliaze for x,y data and print optimization results
+        # myPWLF = piecewise_lin_fit(x, y, disp_res=True)
+        self.print = disp_res
 
         # sort the data from least x to max x
         orderArg = np.argsort(x)
@@ -303,7 +313,8 @@ class piecewise_lin_fit(object):
                                          polish=True, init='latinhypercube', atol=1e-4)
         else:
             res = differential_evolution(self.fitWithBreaksOpt, bounds, **kwargs)
-        print(res)
+        if self.print == True:
+            print(res)
 
         self.SSr = res.fun
 
@@ -387,14 +398,16 @@ class piecewise_lin_fit(object):
             x[i, :] = resx
             f[i] = resf
             d.append(resd)
-            print(i + 1, 'of ' + str(pop) + ' complete')
+            if self.print == True:
+                print(i + 1, 'of ' + str(pop) + ' complete')
 
         # find the best result
         best_ind = np.nanargmin(f)
         best_val = f[best_ind]
         best_break = x[best_ind]
         res = (x[best_ind], f[best_ind], d[best_ind])
-        print(res)
+        if self.print == True:
+            print(res)
 
         self.SSr = best_val
 
