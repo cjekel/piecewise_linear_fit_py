@@ -361,7 +361,7 @@ class piecewise_lin_fit(object):
         # - Increasing this number will improve the likelihood of finding
         #   good results
         # - You can specify the number of starts using the following call
-        # - Minum value of pop is 2
+        # - Minimum value of pop is 2
         #
         # # finds 3 piecewise line segments with 30 multi start optimizations
         # breaks = fitfast(3,30)
