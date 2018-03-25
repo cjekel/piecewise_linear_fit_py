@@ -329,12 +329,12 @@ class piecewise_lin_fit(object):
 
         return (self.fitBreaks)
 
-    def fitfast(self, numberOfSegments, pop=50, **kwargs):
+    def fitfast(self, numberOfSegments, pop=2, **kwargs):
         # a function which uses multi start LBFGSB optimization to find the
         # location of break points for a given number of line segments by
         # minimizing the sum of the square of the errors.
         #
-        # The idea is that we generate 50 random latin hypercube samples
+        # The idea is that we generate n random latin hypercube samples
         # and run LBFGSB optimization on each one. This isn't guaranteed to
         # find the global optimum. It's suppose to be a reasonable compromise
         # between speed and quality of fit. Let me know how it works.
@@ -356,11 +356,12 @@ class piecewise_lin_fit(object):
         # returns the break points of the optimal piecewise continuous lines
         #
         #
-        # The default number of multi start optimizations is 50.
+        # The default number of multi start optimizations is 2.
         # - Decreasing this number will result in a faster run time.
         # - Increasing this number will improve the likelihood of finding
         #   good results
         # - You can specify the number of starts using the following call
+        # - Minum value of pop is 2
         #
         # # finds 3 piecewise line segments with 30 multi start optimizations
         # breaks = fitfast(3,30)
