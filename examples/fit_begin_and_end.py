@@ -49,39 +49,42 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
               1.65299640e-01, 1.79942720e-01])
 
 # initialize piecwise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+# this doesn't work at all yet... WIP
+myPWLF = pwlf.piecewise_lin_fit(x, y, disp_res=True)
 
 
-def my_pw_reg(var):
-    # this function is to aid in a regression problem where the first
-    # and last design point locations are known
-    # while the best PWLF between the known beginning and ending are found
+# def my_pw_reg(var):
+#     # this function is to aid in a regression problem where the first
+#     # and last design point locations are known
+#     # while the best PWLF between the known beginning and ending are found
+#
+#     # you want four line segments, which will hve five data points
+#     x0 = np.zeros(5)
+#     # save the beginning and end points
+#     x0[0] = np.min(x)
+#     x0[-1] = np.max(x)
+#     # find the best location for the middle break points
+#     x0[1:4] = var
+#     # sort x0 from lowest to highest
+#     x0 = np.sort(x0)
+#
+#     # fit with these break points
+#     e = myPWLF.fitWithBreaks(x0)
+#     return e
+#
+#
+# # setup optimization bounds
+# bounds = ((np.min(x) + 0.0001, np.max(x) - 0.0001),
+#           (np.min(x) + 0.0001, np.max(x) - 0.0001),
+#           (np.min(x) + 0.0001, np.max(x) - 0.0001))
+#
+# # find the optimum breakpoints for my custom PW regression problem
+# res = differential_evolution(my_pw_reg, bounds, disp=True)
+#
+# # re evalue the pwlf from the optimum to save parameters
+# my_pw_reg(res.x)
 
-    # you want four line segments, which will hve five data points
-    x0 = np.zeros(5)
-    # save the beginning and end points
-    x0[0] = np.min(x)
-    x0[-1] = np.max(x)
-    # find the best location for the middle break points
-    x0[1:4] = var
-    # sort x0 from lowest to highest
-    x0 = np.sort(x0)
-
-    # fit with these break points
-    e = myPWLF.fitWithBreaks(x0)
-    return e
-
-
-# setup optimization bounds
-bounds = ((np.min(x) + 0.0001, np.max(x) - 0.0001),
-          (np.min(x) + 0.0001, np.max(x) - 0.0001),
-          (np.min(x) + 0.0001, np.max(x) - 0.0001))
-
-# find the optimum breakpoints for my custom PW regression problem
-res = differential_evolution(my_pw_reg, bounds, disp=True)
-
-# re evalue the pwlf from the optimum to save parameters
-my_pw_reg(res.x)
+res = myPWLF.fit_begin_and_end(4,disp=True)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)

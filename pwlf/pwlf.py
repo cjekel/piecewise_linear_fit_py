@@ -443,3 +443,245 @@ class piecewise_lin_fit(object):
 
         # calculate the number of variables I have to solve for
         self.nVar = self.numberOfSegments - 1
+
+    def fit_break_begin_and_end_opt(self, var):
+        # same as fit_fit_break_begin_and_end, but used in optimization
+
+        var = np.sort(var)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+
+        sepDataX, sepDataY = self.seperateData(breaks)
+
+        numberOfParameters = self.nVar
+
+        # compute matrices corresponding to the system of equations
+        A = np.zeros([numberOfParameters, numberOfParameters])
+        B = np.zeros(numberOfParameters)
+        for i in range(0, numberOfParameters):
+            if i != 0:
+                # first sum
+                A[i, i - 1] -= sum((sepDataX[i - 1] - breaks[i - 1]) * (sepDataX[i - 1] - breaks[i])) / (
+                            (breaks[i] - breaks[i - 1]) ** 2)
+                A[i, i] += sum((sepDataX[i - 1] - breaks[i - 1]) ** 2) / ((breaks[i] - breaks[i - 1]) ** 2)
+                B[i] += (sum(sepDataX[i - 1] * sepDataY[i - 1]) - breaks[i - 1] * sum(sepDataY[i - 1])) / (
+                            breaks[i] - breaks[i - 1])
+
+            if i != numberOfParameters - 1:
+                # second sum
+                A[i, i] += sum(((sepDataX[i] - breaks[i + 1]) ** 2)) / ((breaks[i + 1] - breaks[i]) ** 2)
+                A[i, i + 1] -= sum((sepDataX[i] - breaks[i]) * (sepDataX[i] - breaks[i + 1])) / (
+                            (breaks[i + 1] - breaks[i]) ** 2)
+                B[i] += (-sum(sepDataX[i] * sepDataY[i]) + breaks[i + 1] * sum(sepDataY[i])) / (
+                            breaks[i + 1] - breaks[i])
+
+        print('A',np.shape(A))
+        print('B',np.shape(B))
+        # remove top row and column of A, B
+        # A = A[1:-1, 1:-1]
+        # B = B[1:-1]
+        # print('A',np.shape(A))
+        # print('B',np.shape(B))
+        # p_temp = np.linalg.solve(A, B)
+        try:
+            p_temp = np.linalg.solve(A, B)
+            p = np.zeros(self.numberOfParameters)
+            p[0] = self.y0
+            p[-1] = self.yn
+            p[1:-1] = p_temp
+            print('p_temp',np.shape(p_temp))
+            print('p', np.shape(p))
+            yHat = []
+            lineSlopes = []
+            for i, j in enumerate(sepDataX):
+                m = (p[i + 1] - p[i]) / (breaks[i + 1] - breaks[i])
+                lineSlopes.append(m)
+                yHat.append(m * (j - breaks[i]) + p[i])
+            yHat = np.concatenate(yHat)
+            self.slopes = np.array(lineSlopes)
+
+            # calculate the sum of the square of residuals
+            e = self.yData - yHat
+            SSr = np.dot(e.T, e)
+        except:
+            # if there is an error in the above calculation
+            # it is likely from A being ill conditioned or indeterminant
+            # this will be more efficient than calculating the determinant
+            SSr = np.inf
+        return (SSr)
+
+    def fit_break_begin_and_end(self, var):
+        # define a function which fits the piecewise linear function
+        # for specified break point locations where the begining and ending have
+        # a fixed location
+        #
+        # The function minimizes the sum of the square of the residuals for the
+        #  pair of x,y data points
+        #
+        # This is a port of 4-May-2004 Nikolai Golovchenko MATLAB code
+        # see http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
+        #
+        # Alternatively see https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        #
+        # Input:
+        # provide the location of the end points of the breaks for each line segment
+        #
+        # Example: if your x data exists from 0 <= x <= 1 and you want three
+        # piecewise linear lines, an acceptable breaks would look like
+        # breaks = [0.0, 0.3, 0.6, 1.0]
+        #
+        # Output:
+        # The function returns the sum of the square of the residuals
+        #
+        # To get the parameters of the fit look for
+        # self.parameters
+        #
+        # remember that the parameters that result are part of the continuous function
+        # such that:
+        # parameters = f(breaks)
+
+        var = np.sort(var)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+
+        sepDataX, sepDataY = self.seperateData(breaks)
+
+        numberOfParameters = self.nVar
+
+        # compute matrices corresponding to the system of equations
+        A = np.zeros([numberOfParameters, numberOfParameters])
+        B = np.zeros(numberOfParameters)
+        for i in range(0, numberOfParameters):
+            if i != 0:
+                # first sum
+                A[i, i - 1] -= sum((sepDataX[i - 1] - breaks[i - 1]) * (sepDataX[i - 1] - breaks[i])) / (
+                            (breaks[i] - breaks[i - 1]) ** 2)
+                A[i, i] += sum((sepDataX[i - 1] - breaks[i - 1]) ** 2) / ((breaks[i] - breaks[i - 1]) ** 2)
+                B[i] += (sum(sepDataX[i - 1] * sepDataY[i - 1]) - breaks[i - 1] * sum(sepDataY[i - 1])) / (
+                            breaks[i] - breaks[i - 1])
+
+            if i != numberOfParameters - 1:
+                # second sum
+                A[i, i] += sum(((sepDataX[i] - breaks[i + 1]) ** 2)) / ((breaks[i + 1] - breaks[i]) ** 2)
+                A[i, i + 1] -= sum((sepDataX[i] - breaks[i]) * (sepDataX[i] - breaks[i + 1])) / (
+                            (breaks[i + 1] - breaks[i]) ** 2)
+                B[i] += (-sum(sepDataX[i] * sepDataY[i]) + breaks[i + 1] * sum(sepDataY[i])) / (
+                            breaks[i + 1] - breaks[i])
+
+        print('A',np.shape(A))
+        print('B',np.shape(B))
+        # remove top row and column of A, B
+        # A = A[1:-1, 1:-1]
+        # B = B[1:-1]
+        # print('A',np.shape(A))
+        # print('B',np.shape(B))
+        # p_temp = np.linalg.solve(A, B)
+        try:
+            p_temp = np.linalg.solve(A, B)
+            print(p_temp)
+            p = np.zeros(self.numberOfParameters)
+            p[0] = self.y0
+            p[-1] = self.yn
+            p[1:-1] = p_temp
+            print('p_temp',np.shape(p_temp))
+            print('p', np.shape(p))
+            print(p)
+            yHat = []
+            lineSlopes = []
+            for i, j in enumerate(sepDataX):
+                m = (p[i + 1] - p[i]) / (breaks[i + 1] - breaks[i])
+                lineSlopes.append(m)
+                yHat.append(m * (j - breaks[i]) + p[i])
+            yHat = np.concatenate(yHat)
+            self.slopes = np.array(lineSlopes)
+
+            # calculate the sum of the square of residuals
+            e = self.yData - yHat
+            SSr = np.dot(e.T, e)
+
+            # save the fitParameters
+            self.fitParameters = p
+
+        except:
+            # if there is an error in the above calculation
+            # it is likely from A being ill conditioned or indeterminant
+            # this will be more efficient than calculating the determinant
+            SSr = np.inf
+        return (SSr)
+
+    def fit_begin_and_end(self, numberOfSegments, y0=None, yn=None, **kwargs):
+        #   a function which uses differntial evolution to finds the optimum
+        #   location of break points for a given number of line segments by
+        #   minimizing the sum of the square of the errors
+        #
+        #   The difference between fit() and fit_begin_and_end() is that
+        #   fit_begin_and_end() forces the beginging and end of the continous
+        #   pwlf to occur at at particlar locations
+        #
+        #   input:
+        #   the number of line segments that you want to find
+        #   the optimum break points for
+        #   numberOfSegments - integer number of desired line segments
+        #   y0 - desired floating point value of y(min(x))
+        #      - defaults to y[0]
+        #   yn - desired floating point value of y(max(x))
+        #      - defaults to y[-1]
+        #   ex: fit 3 line segments where at y @ min(x) = 0.0 AND
+        #   y @ max(x) = 1.5
+        #   breaks = fit(3,0.0,1.5)
+        #
+        #   output:
+        #   returns the break points of the optimal piecewise contionus lines
+        print('This function does not work! DO NOT USE!)
+        self.numberOfSegments = int(numberOfSegments)
+        self.numberOfParameters = self.numberOfSegments + 1
+
+        #   define values for y0 and yn
+        if y0 == None:
+            self.y0 = self.yData[0]
+        else:
+            self.y0 = y0
+        if yn == None:
+            self.yn = self.yData[-1]
+        else:
+            self.yn = yn
+
+        # self.fitBreaks = self.numberOfSegments+1
+
+        # calculate the number of variables I have to solve for
+        self.nVar = self.numberOfSegments - 1
+
+        # initiate the bounds of the optimization
+        bounds = np.zeros([self.nVar, 2])
+        bounds[:, 0] = self.break0
+        bounds[:, 1] = self.breakN
+
+        if len(kwargs) == 0:
+            res = differential_evolution(self.fit_break_begin_and_end_opt,
+                    bounds, strategy='best1bin', maxiter=1000, popsize=50,
+                    tol=1e-3, mutation=(0.5, 1), recombination=0.7, seed=None,
+                    callback=None, disp=False, polish=True,
+                    init='latinhypercube', atol=1e-4)
+        else:
+            res = differential_evolution(self.fit_break_begin_and_end_opt,
+                    bounds, **kwargs)
+        if self.print == True:
+            print(res)
+
+        self.SSr = res.fun
+
+        var = np.sort(res.x)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break0
+        breaks[-1] = self.breakN
+        self.fitBreaks = breaks
+        # assign p
+        self.fit_break_begin_and_end(var)
+        print('This function does not work! DO NOT USE!)
+
+        return (self.fitBreaks)
