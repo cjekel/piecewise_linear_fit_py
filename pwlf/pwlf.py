@@ -636,7 +636,7 @@ class piecewise_lin_fit(object):
         #
         #   output:
         #   returns the break points of the optimal piecewise contionus lines
-        print('This function does not work! DO NOT USE!)
+        print('This function does not work! DO NOT USE!')
         self.numberOfSegments = int(numberOfSegments)
         self.numberOfParameters = self.numberOfSegments + 1
 
@@ -682,6 +682,6 @@ class piecewise_lin_fit(object):
         self.fitBreaks = breaks
         # assign p
         self.fit_break_begin_and_end(var)
-        print('This function does not work! DO NOT USE!)
+        print('This function does not work! DO NOT USE!')
 
         return (self.fitBreaks)

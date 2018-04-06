@@ -77,7 +77,7 @@ class test_everything(unittest.TestCase):
     def test_multi_start_fitfast(self):
         print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.piecewise_lin_fit(self.x_small, self.y_small)
-        res = my_pwlf.fitfast(4)
+        res = my_pwlf.fitfast(4,50)
         self.assertTrue(np.isclose(my_pwlf.SSr, 0.0))
 
 
