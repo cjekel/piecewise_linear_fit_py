@@ -1,3 +1,7 @@
+# THIS DOES NOT WORK!!!!
+# DO NOT USE THIS SCRIPT AS AN EXAMPLE
+# WORK IN PROGRESS
+
 # fit and predict between a known begging and known ending
 
 # import our libraries

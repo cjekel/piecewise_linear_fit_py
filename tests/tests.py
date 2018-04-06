@@ -66,18 +66,27 @@ class test_everything(unittest.TestCase):
         res = my_pwlf.fit(4, disp=False)
         self.assertTrue(np.isclose(my_pwlf.SSr, 0.0))
 
+    def test_predict(self):
+        my_pwlf = pwlf.piecewise_lin_fit(self.x_small, self.y_small)
+        xmax = np.max(self.x_small)
+        xmin = np.min(self.x_small)
+        res = my_pwlf.fitWithBreaks((xmin, xmax))
+        x = np.linspace(xmin, xmax, 10)
+        yHat = my_pwlf.predict(x)
+        self.assertTrue(np.isclose(np.sum(yHat), 8.085714285714287))
+
     def test_custom_opt(self):
         my_pwlf = pwlf.piecewise_lin_fit(self.x_small, self.y_small)
+        my_pwlf.useCustomOpt(3)
         x_guess = np.array((0.9, 1.1))
         from scipy.optimize import minimize
         res = minimize(my_pwlf.fitWithBreaksOpt, x_guess)
-        print(res)
         self.assertTrue(np.isclose(res['fun'], 0.0))
 
     def test_multi_start_fitfast(self):
         print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.piecewise_lin_fit(self.x_small, self.y_small)
-        res = my_pwlf.fitfast(4,50)
+        res = my_pwlf.fitfast(4, 50)
         self.assertTrue(np.isclose(my_pwlf.SSr, 0.0))
 
 
