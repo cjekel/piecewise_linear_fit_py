@@ -52,7 +52,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
               1.65299640e-01, 1.79942720e-01])
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # fit the data for four line segments
 # My differential evolutions keywords are tuned to be very aggressive
@@ -62,11 +62,11 @@ myPWLF = pwlf.piecewise_lin_fit(x, y)
 # to print the iterations with disp=True
 # if any keyword is passed, all of my aggressively tuned differential evolution
 # keywords reset to the default
-res = myPWLF.fit(4, disp=True)
+res = my_pwlf.fit(4, disp=True)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 # plot the results
 plt.figure()

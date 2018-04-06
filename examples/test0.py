@@ -46,33 +46,33 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 x0 = np.array([min(x), 0.039, 0.10, max(x)])
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # fit the data with the specified break points (ie the x locations of where
 # the line segments should end
-# myPWLF.fitWithBreaks(x0)
-# myPWLF.seperateData(x0)
+# my_pwlf.fit_with_breaks(x0)
+# my_pwlf.seperateData(x0)
 
-# res = myPWLF.fit(3)
+# res = my_pwlf.fit(3)
 
 # initialize custom optimization
-numberOfLineSegments = 3
-myPWLF.useCustomOpt(numberOfLineSegments)
+number_of_line_segments = 3
+my_pwlf.use_custom_opt(number_of_line_segments)
 
-res = minimize(myPWLF.fitWithBreaksOpt, np.array([x0[1], x0[2]]))
+res = minimize(my_pwlf.fit_with_breaks_opt, np.array([x0[1], x0[2]]))
 
 # set up the break point locations
-x0 = np.zeros(numberOfLineSegments + 1)
+x0 = np.zeros(number_of_line_segments + 1)
 x0[0] = np.min(x)
 x0[-1] = np.max(x)
 x0[1:-1] = res.x
 
 # calculate the parameters based on the optimal break point locations
-myPWLF.fitWithBreaks(x0)
+my_pwlf.fit_with_breaks(x0)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 plt.figure()
 plt.plot(x, y, 'o')

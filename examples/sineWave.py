@@ -13,10 +13,10 @@ y = np.sin(x * np.pi / 2)
 y = np.random.normal(0, 0.05, 100) + y
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # fit the data for four line segments
-res = myPWLF.fit(16, disp=True)
+res = my_pwlf.fit(16, disp=True)
 # i'm passing the argument disp=True to see the progress of the differential
 # evolution so you can be sure the program isn't just hanging...
 
@@ -26,7 +26,7 @@ res = myPWLF.fit(16, disp=True)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 # plot the results
 plt.figure()

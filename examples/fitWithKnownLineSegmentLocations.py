@@ -51,15 +51,15 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 x0 = np.array([min(x), 0.039, 0.10, max(x)])
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # fit the data with the specified break points (ie the x locations of where
 # the line segments should end
-myPWLF.fitWithBreaks(x0)
+my_pwlf.fit_with_breaks(x0)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 # plot the results
 plt.figure()

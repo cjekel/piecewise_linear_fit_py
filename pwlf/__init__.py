@@ -1,4 +1,5 @@
 from .pwlf import piecewise_lin_fit
+from .pwlf import PiecewiseLinFit
 import os
 
 # add rudimentary version tracking

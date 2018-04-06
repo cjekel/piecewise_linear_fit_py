@@ -51,33 +51,33 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
               1.65299640e-01, 1.79942720e-01])
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # initialize custom optimization
-numberOfLineSegments = 3
-myPWLF.useCustomOpt(numberOfLineSegments)
+number_of_line_segments = 3
+my_pwlf.use_custom_opt(number_of_line_segments)
 
-# i have numberOfLineSegments - 1 number of variables
+# i have number_of_line_segments - 1 number of variables
 # let's guess the correct location of the two unknown variables
 # (the program defaults to have end segments at x0= min(x) and xn=max(x)
-xGuess = np.zeros(numberOfLineSegments - 1)
+xGuess = np.zeros(number_of_line_segments - 1)
 xGuess[0] = 0.02
 xGuess[1] = 0.10
 
-res = minimize(myPWLF.fitWithBreaksOpt, xGuess)
+res = minimize(my_pwlf.fit_with_breaks_opt, xGuess)
 
 # set up the break point locations
-x0 = np.zeros(numberOfLineSegments + 1)
+x0 = np.zeros(number_of_line_segments + 1)
 x0[0] = np.min(x)
 x0[-1] = np.max(x)
 x0[1:-1] = res.x
 
 # calculate the parameters based on the optimal break point locations
-myPWLF.fitWithBreaks(x0)
+my_pwlf.fit_with_breaks(x0)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 plt.figure()
 plt.plot(x, y, 'o')

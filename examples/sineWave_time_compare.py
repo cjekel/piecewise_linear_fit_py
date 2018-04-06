@@ -14,11 +14,11 @@ y = np.sin(x * np.pi / 2)
 y = np.random.normal(0, 0.05, 100) + y
 
 # initialize piecewise linear fit with your x and y data
-myPWLF = pwlf.piecewise_lin_fit(x, y)
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # fit the data for sixteen line segments
 t0 = time()
-res1 = myPWLF.fit(16, disp=True)
+res1 = my_pwlf.fit(16, disp=True)
 t1 = time()
 # i'm passing the argument disp=True to see the progress of the differential
 # evolution so you can be sure the program isn't just hanging...
@@ -29,17 +29,17 @@ t1 = time()
 
 # predict for the determined points
 xHat1 = np.linspace(min(x), max(x), num=10000)
-yHat1 = myPWLF.predict(xHat1)
+yHat1 = my_pwlf.predict(xHat1)
 
 # fit the data for sixteen line segments
 # using the default 50 number of multi starts
 t2 = time()
-res2 = myPWLF.fitfast(16)  # this is equivalent to myPWLF.fitfast(16,50)
+res2 = my_pwlf.fitfast(16)  # this is equivalent to my_pwlf.fitfast(16,50)
 t3 = time()
 
 # predict for the determined points
 xHat2 = np.linspace(min(x), max(x), num=10000)
-yHat2 = myPWLF.predict(xHat2)
+yHat2 = my_pwlf.predict(xHat2)
 
 print('Run time for differential_evolution', t1 - t0, 'seconds')
 print('Run time for multi-start', t3 - t2, 'seconds')

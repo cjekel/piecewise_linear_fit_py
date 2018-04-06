@@ -54,7 +54,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 
 # initialize piecwise linear fit with your x and y data
 # this doesn't work at all yet... WIP
-myPWLF = pwlf.piecewise_lin_fit(x, y, disp_res=True)
+my_pwlf = pwlf.PiecewiseLinFit(x, y, disp_res=True)
 
 
 # def my_pw_reg(var):
@@ -73,7 +73,7 @@ myPWLF = pwlf.piecewise_lin_fit(x, y, disp_res=True)
 #     x0 = np.sort(x0)
 #
 #     # fit with these break points
-#     e = myPWLF.fitWithBreaks(x0)
+#     e = my_pwlf.fit_with_breaks(x0)
 #     return e
 #
 #
@@ -88,11 +88,11 @@ myPWLF = pwlf.piecewise_lin_fit(x, y, disp_res=True)
 # # re evalue the pwlf from the optimum to save parameters
 # my_pw_reg(res.x)
 
-res = myPWLF.fit_begin_and_end(4,disp=True)
+res = my_pwlf.fit_begin_and_end(4,disp=True)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
-yHat = myPWLF.predict(xHat)
+yHat = my_pwlf.predict(xHat)
 
 # plot the results
 plt.figure()
