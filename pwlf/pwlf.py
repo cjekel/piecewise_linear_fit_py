@@ -444,9 +444,11 @@ class piecewise_lin_fit(object):
         #
         # # initialize for x,y data and print optimization results
         # myPWLF = piecewise_lin_fit(x, y, disp_res=True)
-        warning = '''Warning: This is the old piecewise_lin_fit() class which is
-              going to be depreciated at some point as the naming convention
-              does not follow pep8. Use PiecewiseLinFit() instead.'''
+        warning = '''
+                Warning: This is the old piecewise_lin_fit() class which is
+                going to be depreciated at some point as the naming convention
+                does not follow pep8. Use PiecewiseLinFit() instead.
+                '''
         print(warning)
         self.print = disp_res
 
