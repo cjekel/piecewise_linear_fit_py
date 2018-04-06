@@ -11,3 +11,5 @@ setup.cfg
 # pip stuff
 /temp/
 
+# vscode folder
+.vscode*
