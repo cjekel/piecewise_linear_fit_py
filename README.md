@@ -70,7 +70,7 @@ All other methods require the user to specify the specific location of break poi
 # Requirements
 Python 2.7+ (Python 2.7 and Python 3.4 have been tested)
 
-NumPy (Tested on version >= 1.11.3 )
+NumPy (Tested on version >= 1.14.0)
 
 SciPy (Tested on version >= 0.19.0)
 
