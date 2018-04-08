@@ -12,7 +12,7 @@ setup(
     long_description=open('README.rst').read(),
     platforms=['any'],
     install_requires=[
-        "numpy >= 1.11.3",
+        "numpy >= 1.14.0",
         "scipy >= 0.19.0",
         "pyDOE >= 0.3.8",
     ],
