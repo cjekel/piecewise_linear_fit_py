@@ -89,16 +89,15 @@ How it works
 ============
 
 This is based on a formulation of a piecewise linear least squares fit,
-where the user must specify the location of break points. A simple
-derivation of this fit has been done by `Golovchenko
+where the user must specify the location of break points. See `this
+post <http://jekel.me/2018/Continous-piecewise-linear-regression/>`__
+which goes through the derivation of a least squares regression problem
+if the break point locations are known. Alternatively check out
+`Golovchenko
 (2004) <http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf>`__.
-The routine for fitting the piecewise linear function is based on
-Golovchenko's MATLAB code (which I can't seem to find on the internet),
-which I ported to Python. Alternatively you can view `this
-code <https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit>`__.
 
 Global optimization is used to find the best location for the user
-defined number of lline segments. I specifically use the `differential
+defined number of line segments. I specifically use the `differential
 evolution <https://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.optimize.differential_evolution.html>`__
 algorithm in SciPy. I default the differential evolution algorithm to be
 aggressive, and it is probably overkill for your problem. So feel free
@@ -118,9 +117,20 @@ best location for the ends of these line segments.
 Changelog
 =========
 
--  2018/03/11 Added try/execpt behavior for fitWithBreaks function such
-   that the function could be used in an optimzation routine. In general
-   when you have a singular matrix, the function will now return np.inf.
+-  2018/04/06 Speed! pwlf just got better and faster! A vast majority of
+   this library has been entirely rewritten! New naming convention. The
+   class piecewise\_lin\_fit() is being depreciated, now use the class
+   PiecewiseLinFit(). See `this
+   post <http://jekel.me/2018/Continous-piecewise-linear-regression/>`__
+   for details on the new formulation. New test function that tests
+   predict().
+-  2018/03/25 Default now hides optimization results. Use disp\_res=True
+   when initializing piecewise\_lin\_fit to change. The multi-start
+   fitfast() function now defaults to the minimum population of 2.
+-  2018/03/11 Added try/except behavior for fitWithBreaks function such
+   that the function could be used in an optimization routine. In
+   general when you have a singular matrix, the function will now return
+   np.inf.
 -  2018/02/16 Added new fitfast() function which uses multi-start
    gradient optimization instead of Differential Evolution. It may be
    substantially faster for your application. Also it would be a good

@@ -49,7 +49,7 @@ sudo python setup.py install
 ```
 
 # How it works
-This is based on a formulation of a piecewise linear least squares fit, where the user must specify the location of break points. A simple derivation of this fit has been done by [Golovchenko (2004)](http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf). The routine for fitting the piecewise linear function is based on Golovchenko's MATLAB code (which I can't seem to find on the internet), which I ported to Python. Alternatively you can view [this code](https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit).
+This is based on a formulation of a piecewise linear least squares fit, where the user must specify the location of break points. See [this post](http://jekel.me/2018/Continous-piecewise-linear-regression/) which goes through the derivation of a least squares regression problem if the break point locations are known. Alternatively check out [Golovchenko (2004)](http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf).
 
 Global optimization is used to find the best location for the user defined number of line segments. I specifically use the [differential evolution](https://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.optimize.differential_evolution.html) algorithm in SciPy. I default the differential evolution algorithm to be aggressive, and it is probably overkill for your problem. So feel free to pass your own differential evolution keywords to the library. See [this example](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/fitForSpecifiedNumberOfLineSegments_passDiffEvoKeywords.py).
 
@@ -57,7 +57,7 @@ Global optimization is used to find the best location for the user defined numbe
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
 # Changelog
-- 2018/04/06 Major changes are coming soon! A vast majority of this library has been entirely rewritten!
+- 2018/04/06 Speed! pwlf just got better and faster! A vast majority of this library has been entirely rewritten! New naming convention. The class piecewise_lin_fit() is being depreciated, now use the class PiecewiseLinFit(). See [this post](http://jekel.me/2018/Continous-piecewise-linear-regression/) for details on the new formulation. New test function that tests predict().
 - 2018/03/25 Default now hides optimization results. Use disp_res=True when initializing piecewise_lin_fit to change. The multi-start fitfast() function now defaults to the minimum population of 2.
 - 2018/03/11 Added try/except behavior for fitWithBreaks function such that the function could be used in an optimization routine. In general when you have a singular matrix, the function will now return np.inf.
 - 2018/02/16 Added new fitfast() function which uses multi-start gradient optimization instead of Differential Evolution. It may be substantially faster for your application. Also it would be a good candidate if you don't need the best solution, but just a reasonable fit. Fixed bug in tests function where assert was checking bound, not SSr. New requirement, pyDOE library. New 0.1.0 Version.
