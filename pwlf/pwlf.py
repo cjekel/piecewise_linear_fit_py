@@ -68,11 +68,14 @@ class PiecewiseLinFit(object):
         #
         # The function minimizes the sum of the square of the residuals for the
         #  pair of x,y data points
+        #  
+        # If you want to understand the math behind this read
+        # http://jekel.me/2018/Continous-piecewise-linear-regression/
         #
-        # This is a port of 4-May-2004 Nikolai Golovchenko MATLAB code
-        # see http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
-        #
-        # Alternatively see https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        # Other useful resources:
+        # http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
+        # https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        # http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
         #
         # Input:
         # provide the x locations of the end points for the breaks of each
@@ -81,17 +84,15 @@ class PiecewiseLinFit(object):
         # Example: if your x data exists from 0 <= x <= 1 and you want three
         # piecewise linear lines, an acceptable breaks would look like
         # breaks = [0.0, 0.3, 0.6, 1.0]
+        # ssr = fit_with_breaks(breaks)
         #
         # Output:
         # The function returns the sum of the square of the residuals
         #
-        # To get the parameters of the fit look for
-        # self.parameters
-        #
-        # remember that the parameters that result are part of the continuous
-        # piecewise linear function
-        # such that:
-        # parameters = f(breaks)
+        # To get the beta values of the fit look for
+        # self.beta
+        # or to get the slope values of the lines loot for
+        # self.slopes
 
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray):
@@ -189,7 +190,11 @@ class PiecewiseLinFit(object):
 
     def fit_with_breaks_opt(self, var):
         # same as self.fitWithBreaks, except this one is tuned to be used with
-        # the optimization algorithm
+        # the optimization algorithm.
+        #
+        # Note: unlike fit_with_breaks, fit_with_breaks_opt automatically
+        # assumes that the firs and last break points occur at the min and max
+        # values of x
 
         var = np.sort(var)
         breaks = np.zeros(len(var) + 2)
@@ -419,6 +424,8 @@ class PiecewiseLinFit(object):
         # fit_with_breaks_opt(var) will return the sum of the square of the
         # residuals which you'll want to minimize with your optimization
         # routine
+        #
+        # run this function to initialize necessary attributes
 
         self.n_segments = int(n_segments)
         self.n_parameters = self.n_segments + 1
