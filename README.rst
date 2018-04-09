@@ -117,6 +117,8 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/04/09 Intelligently converts your x, y, or breaks to be numpy
+   array.
 -  2018/04/06 Speed! pwlf just got better and faster! A vast majority of
    this library has been entirely rewritten! New naming convention. The
    class piecewise\_lin\_fit() is being depreciated, now use the class
