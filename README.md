@@ -57,6 +57,7 @@ Global optimization is used to find the best location for the user defined numbe
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
 # Changelog
+- 2018/04/09 Intelligently converts your x, y, or breaks to be numpy array.
 - 2018/04/06 Major changes are coming soon! A vast majority of this library has been entirely rewritten!
 - 2018/03/25 Default now hides optimization results. Use disp_res=True when initializing piecewise_lin_fit to change. The multi-start fitfast() function now defaults to the minimum population of 2.
 - 2018/03/11 Added try/except behavior for fitWithBreaks function such that the function could be used in an optimization routine. In general when you have a singular matrix, the function will now return np.inf.
