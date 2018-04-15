@@ -159,6 +159,136 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return ssr
 
+    def fit_with_breaks_force_points(self, breaks, x_c, y_c):
+        # define a function which fits the piecewise linear function
+        # for specified break point locations, where you force the
+        # pwlf to go through the data points at x_c and y_c
+        #
+        # The function minimizes the sum of the square of the residuals for the
+        #  pair of x,y data points
+        #
+        # If you want to understand the math behind this read
+        # http://jekel.me/2018/Continous-piecewise-linear-regression/
+        #
+        # Input:
+        # breaks - (list or numpy array) provide the x locations of the end
+        #           points for the breaks of each line segment
+        # x_c    - (list or numpy array) provide the x locations of the data
+        #           points that the piecewise linear function will be forced
+        #           to go through
+        # y_c    - (list or numpy array) provide the y locations of the data
+        #           points that the piecewise linear function will be forced
+        #           to go through
+        #
+        # Example: if your x data exists from 0 <= x <= 1 and you want three
+        # piecewise linear lines, an acceptable breaks would look like
+        # Additionally you desired that the piecewise linear function go 
+        # through the point (0.0,0.0)
+        # x_c = [0.0]
+        # y_c = [0.0]
+        # breaks = [0.0, 0.3, 0.6, 1.0]
+        # ssr = fit_with_breaks(breaks, x_c, y_c)
+        #
+        # Output:
+        # The function returns the sum of the square of the residuals
+        #
+        # To get the beta values of the fit look for
+        # self.beta
+        # or to get the slope values of the lines loot for
+        # self.slopes
+
+        # check if x_c and y_c are numpy array, if not convert to numpy array
+        if isinstance(x_c, np.ndarray) is False:
+            x_c = np.array(x_c)
+        if isinstance(y_c, np.ndarray) is False:
+            y_c = np.array(y_c)
+        # sort the x_c and y_c data points, then store them
+        x_c_order = np.argsort(x_c)
+        self.x_c = x_c[x_c_order]
+        self.y_c = y_c[x_c_order]
+        # store the number of constraints
+        self.c_n = len(self.x_c)
+
+        # Check if breaks in ndarray, if not convert to np.array
+        if isinstance(breaks, np.ndarray) is False:
+            breaks = np.array(breaks)
+
+        # Sort the breaks, then store them
+        breaks_order = np.argsort(breaks)
+        self.fit_breaks = breaks[breaks_order]
+        # store the number of parameters and line segments
+        self.n_parameters = len(breaks)
+        self.n_segments = self.n_parameters - 1
+
+        # initialize the regression matrix as zeros
+        A = np.zeros((self.n_data, self.n_parameters))
+        # The first two columns of the matrix are always defined as
+        A[:, 0] = 1.0
+        A[:, 1] = self.x_data - self.fit_breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the first index of x where it is greater than the break
+            # point value
+            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
+            # only change the non-zero values of A
+            A[int_index:, i+2] = self.x_data[int_index:] - self.fit_breaks[i+1]
+
+        # Assemble the constraint matrix
+        C = np.zeros((self.c_n, self.n_parameters))
+        C[:, 0] = 1.0
+        C[:, 1] = self.x_c - breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the locations where x > break point values
+            int_locations = self.x_c > breaks[i+1]
+            if sum(int_locations) > 0:
+                # this if statement just ensures that there is at least
+                # one data point in x_c > breaks[i+1]
+                # find the first index of x where it is greater than the break
+                # point value
+                int_index = np.argmax(int_locations)
+                # only change the non-zero values of A
+                C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
+        
+        # Assemble the square constrained least squares matrix
+        K = np.zeros((self.n_parameters + self.c_n,
+                      self.n_parameters + self.c_n))
+        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
+        K[:self.n_parameters, self.n_parameters:] = C.T
+        K[self.n_parameters:, :self.n_parameters] = C
+        # Assemble right hand side vector
+        yt = np.dot(2.0*A.T, self.y_data)
+        z = np.zeros(self.n_parameters + self.c_n)
+        z[:self.n_parameters] = yt
+        z[self.n_parameters:] = self.y_c
+
+        # try to solve the regression problem
+        try:
+            # Solve the least squares problem
+            beta_prime = np.linalg.solve(K, z)
+
+            # save the beta parameters
+            self.beta = beta_prime[0:self.n_parameters]
+
+            # save the slopes
+            self.slopes = self.beta[1:]
+
+            # Calculate ssr
+            # where ssr = sum of square of residuals
+            y_hat = np.dot(A, self.beta)
+            e = y_hat - self.y_data
+            ssr = np.dot(e, e)
+
+        except np.linalg.LinAlgError:
+            # the computation could not converge!
+            # on an error, return ssr = np.print_function
+            # You might have a singular Matrix!!!
+            ssr = np.inf
+        if ssr is None:
+            ssr = np.inf
+            # something went wrong...
+        return ssr
+
     def predict(self, x, *args):  # breaks, p):
         # a function that predicts based on the supplied x values
         # you can manfully supply break points and calculated
@@ -202,7 +332,7 @@ class PiecewiseLinFit(object):
         # the optimization algorithm.
         #
         # Note: unlike fit_with_breaks, fit_with_breaks_opt automatically
-        # assumes that the firs and last break points occur at the min and max
+        # assumes that the first and last break points occur at the min and max
         # values of x
 
         var = np.sort(var)
@@ -263,20 +393,148 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return ssr
 
-    def fit(self, n_segments, **kwargs):
+    def fit_force_points_opt(self, var):
+        # same as self.fit_with_breaks_force_points, except this one is to
+        # be used with the optimization algorithm.
+        #
+        # Note: unlike fit_with_breaks_force_points, fit_force_points_opt
+        # automatically assumes that the first and last break points occur
+        # at the min and max values of x
+
+        var = np.sort(var)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break_0
+        breaks[-1] = self.break_n
+
+        # Sort the breaks, then store them
+        breaks_order = np.argsort(breaks)
+        breaks = breaks[breaks_order]
+
+        # initialize the regression matrix as zeros
+        A = np.zeros((self.n_data, self.n_parameters))
+        # The first two columns of the matrix are always defined as
+        A[:, 0] = 1.0
+        A[:, 1] = self.x_data - breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the first index of x where it is greater than the break
+            # point value
+            int_index = np.argmax(self.x_data > breaks[i+1])
+            # only change the non-zero values of A
+            A[int_index:, i+2] = self.x_data[int_index:] - breaks[i+1]
+
+        # Assemble the constraint matrix
+        C = np.zeros((self.c_n, self.n_parameters))
+        C[:, 0] = 1.0
+        C[:, 1] = self.x_c - breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the locations where x > break point values
+            int_locations = self.x_c > breaks[i+1]
+            if sum(int_locations) > 0:
+                # this if statement just ensures that there is at least
+                # one data point in x_c > breaks[i+1]
+                # find the first index of x where it is greater than the break
+                # point value
+                int_index = np.argmax(int_locations)
+                # only change the non-zero values of A
+                C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
+        
+        # Assemble the square constrained least squares matrix
+        K = np.zeros((self.n_parameters + self.c_n,
+                      self.n_parameters + self.c_n))
+        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
+        K[:self.n_parameters, self.n_parameters:] = C.T
+        K[self.n_parameters:, :self.n_parameters] = C
+        # Assemble right hand side vector
+        yt = np.dot(2.0*A.T, self.y_data)
+        z = np.zeros(self.n_parameters + self.c_n)
+        z[:self.n_parameters] = yt
+        z[self.n_parameters:] = self.y_c
+
+        # try to solve the regression problem
+        try:
+            # Solve the least squares problem
+            beta_prime = np.linalg.solve(K, z)
+
+            # save the beta parameters
+            self.beta = beta_prime[0:self.n_parameters]
+
+            # save the slopes
+            self.slopes = self.beta[1:]
+
+            # Calculate ssr
+            # where ssr = sum of square of residuals
+            y_hat = np.dot(A, self.beta)
+            e = y_hat - self.y_data
+            ssr = np.dot(e, e)
+
+        except np.linalg.LinAlgError:
+            # the computation could not converge!
+            # on an error, return ssr = np.print_function
+            # You might have a singular Matrix!!!
+            ssr = np.inf
+        if ssr is None:
+            ssr = np.inf
+            # something went wrong...
+        return ssr
+
+    def fit(self, n_segments, x_c=None, y_c=None, **kwargs):
         # a function which uses differential evolution to finds the optimum
         # location of break points for a given number of line segments by
         # minimizing the sum of the square of the errors
         #
         # input:
-        # the number of line segments that you want to find
-        # the optimum break points for
-        # ex:
+        # n_segments - (integer) the number of line segments that you want to
+        #              find the optimum break points for
+        # x_c        - (list or numpy array, default=None) provide the x
+        #              locations of the data points that the piecewise linear
+        #              function will be forced to go through
+        # y_c        - (list or numpy array, default=None) provide the y
+        #              locations of the data points that the piecewise linear
+        #              function will be forced to go through
+        # Examples:
+        # # find the best break points for three line segments
         # breaks = fit(3)
+        #
+        # # find the best break point for three line segments, but force the
+        # # function to go through the data point (0.0, 0.0)
+        # breaks = fit(3, [0.0], [0.0])
+        #
+        # # find the best break point for three line segments, but force the
+        # # function to go through the data points (0.0, 0.0) and (1.0, 1.0)
+        # breaks = fit(3, [0.0, 1.0], [0.0, 1.0])
         #
         # output:
         # returns the break points of the optimal piecewise continua lines
 
+        # check to see if you've provided just x_c or y_c
+        logic1 = x_c is not None and y_c is None
+        logic2 = y_c is not None and x_c is None
+        if logic1 or logic2:
+            raise ValueError('You must provide both x_c and y_c!') 
+        
+        # set the function to minimize
+        min_function = self.fit_with_breaks_opt
+
+        # if you've provided both x_c and y_c
+        if x_c is not None and y_c is not None:  
+        # check if x_c and y_c are numpy array, if not convert to numpy array
+            if isinstance(x_c, np.ndarray) is False:
+                x_c = np.array(x_c)
+            if isinstance(y_c, np.ndarray) is False:
+                y_c = np.array(y_c)
+            # sort the x_c and y_c data points, then store them
+            x_c_order = np.argsort(x_c)
+            self.x_c = x_c[x_c_order]
+            self.y_c = y_c[x_c_order]
+            # store the number of constraints
+            self.c_n = len(self.x_c)
+            # Use a different function to minimize
+            min_function = self.fit_force_points_opt
+
+        # store the number of line segments and number of parameters
         self.n_segments = int(n_segments)
         self.n_parameters = self.n_segments + 1
 
@@ -288,8 +546,9 @@ class PiecewiseLinFit(object):
         bounds[:, 0] = self.break_0
         bounds[:, 1] = self.break_n
 
+        # run the optimization
         if len(kwargs) == 0:
-            res = differential_evolution(self.fit_with_breaks_opt, bounds,
+            res = differential_evolution(min_function, bounds,
                                          strategy='best1bin', maxiter=1000,
                                          popsize=50, tol=1e-3,
                                          mutation=(0.5, 1), recombination=0.7,
@@ -297,7 +556,7 @@ class PiecewiseLinFit(object):
                                          polish=True, init='latinhypercube',
                                          atol=1e-4)
         else:
-            res = differential_evolution(self.fit_with_breaks_opt,
+            res = differential_evolution(min_function,
                                          bounds, **kwargs)
         if self.print is True:
             print(res)

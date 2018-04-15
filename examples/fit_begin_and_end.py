@@ -1,7 +1,3 @@
-# THIS DOES NOT WORK!!!!
-# DO NOT USE THIS SCRIPT AS AN EXAMPLE
-# WORK IN PROGRESS
-
 # fit and predict between a known begging and known ending
 
 # import our libraries
@@ -52,47 +48,21 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
               1.22120350e-01, 1.36931660e-01, 1.50958760e-01,
               1.65299640e-01, 1.79942720e-01])
 
-# initialize piecwise linear fit with your x and y data
+# initialize piecewise linear fit with your x and y data
 # this doesn't work at all yet... WIP
-my_pwlf = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+myPWLF = pwlf.PiecewiseLinFit(x, y, disp_res=True)
 
-
-# def my_pw_reg(var):
-#     # this function is to aid in a regression problem where the first
-#     # and last design point locations are known
-#     # while the best PWLF between the known beginning and ending are found
-#
-#     # you want four line segments, which will hve five data points
-#     x0 = np.zeros(5)
-#     # save the beginning and end points
-#     x0[0] = np.min(x)
-#     x0[-1] = np.max(x)
-#     # find the best location for the middle break points
-#     x0[1:4] = var
-#     # sort x0 from lowest to highest
-#     x0 = np.sort(x0)
-#
-#     # fit with these break points
-#     e = my_pwlf.fit_with_breaks(x0)
-#     return e
-#
-#
-# # setup optimization bounds
-# bounds = ((np.min(x) + 0.0001, np.max(x) - 0.0001),
-#           (np.min(x) + 0.0001, np.max(x) - 0.0001),
-#           (np.min(x) + 0.0001, np.max(x) - 0.0001))
-#
-# # find the optimum breakpoints for my custom PW regression problem
-# res = differential_evolution(my_pw_reg, bounds, disp=True)
-#
-# # re evalue the pwlf from the optimum to save parameters
-# my_pw_reg(res.x)
-
-res = my_pwlf.fit_begin_and_end(4,disp=True)
+# fit the function with four line segments
+# force the function to go through the data points
+# (0.0, 0.0) and (0.19, 0.16) 
+# where the data points are of the form (x, y)
+x_c = [0.0, 0.19]
+y_c = [0.0, 0.2]
+res = myPWLF.fit(4, x_c, y_c)
 
 # predict for the determined points
-xHat = np.linspace(min(x), max(x), num=10000)
-yHat = my_pwlf.predict(xHat)
+xHat = np.linspace(min(x), 0.19, num=10000)
+yHat = myPWLF.predict(xHat)
 
 # plot the results
 plt.figure()
