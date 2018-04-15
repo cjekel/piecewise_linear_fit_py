@@ -190,7 +190,7 @@ class PiecewiseLinFit(object):
         # ssr = fit_with_breaks(breaks, x_c, y_c)
         #
         # Output:
-        # The function returns the sum of the square of the residuals
+        # The function returns the sum of the Lagrangian function
         #
         # To get the beta values of the fit look for
         # self.beta
