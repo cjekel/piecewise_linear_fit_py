@@ -269,6 +269,8 @@ class PiecewiseLinFit(object):
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
+            # save the zeta parameters
+            self.zeta = beta_prime[self.n_parameters:]
 
             # save the slopes
             self.slopes = self.beta[1:]
@@ -279,15 +281,20 @@ class PiecewiseLinFit(object):
             e = y_hat - self.y_data
             ssr = np.dot(e, e)
 
+            # Calculate the Lagrangian function
+            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
+            p = np.dot(C.T, self.zeta)
+            L = np.sum(np.abs(p)) + ssr
+
         except np.linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return ssr = np.print_function
+            # on an error, return L = np.inf
             # You might have a singular Matrix!!!
-            ssr = np.inf
-        if ssr is None:
-            ssr = np.inf
+            L = np.inf
+        if L is None:
+            L = np.inf
             # something went wrong...
-        return ssr
+        return L
 
     def predict(self, x, *args):  # breaks, p):
         # a function that predicts based on the supplied x values
@@ -317,11 +324,16 @@ class PiecewiseLinFit(object):
         A[:, 1] = x - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(x > self.fit_breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+            # find the locations where x > break point values
+            int_locations = self.x_c > self.fit_breaks[i+1]
+            if sum(int_locations) > 0:
+                # this if statement just ensures that there is at least
+                # one data point in x_c > breaks[i+1]
+                # find the first index of x where it is greater than the break
+                # point value
+                int_index = np.argmax(x > self.fit_breaks[i+1])
+                # only change the non-zero values of A
+                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
 
         # solve the regression problem
         y_hat = np.dot(A, self.beta)
@@ -385,7 +397,7 @@ class PiecewiseLinFit(object):
 
         except np.linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return ssr = np.print_function
+            # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
             ssr = np.inf
         if ssr is None:
@@ -460,6 +472,8 @@ class PiecewiseLinFit(object):
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
+            # save the zeta parameters
+            self.zeta = beta_prime[self.n_parameters:]
 
             # save the slopes
             self.slopes = self.beta[1:]
@@ -470,15 +484,19 @@ class PiecewiseLinFit(object):
             e = y_hat - self.y_data
             ssr = np.dot(e, e)
 
+            # Calculate the Lagrangian function
+            p = np.dot(C.T, self.zeta)
+            L = np.sum(np.abs(p)) + ssr
+
         except np.linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return ssr = np.print_function
+            # on an error, return L = np.inf
             # You might have a singular Matrix!!!
-            ssr = np.inf
-        if ssr is None:
-            ssr = np.inf
+            L = np.inf
+        if L is None:
+            L = np.inf
             # something went wrong...
-        return ssr
+        return L
 
     def fit(self, n_segments, x_c=None, y_c=None, **kwargs):
         # a function which uses differential evolution to finds the optimum
@@ -520,7 +538,8 @@ class PiecewiseLinFit(object):
 
         # if you've provided both x_c and y_c
         if x_c is not None and y_c is not None:  
-        # check if x_c and y_c are numpy array, if not convert to numpy array
+            # check if x_c and y_c are numpy array
+            # if not convert to numpy array
             if isinstance(x_c, np.ndarray) is False:
                 x_c = np.array(x_c)
             if isinstance(y_c, np.ndarray) is False:
@@ -571,7 +590,10 @@ class PiecewiseLinFit(object):
         breaks[-1] = self.break_n
 
         # assign values
-        self.fit_with_breaks(breaks)
+        if x_c is None and y_c is None:
+            self.fit_with_breaks(breaks)
+        else:
+            self.fit_with_breaks_force_points(breaks, self.x_c, self.y_c)
 
         return self.fit_breaks
 
@@ -821,7 +843,7 @@ class piecewise_lin_fit(object):
 
         except np.linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return SSr = np.print_function
+            # on an error, return SSr = np.inf
             # You might have a singular Matrix!!!
             SSr = np.inf
         if SSr is None:
