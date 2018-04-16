@@ -325,13 +325,13 @@ class PiecewiseLinFit(object):
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
             # find the locations where x > break point values
-            int_locations = self.x_c > self.fit_breaks[i+1]
+            int_locations = self.x_data > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
                 # one data point in x_c > breaks[i+1]
                 # find the first index of x where it is greater than the break
                 # point value
-                int_index = np.argmax(x > self.fit_breaks[i+1])
+                int_index = np.argmax(int_locations)
                 # only change the non-zero values of A
                 A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
 
