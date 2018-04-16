@@ -82,7 +82,7 @@ class TestEverything(unittest.TestCase):
         from scipy.optimize import minimize
         res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
         self.assertTrue(np.isclose(res['fun'], 0.0))
-    
+
     def test_single_force_break_point1(self):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x_c = [-0.5]
@@ -90,7 +90,7 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit.fit_with_breaks_force_points([0.2, 0.7], x_c, y_c)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
-    
+
     def test_single_force_break_point2(self):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x_c = [2.0]
@@ -98,7 +98,7 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit.fit_with_breaks_force_points([0.2, 0.7], x_c, y_c)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
-    
+
     def test_opt_fit_with_force_points(self):
         # I need more data points to test this function because of
         # ill conditioning in the least squares problem...
@@ -107,7 +107,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
         x_c = [0.0]
         y_c = [0.0]
-        res = my_fit.fit(3, x_c, y_c, disp=True)
+        res = my_fit.fit(3, x_c, y_c)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
