@@ -168,7 +168,7 @@ class PiecewiseLinFit(object):
         #  pair of x,y data points
         #
         # If you want to understand the math behind this read
-        # http://jekel.me/2018/Continous-piecewise-linear-regression/
+        # http://jekel.me/2018/Force-piecwise-linear-fit-through-data/
         #
         # Input:
         # breaks - (list or numpy array) provide the x locations of the end
@@ -182,7 +182,7 @@ class PiecewiseLinFit(object):
         #
         # Example: if your x data exists from 0 <= x <= 1 and you want three
         # piecewise linear lines, an acceptable breaks would look like
-        # Additionally you desired that the piecewise linear function go 
+        # Additionally you desired that the piecewise linear function go
         # through the point (0.0,0.0)
         # x_c = [0.0]
         # y_c = [0.0]
@@ -249,7 +249,7 @@ class PiecewiseLinFit(object):
                 int_index = np.argmax(int_locations)
                 # only change the non-zero values of A
                 C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
-        
+
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
                       self.n_parameters + self.c_n))
@@ -452,7 +452,7 @@ class PiecewiseLinFit(object):
                 int_index = np.argmax(int_locations)
                 # only change the non-zero values of A
                 C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
-        
+
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
                       self.n_parameters + self.c_n))
@@ -531,13 +531,13 @@ class PiecewiseLinFit(object):
         logic1 = x_c is not None and y_c is None
         logic2 = y_c is not None and x_c is None
         if logic1 or logic2:
-            raise ValueError('You must provide both x_c and y_c!') 
-        
+            raise ValueError('You must provide both x_c and y_c!')
+
         # set the function to minimize
         min_function = self.fit_with_breaks_opt
 
         # if you've provided both x_c and y_c
-        if x_c is not None and y_c is not None:  
+        if x_c is not None and y_c is not None:
             # check if x_c and y_c are numpy array
             # if not convert to numpy array
             if isinstance(x_c, np.ndarray) is False:

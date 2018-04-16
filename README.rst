@@ -117,6 +117,10 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/04/15 Now you can find piecewise linear fits that go through
+   specified data points! Read `this
+   post <http://jekel.me/2018/Force-piecwise-linear-fit-through-data/>`__
+   for the details.
 -  2018/04/09 Intelligently converts your x, y, or breaks to be numpy
    array.
 -  2018/04/06 Speed! pwlf just got better and faster! A vast majority of
