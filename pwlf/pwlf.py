@@ -325,7 +325,7 @@ class PiecewiseLinFit(object):
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
             # find the locations where x > break point values
-            int_locations = self.x_data > self.fit_breaks[i+1]
+            int_locations = x > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
                 # one data point in x_c > breaks[i+1]
