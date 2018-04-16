@@ -375,12 +375,6 @@ class PiecewiseLinFit(object):
             # least squares solver
             beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
 
-            # save the beta parameters
-            self.beta = beta
-
-            # save the slopes
-            self.slopes = beta[1:]
-
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
@@ -469,14 +463,6 @@ class PiecewiseLinFit(object):
         try:
             # Solve the least squares problem
             beta_prime = np.linalg.solve(K, z)
-
-            # save the beta parameters
-            self.beta = beta_prime[0:self.n_parameters]
-            # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters:]
-
-            # save the slopes
-            self.slopes = self.beta[1:]
 
             # Calculate ssr
             # where ssr = sum of square of residuals
