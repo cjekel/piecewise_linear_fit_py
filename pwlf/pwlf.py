@@ -133,7 +133,7 @@ class PiecewiseLinFit(object):
             self.beta = beta
 
             # save the slopes
-            self.slopes = beta[1:]
+            self.calc_slopes()
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in this case I'll need to calculate ssr manually
@@ -273,7 +273,7 @@ class PiecewiseLinFit(object):
             self.zeta = beta_prime[self.n_parameters:]
 
             # save the slopes
-            self.slopes = self.beta[1:]
+            self.calc_slopes()
 
             # Calculate ssr
             # where ssr = sum of square of residuals
@@ -463,7 +463,12 @@ class PiecewiseLinFit(object):
         try:
             # Solve the least squares problem
             beta_prime = np.linalg.solve(K, z)
-
+            
+            # save the beta parameters
+            self.beta = beta_prime[0:self.n_parameters]
+            # save the zeta parameters
+            self.zeta = beta_prime[self.n_parameters:]
+            
             # Calculate ssr
             # where ssr = sum of square of residuals
             y_hat = np.dot(A, self.beta)
@@ -708,6 +713,16 @@ class PiecewiseLinFit(object):
 
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
+
+    def calc_slopes(self):
+        # calculate the slopes of the piecewise linear fit and store as
+        # self.slopes
+        # Predict at the break points
+        y_hat = self.predict(self.fit_breaks)
+        self.slopes = np.zeros(self.n_segments)
+        for i in range(self.n_segments):
+            self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
+                        (self.fit_breaks[i+1]-self.fit_breaks[i])
 
 
 # OLD piecewise linear fit library naming convention
