@@ -304,7 +304,7 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def predict(self, x, *args):  # breaks, p):
+    def predict(self, *args):  # breaks, p):
         # a function that predicts based on the supplied x values
         # you can manfully supply break points and calculated
         # values for beta
@@ -319,27 +319,17 @@ class PiecewiseLinFit(object):
             # Sort the breaks, then store them
             breaks_order = np.argsort(breaks)
             self.fit_breaks = breaks[breaks_order]
-        # check if x is numpy array, if not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if self.ordered_data is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
+        # we've re-ordered the data already
 
         # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters))
+        A = np.zeros((len(self.x_data), self.n_parameters))
         # The first two columns of the matrix are always defined as
         A[:, 0] = 1.0
-        A[:, 1] = x - self.fit_breaks[0]
+        A[:, 1] = self.x_data - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
             # find the locations where x > break point values
-            int_locations = x > self.fit_breaks[i+1]
+            int_locations = self.x_data > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
                 # one data point in x_c > breaks[i+1]
@@ -347,7 +337,7 @@ class PiecewiseLinFit(object):
                 # point value
                 int_index = np.argmax(int_locations)
                 # only change the non-zero values of A
-                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+                A[int_index:, i+2] = self.x_data[int_index:] - self.fit_breaks[i+1]
 
         # solve the regression problem
         y_hat = np.dot(A, self.beta)
@@ -735,8 +725,7 @@ class PiecewiseLinFit(object):
         y_hat = self.predict(self.fit_breaks)
         self.slopes = np.zeros(self.n_segments)
         for i in range(self.n_segments):
-            self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
-                        (self.fit_breaks[i+1]-self.fit_breaks[i])
+            self.slopes[i] = (y_hat[i+1]-y_hat[i]) / (self.fit_breaks[i+1]-self.fit_breaks[i])
 
 
 # OLD piecewise linear fit library naming convention
