@@ -33,7 +33,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False):
+    def __init__(self, x, y, disp_res=False, sorted_data = True):
         # Initiate the library with the supplied x and y data
         # where y(x). For now x and y should be 1D numpy arrays.
         #
@@ -57,10 +57,16 @@ class PiecewiseLinFit(object):
         if isinstance(y, np.ndarray) is False:
             y = np.array(y)
 
-        # sort the data from least x to max x
-        order_arg = np.argsort(x)
-        self.x_data = x[order_arg]
-        self.y_data = y[order_arg]
+        self.ordered_data = sorted_data
+        # it is assumed by default that initial arrays are sorted
+        if self.ordered_data:
+            self.x_data = x
+            self.y_data = y
+        else:
+            # sort the data from least x to max x
+            order_arg = np.argsort(x)
+            self.x_data = x[order_arg]
+            self.y_data = y[order_arg]
 
         # calculate the number of data points
         self.n_data = len(x)
