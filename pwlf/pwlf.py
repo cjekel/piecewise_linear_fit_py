@@ -33,7 +33,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data = True):
+    def __init__(self, x, y, disp_res=False, sorted_data=False):
         # Initiate the library with the supplied x and y data
         # where y(x). For now x and y should be 1D numpy arrays.
         #
@@ -58,16 +58,18 @@ class PiecewiseLinFit(object):
             y = np.array(y)
 
         self.ordered_data = sorted_data
-        # it is assumed by default that initial arrays are sorted
-        if self.ordered_data:
-            self.x_data = x
-            self.y_data = y
-        else:
+
+        # it is assumed by default that initial arrays are not sorted
+        # i.e. if your data is already ordered
+        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
+        if self.ordered_data is False:
             # sort the data from least x to max x
             order_arg = np.argsort(x)
             self.x_data = x[order_arg]
             self.y_data = y[order_arg]
-
+        else:
+            self.x_data = x
+            self.y_data = y
         # calculate the number of data points
         self.n_data = len(x)
 
@@ -320,9 +322,15 @@ class PiecewiseLinFit(object):
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)
-        # sort the data from least x to max x
-        order_arg = np.argsort(x)
-        x = x[order_arg]
+
+        # it is assumed by default that initial arrays are not sorted
+        # i.e. if your data is already ordered
+        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
+        if self.ordered_data is False:
+            # sort the data from least x to max x
+            order_arg = np.argsort(x)
+            x = x[order_arg]
+
         # initialize the regression matrix as zeros
         A = np.zeros((len(x), self.n_parameters))
         # The first two columns of the matrix are always defined as
