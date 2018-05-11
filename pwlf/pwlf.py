@@ -48,6 +48,12 @@ class PiecewiseLinFit(object):
         #
         # # initialize for x,y data and print optimization results
         # my_pWLF = PiecewiseLinFit(x, y, disp_res=True)
+        # 
+        # # if your data is already sorted such that x[0] <= x[1] <=
+        # # ... <= x[n-1], use sorted_data=True for a slight 
+        # # performance increase
+        # my_pWLF = PiecewiseLinFit(x, y, sorted_data=True)
+        # 
         self.print = disp_res
 
         # x and y should be numpy arrays
@@ -57,19 +63,19 @@ class PiecewiseLinFit(object):
         if isinstance(y, np.ndarray) is False:
             y = np.array(y)
 
-        self.ordered_data = sorted_data
+        self.sorted_data = sorted_data
 
         # it is assumed by default that initial arrays are not sorted
         # i.e. if your data is already ordered
         # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if self.ordered_data is False:
+        if self.sorted_data:
+            self.x_data = x
+            self.y_data = y
+        else:
             # sort the data from least x to max x
             order_arg = np.argsort(x)
             self.x_data = x[order_arg]
             self.y_data = y[order_arg]
-        else:
-            self.x_data = x
-            self.y_data = y
         # calculate the number of data points
         self.n_data = len(x)
 
@@ -304,10 +310,14 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def predict(self, x, *args):  # breaks, p):
+    def predict(self, x, sorted_data=False, *args):
         # a function that predicts based on the supplied x values
         # you can manfully supply break points and calculated
         # values for beta
+        # 
+        # If you want to predict at x locations that are ordered
+        # as x[0] <= x[1] <= ... <= x[n-1], use the key 
+        # sorted_data=True. By default sorted_data=False
         #
         # Examples:
         # y_hat = predict(x)
@@ -326,7 +336,7 @@ class PiecewiseLinFit(object):
         # it is assumed by default that initial arrays are not sorted
         # i.e. if your data is already ordered
         # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if self.ordered_data is False:
+        if sorted_data is False:
             # sort the data from least x to max x
             order_arg = np.argsort(x)
             x = x[order_arg]
