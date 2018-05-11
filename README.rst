@@ -117,6 +117,13 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/05/11 New sorted\_data key which can be used to avoided sorting
+   already ordered data. If your data is already ordered as x[0] < x[1]
+   < ... < x[n-1], you may consider using sorted\_data=True for a slight
+   performance increase. Additionally the predict function can take the
+   sorted\_data key if the data you want to predict at is already
+   sorted. Thanks to `V-Kh <https://github.com/V-Kh>`__ for the idea and
+   PR.
 -  2018/04/15 Now you can find piecewise linear fits that go through
    specified data points! Read `this
    post <http://jekel.me/2018/Force-piecwise-linear-fit-through-data/>`__
