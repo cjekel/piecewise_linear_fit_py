@@ -117,6 +117,13 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/06/16 New function which calculates the standard error for each
+   of the model parameters (Remember model parameters are stored as
+   my\_pwlf.beta). Standard errors are calculated by calling se =
+   my\_pwlf.standard\_errors() after you have performed a fit. For more
+   information about standard errors see
+   `this <https://en.wikipedia.org/wiki/Standard_error>`__. Fix
+   docstrings for all functions.
 -  2018/05/11 New sorted\_data key which can be used to avoided sorting
    already ordered data. If your data is already ordered as x[0] < x[1]
    < ... < x[n-1], you may consider using sorted\_data=True for a slight
