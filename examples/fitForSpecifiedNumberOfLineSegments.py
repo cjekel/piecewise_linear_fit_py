@@ -58,6 +58,15 @@ res = my_pwlf.fit(4)
 xHat = np.linspace(min(x), max(x), num=10000)
 yHat = my_pwlf.predict(xHat)
 
+# Get the slopes
+my_slopes = my_pwlf.slopes
+
+# Get my model parameters
+beta = my_pwlf.beta
+
+# calculate the standard errors associated with each beta parameter
+se = my_pwlf.standard_errors()
+
 # plot the results
 plt.figure()
 plt.plot(x, y, 'o')

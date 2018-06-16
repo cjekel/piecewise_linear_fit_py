@@ -116,6 +116,13 @@ class TestEverything(unittest.TestCase):
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         res = my_pwlf.fitfast(4, 50)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+    
+    def test_se(self):
+        # check to see if it will let me calculate standard errors
+        my_pwlf = pwlf.PiecewiseLinFit(np.random.random(20),
+                                       np.random.random(20))
+        ssr = my_pwlf.fitfast(2)
+        se = my_pwlf.standard_errors()
 
 
 if __name__ == '__main__':

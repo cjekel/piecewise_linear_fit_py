@@ -2,7 +2,8 @@
 # you specify the number of line segments you want, the library does the rest
 # same as fitForSpecifiedNumberOfLineSegments.py, with the exception of
 # passing custom keywords directly to the scipy differential evolution algo
-# see https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
+# see
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
 
 # import our libraries
 import numpy as np
