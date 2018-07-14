@@ -18,7 +18,7 @@ If you want to pass different keywords for the SciPy differential evolution algo
 
 You can use a different optimization algorithm to find the optimal location for line segments by using the objective function that minimizes the sum of square of residuals. See [this example](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py).
 
-Instead of using differential evolution, you can now use a multi-start gradient optimization with fitfast() function. You can specify the number of starting points to use. The default is 50. This means that a latin hyper cube sampling of 50 is used to run 50 L-BFGS-B optimizations. See [this example](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/sineWave_time_compare.py) which runs fit() function, then runs the fitfast() to compare the runtime differences!
+Instead of using differential evolution, you can now use a multi-start gradient optimization with fitfast() function. You can specify the number of starting points to use. The default is 2. This means that a latin hyper cube sampling (space filling DOE) of 2 is used to run 2 L-BFGS-B optimizations. See [this example](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/sineWave_time_compare.py) which runs fit() function, then runs the fitfast() to compare the runtime differences!
 
 # Installation
 

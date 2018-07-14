@@ -890,7 +890,8 @@ class piecewise_lin_fit(object):
         # This is a port of 4-May-2004 Nikolai Golovchenko MATLAB code
         # see http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
         #
-        # Alternatively see https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        # Alternatively see
+        # https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
         #
         # Input:
         # provide the x locations of the end points for the breaks of each
