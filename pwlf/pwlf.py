@@ -37,21 +37,21 @@ class PiecewiseLinFit(object):
         """
         Initiate the library with the supplied x and y data
         where y(x). For now x and y should be 1D numpy arrays.
-        
+
         you must supply the x and y data of which you'll be fitting
         a continuous piecewise linear model to where y(x)
         by default pwlf won't print the optimization results
         initialize results printing with print=distribute
-        
+
         Examples:
         # initialize for x, y data
         my_pwlf = PiecewiseLinFit(x, y)
-        
+
         # initialize for x,y data and print optimization results
         my_pWLF = PiecewiseLinFit(x, y, disp_res=True)
-        
+
         # if your data is already sorted such that x[0] <= x[1] <=
-        # ... <= x[n-1], use sorted_data=True for a slight 
+        # ... <= x[n-1], use sorted_data=True for a slight
         # performance increase
         my_pWLF = PiecewiseLinFit(x, y, sorted_data=True)
         """
@@ -89,30 +89,30 @@ class PiecewiseLinFit(object):
         """
         define a function which fits the piecewise linear function
         for specified break point locations
-        
+
         The function minimizes the sum of the square of the residuals for the
          pair of x,y data points
-        
+
         If you want to understand the math behind this read
         http://jekel.me/2018/Continous-piecewise-linear-regression/
-        
+
         Other useful resources:
         http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
         https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
         http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
-        
+
         Input:
         provide the x locations of the end points for the breaks of each
         line segment
-        
+
         Example: if your x data exists from 0 <= x <= 1 and you want three
         piecewise linear lines, an acceptable breaks would look like
         breaks = [0.0, 0.3, 0.6, 1.0]
         ssr = fit_with_breaks(breaks)
-        
+
         Output:
         The function returns the sum of the square of the residuals
-        
+
         To get the beta values of the fit look for
         self.beta
         or to get the slope values of the lines loot for
@@ -182,13 +182,13 @@ class PiecewiseLinFit(object):
         define a function which fits the piecewise linear function
         for specified break point locations, where you force the
         pwlf to go through the data points at x_c and y_c
-        
+
         The function minimizes the sum of the square of the residuals for the
          pair of x,y data points
-        
+
         If you want to understand the math behind this read
         http://jekel.me/2018/Force-piecwise-linear-fit-through-data/
-        
+
         Input:
         breaks - (list or numpy array) provide the x locations of the end
                   points for the breaks of each line segment
@@ -198,7 +198,7 @@ class PiecewiseLinFit(object):
         y_c    - (list or numpy array) provide the y locations of the data
                   points that the piecewise linear function will be forced
                   to go through
-        
+
         Example: if your x data exists from 0 <= x <= 1 and you want three
         piecewise linear lines, an acceptable breaks would look like
         Additionally you desired that the piecewise linear function go
@@ -207,10 +207,10 @@ class PiecewiseLinFit(object):
         y_c = [0.0]
         breaks = [0.0, 0.3, 0.6, 1.0]
         ssr = fit_with_breaks(breaks, x_c, y_c)
-        
+
         Output:
         The function returns the sum of the Lagrangian function
-        
+
         To get the beta values of the fit look for
         self.beta
         or to get the slope values of the lines loot for
@@ -321,11 +321,11 @@ class PiecewiseLinFit(object):
         a function that predicts based on the supplied x values
         you can manfully supply break points and calculated
         values for beta
-        
+
         If you want to predict at x locations that are ordered
-        as x[0] <= x[1] <= ... <= x[n-1], use the key 
+        as x[0] <= x[1] <= ... <= x[n-1], use the key
         sorted_data=True. By default sorted_data=False
-        
+
         Examples:
         y_hat = predict(x)
         # or
@@ -375,7 +375,7 @@ class PiecewiseLinFit(object):
         """
         same as self.fitWithBreaks, except this one is tuned to be used with
         the optimization algorithm.
-        
+
         Note: unlike fit_with_breaks, fit_with_breaks_opt automatically
         assumes that the first and last break points occur at the min and max
         values of x
@@ -437,7 +437,7 @@ class PiecewiseLinFit(object):
         """
         same as self.fit_with_breaks_force_points, except this one is to
         be used with the optimization algorithm.
-        
+
         Note: unlike fit_with_breaks_force_points, fit_force_points_opt
         automatically assumes that the first and last break points occur
         at the min and max values of x
@@ -499,12 +499,12 @@ class PiecewiseLinFit(object):
         try:
             # Solve the least squares problem
             beta_prime = np.linalg.solve(K, z)
-            
+
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
             # save the zeta parameters
             self.zeta = beta_prime[self.n_parameters:]
-            
+
             # Calculate ssr
             # where ssr = sum of square of residuals
             y_hat = np.dot(A, self.beta)
@@ -530,7 +530,7 @@ class PiecewiseLinFit(object):
         a function which uses differential evolution to finds the optimum
         location of break points for a given number of line segments by
         minimizing the sum of the square of the errors
-        
+
         input:
         n_segments - (integer) the number of line segments that you want to
                      find the optimum break points for
@@ -543,15 +543,15 @@ class PiecewiseLinFit(object):
         Examples:
         # find the best break points for three line segments
         breaks = fit(3)
-        
+
         # find the best break point for three line segments, but force the
         # function to go through the data point (0.0, 0.0)
         breaks = fit(3, [0.0], [0.0])
-        
+
         # find the best break point for three line segments, but force the
         # function to go through the data points (0.0, 0.0) and (1.0, 1.0)
         breaks = fit(3, [0.0, 1.0], [0.0, 1.0])
-        
+
         output:
         returns the break points of the optimal piecewise continua lines
         """
@@ -631,41 +631,41 @@ class PiecewiseLinFit(object):
         a function which uses multi start LBFGSB optimization to find the
         location of break points for a given number of line segments by
         minimizing the sum of the square of the errors.
-        
+
         The idea is that we generate n random latin hypercube samples
         and run LBFGSB optimization on each one. This isn't guaranteed to
         find the global optimum. It's suppose to be a reasonable compromise
         between speed and quality of fit. Let me know how it works.
-        
+
         Since this is based on random sampling, you might want to run it
         multiple times and save the best version... The best version will
         have the lowest self.ssr (sum of square of residuals)
-        
+
         There is no guarantee that this will be faster than fit(), however
         you may find it much faster sometimes.
-        
+
         input:
         the number of line segments that you want to find
         the optimum break points for
         ex:
         breaks = fitfast(3)
-        
+
         output:
         returns the break points of the optimal piecewise continuous lines
-        
-        
+
+
         The default number of multi start optimizations is 2.
         - Decreasing this number will result in a faster run time.
         - Increasing this number will improve the likelihood of finding
           good results
         - You can specify the number of starts using the following call
         - Minimum value of pop is 2
-        
+
         Examples:
-        
+
         # finds 3 piecewise line segments with 30 multi start optimizations
         breaks = fitfast(3,30)
-        
+
         # finds 7 piecewise line segments with 50 multi start optimizations
         breaks = fitfast(7,50)
         """
@@ -737,16 +737,16 @@ class PiecewiseLinFit(object):
         """
         provide the number of line segments you want to use with your
         custom optimization routine
-        
+
         then optimize fit_with_breaks_opt(var) where var is a 1D array
         containing the x locations of your variables
         var has length n_segments - 1, because the two break points
         are always defined (1. the min of x, 2. the max of x)
-        
+
         fit_with_breaks_opt(var) will return the sum of the square of the
         residuals which you'll want to minimize with your optimization
         routine
-        
+
         run this function to initialize necessary attributes
         """
 
@@ -761,7 +761,7 @@ class PiecewiseLinFit(object):
         calculate the slopes of the piecewise linear fit and store as
         self.slopes
         Predict at the break points
-        
+
         Useage:
         slopes = PiecewiseLinFit.calc_slopes()
         # or
@@ -783,25 +783,25 @@ class PiecewiseLinFit(object):
         assumes the parmaters follow a normal distribution. For more
         information see:
         https://en.wikipedia.org/wiki/Standard_error
-        
+
         This calculation follows the derivation provided in [1]. A taylor-
         series expansion is not needed since this is linear regression.
-        
+
         Reference:
         [1] Coppe, A., Haftka, R. T., and Kim, N. H., “Uncertainty
         Identification of Damage Growth Parameters Using Nonlinear
-        Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp. 2818–2821. 
-        
+        Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp. 2818–2821.
+
         Useage:
         se = PiecewiseLinFit.standard_errors()
         # or
         PiecewiseLinFit.standard_errors()
         se = PiecewiseLinFit.se
-        
+
         Output:
         se: Numpy array (floats) of standard errors associtated with each
-        beta parameter. Specifically se[0] correspounds to the standard 
-        error for beta[0], and so forth. 
+        beta parameter. Specifically se[0] correspounds to the standard
+        error for beta[0], and so forth.
         """
         try:
             nb = len(self.beta)
@@ -809,7 +809,7 @@ class PiecewiseLinFit(object):
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
-        
+
         ny = len(self.y_data)
 
         # initialize the regression matrix as zeros
