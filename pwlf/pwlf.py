@@ -842,6 +842,104 @@ class PiecewiseLinFit(object):
         except np.linalg.LinAlgError:
             raise('Unable to calculate standard errors. Something went wrong.')
 
+    def prediction_variance(self, x, sorted_data=True):
+        """
+        Calculate the prediction variance for each x location. The prediction
+        variance is the uncertainity of the model due to the lack of data.
+        This can be used to find a 95% confidence interval of possible
+        piecewise linear models based on the current data. This would be
+        done typically as y_hat +- 1.96*np.sqrt(pre_var). The
+        prediction_variance needs to be calculated at various x locations.
+        For more information see:
+        www2.mae.ufl.edu/haftka/vvuq/lectures/Regression-accuracy.pptx
+
+        This assumes that your break point locations are exact! and does
+        not consider the uncertainity with your break point locations.
+
+        Example:
+        see examples/prediction_varinace.py
+
+        Useage:
+        pre_var = PiecewiseLinFit.prediction_variance(x)
+
+        Output:
+        pre_var Numpy array (floats) of prediction variance at each x location.
+        """
+        try:
+            nb = len(self.beta)
+        except ValueError:
+            errmsg = 'You do not have any beta parameters. You must perform' \
+                     ' a fit before using standard_errors().'
+            raise ValueError(errmsg)
+
+        ny = len(self.y_data)
+
+        # check if x is numpy array, if not convert to numpy array
+        if isinstance(x, np.ndarray) is False:
+            x = np.array(x)
+
+        # it is assumed by default that initial arrays are not sorted
+        # i.e. if your data is already ordered
+        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
+        if sorted_data is False:
+            # sort the data from least x to max x
+            order_arg = np.argsort(x)
+            x = x[order_arg]
+
+        # calculate the prediction variance
+        Ad = np.zeros((self.n_data, self.n_parameters))
+        # The first two columns of the matrix are always defined as
+        Ad[:, 0] = 1.0
+        Ad[:, 1] = self.x_data - self.fit_breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the first index of x where it is greater than the break
+            # point value
+            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
+            # only change the non-zero values of A
+            Ad[int_index:, i+2] = self.x_data[int_index:] - \
+                self.fit_breaks[i+1]
+
+        # try to solve for the unbiased variance estimation
+        try:
+
+            y_hat = np.dot(Ad, self.beta)
+            e = y_hat - self.y_data
+
+            # solve for the unbiased estimate of variance
+            variance = np.dot(e, e) / (ny - nb)
+
+        except np.linalg.LinAlgError:
+            raise("Unable to calculate prediction variance."
+                  " Something went wrong.")
+
+        # initialize the regression matrix as zeros
+        A = np.zeros((len(x), self.n_parameters))
+        # The first two columns of the matrix are always defined as
+        A[:, 0] = 1.0
+        A[:, 1] = x - self.fit_breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the locations where x > break point values
+            int_locations = x > self.fit_breaks[i+1]
+            if sum(int_locations) > 0:
+                # this if statement just ensures that there is at least
+                # one data point in x_c > breaks[i+1]
+                # find the first index of x where it is greater than the break
+                # point value
+                int_index = np.argmax(int_locations)
+                # only change the non-zero values of A
+                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+
+        # try to solve for the prediction variance at the x locations
+        try:
+            pre_var = variance * \
+                np.dot(np.dot(A, np.linalg.inv(np.dot(Ad.T, Ad))), A.T)
+            return pre_var.diagonal()
+
+        except np.linalg.LinAlgError:
+            raise('Unable to calculate standard errors. Something went wrong.')
+
 
 # OLD piecewise linear fit library naming convention
 class piecewise_lin_fit(object):

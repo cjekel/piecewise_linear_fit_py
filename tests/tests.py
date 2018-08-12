@@ -124,6 +124,14 @@ class TestEverything(unittest.TestCase):
         ssr = my_pwlf.fitfast(2)
         se = my_pwlf.standard_errors()
 
+    def test_pv(self):
+        # check to see if it will let me calculate prediction variance for
+        # random data
+        my_pwlf = pwlf.PiecewiseLinFit(np.random.random(20),
+                                       np.random.random(20))
+        ssr = my_pwlf.fitfast(2)
+        pv = my_pwlf.prediction_variance(np.random.random(20))
+
 
 if __name__ == '__main__':
     unittest.main()
