@@ -120,7 +120,7 @@ Changelog
 -  2018/08/11 New function which calculates the predication variance for
    given array of x locations. The predication variance is the squared
    version of the standard error (not to be confused with the standard
-   errrors of the previous change).New example prediction\_variance.py
+   errrors of the previous change). New example prediction\_variance.py
    shows how to use the new funciton.
 -  2018/06/16 New function which calculates the standard error for each
    of the model parameters (Remember model parameters are stored as
