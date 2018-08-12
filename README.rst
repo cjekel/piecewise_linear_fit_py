@@ -44,9 +44,9 @@ example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/
 
 Instead of using differential evolution, you can now use a multi-start
 gradient optimization with fitfast() function. You can specify the
-number of starting points to use. The default is 50. This means that a
-latin hyper cube sampling of 50 is used to run 50 L-BFGS-B
-optimizations. See `this
+number of starting points to use. The default is 2. This means that a
+latin hyper cube sampling (space filling DOE) of 2 is used to run 2
+L-BFGS-B optimizations. See `this
 example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/sineWave_time_compare.py>`__
 which runs fit() function, then runs the fitfast() to compare the
 runtime differences!
@@ -117,6 +117,11 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/08/11 New function which calculates the predication variance for
+   given array of x locations. The predication variance is the squared
+   version of the standard error (not to be confused with the standard
+   errrors of the previous change).New example prediction\_variance.py
+   shows how to use the new funciton.
 -  2018/06/16 New function which calculates the standard error for each
    of the model parameters (Remember model parameters are stored as
    my\_pwlf.beta). Standard errors are calculated by calling se =
