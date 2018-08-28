@@ -67,6 +67,13 @@ beta = my_pwlf.beta
 # calculate the standard errors associated with each beta parameter
 se = my_pwlf.standard_errors()
 
+# calcualte the R^2 value
+ssr = my_pwlf.fit_with_breaks(my_pwlf.fit_breaks)[0]
+ybar = np.ones(y.size) * np.mean(y)
+ydiff = y - ybar
+sst = np.dot(ydiff, ydiff)
+Rsquared = 1.0 - (ssr/sst)
+
 # plot the results
 plt.figure()
 plt.plot(x, y, 'o')
