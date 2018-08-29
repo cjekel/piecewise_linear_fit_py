@@ -74,6 +74,35 @@ ydiff = y - ybar
 sst = np.dot(ydiff, ydiff)
 Rsquared = 1.0 - (ssr/sst)
 
+# calculate the piecewise R^2 value
+R2values = np.zeros(my_pwlf.n_segments)
+for i in range(my_pwlf.n_segments):
+    # segregate the data based on break point locations
+    xmin = my_pwlf.fit_breaks[i]
+    xmax = my_pwlf.fit_breaks[i+1]
+    xtemp = my_pwlf.x_data
+    ytemp = my_pwlf.y_data
+    indtemp = np.where(xtemp >= xmin)
+    xtemp = my_pwlf.x_data[indtemp]
+    ytemp = my_pwlf.y_data[indtemp]
+    indtemp = np.where(xtemp <= xmax)
+    xtemp = xtemp[indtemp]
+    ytemp = ytemp[indtemp]
+
+    # predict for the new data
+    yhattemp = my_pwlf.predict(xtemp)
+
+    # calcualte ssr
+    e = yhattemp - ytemp
+    ssr = np.dot(e, e)
+
+    # calculate sst
+    ybar = np.ones(ytemp.size) * np.mean(ytemp)
+    ydiff = ytemp - ybar
+    sst = np.dot(ydiff, ydiff)
+
+    R2values[i] = 1.0 - (ssr/sst)
+
 # plot the results
 plt.figure()
 plt.plot(x, y, 'o')
