@@ -50,10 +50,10 @@ my_pwlf = pwlf.PiecewiseLinFit(x, y)
 # fit the data with for 4 line segments
 my_pwlf.fit(4)
 
-# save only the paramaters necessary to predict for new data
+# save only the parameters necessary to predict for new data
 np.save('ex_data/saved_parameters.npy', [my_pwlf.beta, my_pwlf.fit_breaks])
 
-# load the paramaters necessary for prediction
+# load the parameters necessary for prediction
 my_prev_model = np.load('ex_data/saved_parameters.npy')
 
 # initialize new object
