@@ -59,5 +59,5 @@ my_prev_model = np.load('ex_data/saved_parameters.npy')
 # initialize new object
 my_pwlf_new = pwlf.PiecewiseLinFit(x, y)
 
-# predict with the saved paramters
+# predict with the saved parameters
 y_hat = my_pwlf_new.predict(x, beta=my_prev_model[0], breaks=my_prev_model[1])
