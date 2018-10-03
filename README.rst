@@ -117,6 +117,10 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/10/03 Add example of bare minimum model persistance to predict
+   for new data (see examples/model\_persistence\_prediction.py). Bug
+   fix in predict function for custom parameters. Add new test function
+   to check that predict works with custom parameters.
 -  2018/08/11 New function which calculates the predication variance for
    given array of x locations. The predication variance is the squared
    version of the standard error (not to be confused with the standard

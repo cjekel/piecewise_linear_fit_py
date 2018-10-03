@@ -316,7 +316,7 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def predict(self, x, sorted_data=False, *args):
+    def predict(self, x, sorted_data=False, beta=None, breaks=None):
         """
         a function that predicts based on the supplied x values
         you can manfully supply break points and calculated
@@ -328,15 +328,20 @@ class PiecewiseLinFit(object):
 
         Examples:
         y_hat = predict(x)
-        # or
-        y_hat = predict(x, beta, breaks)
+        # if your x values are already sorted, you can run
+        y_hat = predict(x sorted_data=True)
+        # if you want to predict the model for a previously determined
+        # set of paramters run
+        y_hat = predict(x, beta=my_beta, breaks=my_breaks)
         """
-        if len(args) == 2:
-            self.beta = args[0]
-            breaks = args[1]
+        if beta is not None and breaks is not None:
+            self.beta = beta
             # Sort the breaks, then store them
             breaks_order = np.argsort(breaks)
             self.fit_breaks = breaks[breaks_order]
+            self.n_parameters = len(self.fit_breaks)
+            self.n_segments = self.n_parameters - 1
+
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)

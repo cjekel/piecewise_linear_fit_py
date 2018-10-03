@@ -116,7 +116,7 @@ class TestEverything(unittest.TestCase):
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         res = my_pwlf.fitfast(4, 50)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
-    
+
     def test_se(self):
         # check to see if it will let me calculate standard errors
         my_pwlf = pwlf.PiecewiseLinFit(np.random.random(20),
@@ -131,6 +131,13 @@ class TestEverything(unittest.TestCase):
                                        np.random.random(20))
         ssr = my_pwlf.fitfast(2)
         pv = my_pwlf.prediction_variance(np.random.random(20))
+
+    def test_predict_with_custom_param(self):
+        # check to see if predict runs with custom parameters
+        x = np.random.random(20)
+        my_pwlf = pwlf.PiecewiseLinFit(x, np.random.random(20))
+        my_pwlf.predict(x, beta=np.array((1e-4, 1e-2, 1e-3)),
+                        breaks=np.array((0.0, 0.5, 1.0)))
 
 
 if __name__ == '__main__':
