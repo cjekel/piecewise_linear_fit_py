@@ -71,7 +71,7 @@ se = my_pwlf.standard_errors()
 # calculate my t-value
 t = beta / se
 
-# # find the 95% significance value for your problem
+# degrees of freedom for t-distribution
 n = len(x)
 k = len(beta)
 
