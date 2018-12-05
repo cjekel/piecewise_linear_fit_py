@@ -68,11 +68,7 @@ beta = my_pwlf.beta
 se = my_pwlf.standard_errors()
 
 # calcualte the R^2 value
-ssr = my_pwlf.fit_with_breaks(my_pwlf.fit_breaks)[0]
-ybar = np.ones(y.size) * np.mean(y)
-ydiff = y - ybar
-sst = np.dot(ydiff, ydiff)
-Rsquared = 1.0 - (ssr/sst)
+Rsquared = my_pwlf.r_squared()
 
 # calculate the piecewise R^2 value
 R2values = np.zeros(my_pwlf.n_segments)

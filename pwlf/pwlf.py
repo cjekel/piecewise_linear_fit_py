@@ -958,6 +958,35 @@ class PiecewiseLinFit(object):
         except np.linalg.LinAlgError:
             raise('Unable to calculate standard errors. Something went wrong.')
 
+    def r_squared(self):
+        """
+        Calculate the coefficient of determination ("R squared", R^2) value
+        after a fit has been performed.
+        For more information see:
+        https://en.wikipedia.org/wiki/Coefficient_of_determination
+
+        Useage:
+        rsq = PiecewiseLinFit.r_squared()
+
+        Output:
+        rsq = float, the coefficient of determination
+        """
+        try:
+            fit_breaks = self.fit_breaks
+        except ValueError:
+            errmsg = 'You do not have any beta parameters. You must perform' \
+                     ' a fit before using standard_errors().'
+            raise ValueError(errmsg)
+        ssr = self.fit_with_breaks(fit_breaks)
+        ybar = np.ones(self.n_data) * np.mean(self.y_data)
+        ydiff = self.y_data - ybar
+        try:
+            sst = np.dot(ydiff, ydiff)
+            rsq = 1.0 - (ssr/sst)
+            return rsq
+        except np.linalg.LinAlgError:
+            raise('Unable to calculate standard errors. Something went wrong.')
+
 
 # OLD piecewise linear fit library naming convention
 class piecewise_lin_fit(object):

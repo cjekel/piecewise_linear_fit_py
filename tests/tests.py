@@ -20,6 +20,14 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
 
+    def test_break_point_spot_on_r2(self):
+        # test r squared value with known solution
+        my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        rsq = my_fit1.r_squared()
+        self.assertTrue(np.isclose(rsa, 1.0))
+
     def test_break_point_diff_x0_0(self):
         # check diff loc
         my_fit2 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
