@@ -43,6 +43,17 @@ class PiecewiseLinFit(object):
         by default pwlf won't print the optimization results
         initialize results printing with print=distribute
 
+        Parameters
+        ----------
+        x : list or 1D numpy array
+            The x or independent data point locations as list or 1 dimmensional
+            numpy array.
+        y : list or 1D numpy array
+            The y or dependent data point locations as list or 1 dimmensional
+            numpy array.
+        disp_res : bool, optional
+            Whether the optimization results should be printed.
+
         Examples:
         # initialize for x, y data
         my_pwlf = PiecewiseLinFit(x, y)

@@ -26,7 +26,7 @@ class TestEverything(unittest.TestCase):
         x0 = self.x_small.copy()
         ssr = my_fit1.fit_with_breaks(x0)
         rsq = my_fit1.r_squared()
-        self.assertTrue(np.isclose(rsa, 1.0))
+        self.assertTrue(np.isclose(rsq, 1.0))
 
     def test_break_point_diff_x0_0(self):
         # check diff loc
