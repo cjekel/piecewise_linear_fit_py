@@ -117,6 +117,11 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/12/05 Version 0.3.0: Add r\_squared() function to calculate the
+   coefficent of determination after a fit has been performed. Complete
+   docstring overhaul to match the numpydoc style. Fix issues where
+   sum-of-squares of residuals returned array\_like, now should always
+   return float. Legacy piecewise\_lin\_fit object has been removed.
 -  2018/12/04 Version 0.2.10: Only docstring changes, fix spelling
    mistakes, add Notes about \*\*kwargs in scipy optimization functions.
    Version 0.2.11: fix readme.rst for pypi.org...
