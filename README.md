@@ -24,7 +24,7 @@ Instead of using differential evolution, you can now use a multi-start gradient 
 
 You can now install with pip.
 ```
-sudo pip install pwlf
+[sudo] pip install pwlf
 ```
 
 Or clone the repo
@@ -34,18 +34,7 @@ git clone https://github.com/cjekel/piecewise_linear_fit_py.git
 
 then install with pip
 ```
-sudo pip install piecewise_linear_fit_py/
-```
-
-or easy_install
-```
-sudo easy_install piecewise_linear_fit_py/
-```
-
-or using setup.py
-```
-cd piecewise_linear_fit_py/
-sudo python setup.py install
+[sudo] pip install ./piecewise_linear_fit_py/
 ```
 
 # How it works
