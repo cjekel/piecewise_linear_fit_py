@@ -117,6 +117,8 @@ best location for the ends of these line segments.
 Changelog
 =========
 
+-  2018/12/04 Version 0.2.10: Only docstring changes, fix spelling
+   mistakes, add Notes about **kwargs in scipy optimization functions.
 -  2018/10/03 Add example of bare minimum model persistance to predict
    for new data (see examples/model\_persistence\_prediction.py). Bug
    fix in predict function for custom parameters. Add new test function
