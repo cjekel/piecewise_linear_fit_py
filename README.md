@@ -57,7 +57,7 @@ Global optimization is used to find the best location for the user defined numbe
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
 # Changelog
-- 2018/12/04 Version 0.2.10: Only docstring changes, fix spelling mistakes, add Notes about **kwargs in scipy optimization functions.
+- 2018/12/04 Version 0.2.10: Only docstring changes, fix spelling mistakes, add Notes about **kwargs in scipy optimization functions. Version 0.2.11: fix readme.rst for pypi.org...
 - 2018/10/03 Add example of bare minimum model persistance to predict for new data (see examples/model_persistence_prediction.py). Bug fix in predict function for custom parameters. Add new test function to check that predict works with custom parameters.
 - 2018/08/11 New function which calculates the predication variance for given array of x locations. The predication variance is the squared version of the standard error (not to be confused with the standard errrors of the previous change). New example prediction_variance.py shows how to use the new funciton.
 - 2018/06/16 New function which calculates the standard error for each of the model parameters (Remember model parameters are stored as my_pwlf.beta). Standard errors are calculated by calling se = my_pwlf.standard_errors() after you have performed a fit. For more information about standard errors see [this](https://en.wikipedia.org/wiki/Standard_error). Fix docstrings for all functions.
