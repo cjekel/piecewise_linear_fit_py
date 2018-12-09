@@ -46,9 +46,9 @@ Global optimization is used to find the best location for the user defined numbe
 All other methods require the user to specify the specific location of break points, but in most cases the best location for these break points is unknown. It makes more sense to rather have the user specify the desired number of line segments, and then to quantitatively choose the best location for the ends of these line segments.
 
 # Changelog
-All changes now stored in [CHANGELOG.md](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/README.md)
+All changes now stored in [CHANGELOG.md](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/CHANGELOG.md)
 
-New r_squared() function, all docstrings follow numpydoc style... 
+New r_squared() function, new p_values() function,  all docstrings follows numpydoc style... 
 
 # Requirements
 Python 2.7+ (Python 2.7 and Python 3.4 have been tested)
