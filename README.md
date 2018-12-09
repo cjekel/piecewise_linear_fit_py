@@ -34,7 +34,7 @@ git clone https://github.com/cjekel/piecewise_linear_fit_py.git
 
 then install with pip
 ```
-[sudo] pip install ./piecewise_linear_fit_py/
+[sudo] pip install ./piecewise_linear_fit_py
 ```
 
 # How it works
