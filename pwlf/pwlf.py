@@ -1560,7 +1560,7 @@ class PiecewiseLinFit(object):
         >>> x_new = np.linspace(0.0, 1.0, 100)
         >>> p = my_pwlf.p_values(x_new)
 
-        see also standard_errrors_and_p-values.py
+        see also examples/standard_errrors_and_p-values.py
 
         """
         # calculate the standard errors associated with each beta parameter

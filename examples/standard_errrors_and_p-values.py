@@ -2,7 +2,6 @@
 from __future__ import print_function
 import numpy as np
 import pwlf
-from scipy import stats
 
 # your data
 y = np.array([0.00000000e+00, 9.69801700e-03, 2.94350340e-02,
@@ -71,12 +70,10 @@ se = my_pwlf.standard_errors()
 # calculate my t-value
 t = beta / se
 
-# degrees of freedom for t-distribution
-n = len(x)
 k = len(beta)
 
 # calculate the p-values
-pvalues = stats.t.sf(np.abs(t), df=n-k-1)
+pvalues = my_pwlf.p_values()
 
 # print the results
 values = np.zeros((k, 4))
