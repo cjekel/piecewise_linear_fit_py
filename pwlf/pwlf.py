@@ -26,6 +26,7 @@ from __future__ import print_function
 import numpy as np
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
+from scipy import stats
 from pyDOE import lhs
 
 # piecewise linear fit library
@@ -1269,9 +1270,13 @@ class PiecewiseLinFit(object):
         Raises
         ------
         ValueError
-            You have probablly not performed a fit yet.
+            You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
+
+        Notes
+        -----
+        Note, this assumes no uncertainty in break point locations.
 
         References
         ----------
@@ -1290,10 +1295,6 @@ class PiecewiseLinFit(object):
         >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> se = my_pwlf.standard_errors()
-
-        Notes
-        -----
-        Note, this assumes no uncertainty in break point locations.
 
         """
         try:
@@ -1366,9 +1367,14 @@ class PiecewiseLinFit(object):
         Raises
         ------
         ValueError
-            You have probablly not performed a fit yet.
+            You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
+
+        Notes
+        -----
+        This assumes that your break point locations are exact! and does
+        not consider the uncertainty with your break point locations.
 
         Examples
         --------
@@ -1385,10 +1391,6 @@ class PiecewiseLinFit(object):
 
         see also examples/prediction_variance.py
 
-        Notes
-        -----
-        This assumes that your break point locations are exact! and does
-        not consider the uncertainty with your break point locations.
         """
         try:
             nb = len(self.beta)
@@ -1480,7 +1482,7 @@ class PiecewiseLinFit(object):
         Raises
         ------
         ValueError
-            You have probablly not performed a fit yet.
+            You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
 
@@ -1511,3 +1513,73 @@ class PiecewiseLinFit(object):
             return rsq
         except np.linalg.LinAlgError:
             raise('Unable to calculate standard errors. Something went wrong.')
+
+    def p_values(self):
+        r"""
+        Calculate the p-values for each beta parameter.
+
+        This calculates the p-values for the beta parameters under the
+        assumption that your break point locations are known. Section 2.4.2 of
+        [1]_ defines how to calculate the p-value of individual parameters.
+        This is really a marginal test since each parameter is dependent upon
+        the other parameters.
+
+        Returns
+        -------
+        p : ndarray (1-D)
+            p-values for each beta parameter where p-value[0] corresponds to
+            beta[0] and so forth
+
+        Raises
+        ValueError
+            You have probably not performed a fit yet.
+
+        Notes
+        -----
+        This assumes that your break point locations are exact! and does
+        not consider the uncertainty with your break point locations.
+
+        See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
+
+        References
+        ----------
+        .. [1] Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
+            methodology . Hoboken. New Jersey: John Wiley & Sons, Inc.
+            2009;20:38-44.
+
+        Examples
+        --------
+        After performing a fit, one can calculate the p-value for each beta
+        parameter
+
+        >>> import pwlf
+        >>> x = np.linspace(0.0, 1.0, 10)
+        >>> y = np.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> breaks = my_pwlf.fitfast(3)
+        >>> x_new = np.linspace(0.0, 1.0, 100)
+        >>> p = my_pwlf.p_values(x_new)
+
+        see also standard_errrors_and_p-values.py
+
+        """
+        # calculate the standard errors associated with each beta parameter
+        # not that these standard errors and p-values are only meaningful if
+        # you have specified the specific line segment end locations
+        # at least for now...
+        self.standard_errors()
+
+        # calculate my t-value
+        t = self.beta / self.se
+
+        # degrees of freedom for t-distribution
+        n = self.n_data
+        try:
+            k = len(self.beta)
+        except ValueError:
+            errmsg = 'You do not have any beta parameters. You must perform' \
+                     ' a fit before using standard_errors().'
+            raise ValueError(errmsg)
+        # calculate the p-values
+        p = stats.t.sf(np.abs(t), df=n-k-1)
+        return p
