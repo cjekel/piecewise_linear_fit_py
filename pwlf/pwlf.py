@@ -58,8 +58,8 @@ class PiecewiseLinFit(object):
             False.
         sorted_data : bool, optional
             Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implentation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A processes that
+            This implementation takes advantage of sorted x data in order to
+            speed up the assembly of the regression matrix. A process that
             could be repeated several thousand times. If your data is not
             sorted, pwlf will use numpy to sort the data. Default is False.
 
