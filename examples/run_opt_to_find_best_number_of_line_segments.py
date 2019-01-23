@@ -52,6 +52,8 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
 # define your objective function
+
+
 def my_obj(x):
     # define some penalty parameter l
     # you'll have to arbitrarily pick this
@@ -64,6 +66,7 @@ def my_obj(x):
         f[i] = my_pwlf.ssr + (l*j[0])
     print(j, f[i])
     return f
+
 
 # define the lower and upper bound for the number of line segements
 bounds = [{'name': 'var_1', 'type': 'discrete', 'domain': np.arange(2, 40)}]
