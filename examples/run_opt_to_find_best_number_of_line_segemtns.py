@@ -70,7 +70,6 @@ bounds = [{'name': 'var_1', 'type': 'discrete', 'domain': np.arange(2, 40)}]
 
 np.random.seed(12121)
 
-
 myBopt = BayesianOptimization(my_obj, domain=bounds, model_type='GP',
                               initial_design_numdata=10,
                               initial_design_type='latin',
@@ -82,7 +81,7 @@ max_iter = 30
 myBopt.run_optimization(max_iter=max_iter, verbosity=True)
 
 print('\n \n Opt found \n')
-print('X values:', myBopt.x_opt)
+print('Optimum number of line segments:', myBopt.x_opt)
 print('Function value:', myBopt.fx_opt)
 myBopt.plot_acquisition()
 myBopt.plot_convergence()
