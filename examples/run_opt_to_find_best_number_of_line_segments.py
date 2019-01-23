@@ -64,7 +64,6 @@ def my_obj(x):
     for i, j in enumerate(x):
         my_pwlf.fit(j[0])
         f[i] = my_pwlf.ssr + (l*j[0])
-    print(j, f[i])
     return f
 
 
