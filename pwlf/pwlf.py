@@ -1252,7 +1252,7 @@ class PiecewiseLinFit(object):
         for i in range(self.n_segments):
             self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
                         (self.fit_breaks[i+1]-self.fit_breaks[i])
-        self.intercepts = y_hat - self.slopes*self.fit_breaks
+        self.intercepts = y_hat[0:-1] - self.slopes*self.fit_breaks[0:-1]
         return self.slopes
 
     def standard_errors(self):
