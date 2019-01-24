@@ -1216,12 +1216,17 @@ class PiecewiseLinFit(object):
         Calculate the slopes of the lines after a piecewise linear
         function has been fitted.
 
+        This will also calculate the y-intercept from each line in the form
+        y = mx + b. The intercepts are stored at self.intercepts.
+
         Attributes
         ----------
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
 
         Returns
         -------
@@ -1247,6 +1252,7 @@ class PiecewiseLinFit(object):
         for i in range(self.n_segments):
             self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
                         (self.fit_breaks[i+1]-self.fit_breaks[i])
+        self.intercepts = y_hat - self.slopes*self.fit_breaks
         return self.slopes
 
     def standard_errors(self):
