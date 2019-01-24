@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2019-01-24
+### Added
+- y-intercepts are now calculated when running the calc_slopes() function. The Y-intercept for each line is stored in self.intercepts. 
+
 ## [0.3.1] - 2018-12-09
 ### Added
 - p_values() function to calculate the p-value of each beta parameter (WARNING! you may only want to use this if you specify the break point locations, as this does not account for uncertainty in break point locations)
