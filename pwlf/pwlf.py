@@ -211,6 +211,8 @@ class PiecewiseLinFit(object):
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
 
         Returns
         -------
@@ -342,6 +344,8 @@ class PiecewiseLinFit(object):
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
         x_c : ndarray (1-D)
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
@@ -856,6 +860,8 @@ class PiecewiseLinFit(object):
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
         x_c : ndarray (1-D)
             The x locations of the data points that the piecewise linear
             function will be forced to go through. Only created if x_c
@@ -1034,6 +1040,8 @@ class PiecewiseLinFit(object):
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
 
         Returns
         -------
