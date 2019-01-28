@@ -64,7 +64,7 @@ class PiecewiseLinFit(object):
             sorted, pwlf will use numpy to sort the data. Default is False.
 
         Attributes
-        --------
+        ----------
         x_data : ndarray (1-D)
             The inputted parameter x from the 1-D data set.
         y_data : ndarray (1-D)

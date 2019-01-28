@@ -22,3 +22,5 @@ setup.cfg
 # temporary documentation folder
 html/*
 html*
+doc
+doc/*
