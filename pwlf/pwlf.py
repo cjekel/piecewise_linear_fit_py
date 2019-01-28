@@ -1526,7 +1526,7 @@ class PiecewiseLinFit(object):
 
         This calculates the p-values for the beta parameters under the
         assumption that your break point locations are known. Section 2.4.2 of
-        [1]_ defines how to calculate the p-value of individual parameters.
+        [2]_ defines how to calculate the p-value of individual parameters.
         This is really a marginal test since each parameter is dependent upon
         the other parameters.
 
@@ -1549,7 +1549,7 @@ class PiecewiseLinFit(object):
 
         References
         ----------
-        .. [1] Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
+        .. [2] Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
             methodology . Hoboken. New Jersey: John Wiley & Sons, Inc.
             2009;20:38-44.
 
