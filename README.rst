@@ -1,9 +1,9 @@
 About
 =====
 
-A library for fitting a continuous piecewise linear function f(x) to
-data. Just specify the number of line segments you desire and your data
-set.
+A library for fitting continuous piecewise linear functions to data.
+Just specify the number of line segments you desire and provide the
+data.
 
 Check out the
 `examples <https://github.com/cjekel/piecewise_linear_fit_py/tree/master/examples>`__!
