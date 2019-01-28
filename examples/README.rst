@@ -81,8 +81,9 @@ locations.
     # initialize piecewise linear fit with your x and y data
     my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
-    # fit the data with the specified break points (ie the x locations of where
-    # the line segments should end
+    # fit the data with the specified break points
+    # (ie the x locations of where the line segments
+    # will terminate)
     my_pwlf.fit_with_breaks(x0)
 
     # predict for the determined points
@@ -282,7 +283,8 @@ best number of line segments.
 
 
     # define the lower and upper bound for the number of line segments
-    bounds = [{'name': 'var_1', 'type': 'discrete', 'domain': np.arange(2, 40)}]
+    bounds = [{'name': 'var_1', 'type': 'discrete',
+               'domain': np.arange(2, 40)}]
 
     np.random.seed(12121)
 
@@ -293,7 +295,8 @@ best number of line segments.
                                   verbosity_model=False)
     max_iter = 30
 
-    # perform the bayesian optimization to find the optimum number of line segments
+    # perform the bayesian optimization to find the optimum number
+    # of line segments
     myBopt.run_optimization(max_iter=max_iter, verbosity=True)
 
     print('\n \n Opt found \n')
@@ -333,8 +336,7 @@ You can save fitted models with pickle. Alternatively see
     # initialize piecewise linear fit with your x and y data
     my_pwlf = pwlf.PiecewiseLinFit(x, y)
 
-    # fit the data with the specified break points (ie the x locations of where
-    # the line segments should end
+    # fit the data with the specified break points
     my_pwlf.fit_with_breaks(x0)
 
     # save the fitted model
