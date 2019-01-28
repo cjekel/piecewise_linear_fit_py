@@ -195,7 +195,6 @@ plt.figure()
 plt.plot(x, y, 'o')
 plt.plot(xHat, yHat, '-')
 plt.show()
-
 ```
 
 
