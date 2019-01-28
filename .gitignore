@@ -13,3 +13,8 @@ setup.cfg
 
 # vscode folder
 .vscode*
+
+# vim temp file
+*~
+*.swp
+*.un~
