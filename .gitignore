@@ -20,9 +20,5 @@ setup.cfg
 *.un~
 
 # temporary documentation folder
-html/*
-html*
-doc
-doc/*
-docs
-docs/*
+tempdocs
+tempdocs/*

@@ -1,0 +1,4 @@
+About
+============
+
+A library for fitting continuous piecewise linear functions to data. Just specify the number of line segments you desire and provide the data.
