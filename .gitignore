@@ -18,3 +18,7 @@ setup.cfg
 *~
 *.swp
 *.un~
+
+# temporary documentation folder
+html/*
+html*
