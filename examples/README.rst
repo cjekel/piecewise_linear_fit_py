@@ -155,8 +155,7 @@ force a fit through data points
 
 Sometimes it's necessary to force the piecewise continuous model through
 a particular data point, or a set of data points. The following example
-finds the best 4 line segments that go through the first and last data
-point.
+finds the best 4 line segments that go through two data points.
 
 .. code:: python
 
