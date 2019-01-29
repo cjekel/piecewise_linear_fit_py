@@ -1545,6 +1545,7 @@ class PiecewiseLinFit(object):
             beta[0] and so forth
 
         Raises
+        ------
         ValueError
             You have probably not performed a fit yet.
 
