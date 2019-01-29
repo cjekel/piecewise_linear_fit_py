@@ -61,19 +61,19 @@
 <td>Fit a continuous piecewise linear function for a specified number of line segments.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(var)</td>
-<td>The objective function to perform a continuous piecewise linear fit for a specified number of break points.</td>
+<td>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(breaks)</td>
-<td>A function which fits a continuous piecewise linear function for specified break point locations.</td>
+<td>A function which fits a continuous piecewise linear function for specified breakpoint locations.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="pwlf.PiecewiseLinFit.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(breaks,&nbsp;x_c,&nbsp;y_c)</td>
-<td>A function which fits a continuous piecewise linear function for specified break point locations, where you force the fit to go through the data points at x_c and y_c.</td>
+<td>A function which fits a continuous piecewise linear function for specified breakpoint locations, where you force the fit to go through the data points at x_c and y_c.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(var)</td>
-<td>The objective function to perform a continuous piecewise linear fit for a specified number of break points.</td>
+<td>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(n_segments[,&nbsp;pop])</td>
-<td>Uses multi start LBFGSB optimization to find the location of break points for a given number of line segments by minimizing the sum of the square of the errors.</td>
+<td>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>()</td>
 <td>Calculate the p-values for each beta parameter.</td>
@@ -152,7 +152,7 @@ of the first line segment.</p>
 <code class="descname">fit</code><span class="sig-paren">(</span><em>n_segments</em>, <em>x_c=None</em>, <em>y_c=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a continuous piecewise linear function for a specified number
 of line segments. Uses differential evolution to finds the optimum
-location of break points for a given number of line segments by
+location of breakpoints for a given number of line segments by
 minimizing the sum of the square error.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -180,7 +180,7 @@ information.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 </dl>
 </td>
@@ -236,7 +236,7 @@ through the points (0.0, 0.0) and (1.0, 1.0).</p>
 <dd><p class="first last">Optimal sum of square error.</p>
 </dd>
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (1-D)</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 <dt><strong>n_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The number of model parameters. This is equivalent to the
@@ -288,7 +288,7 @@ Only created if x_c and y_c provided.</p>
 <dt id="pwlf.PiecewiseLinFit.fit_force_points_opt">
 <code class="descname">fit_force_points_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
-fit for a specified number of break points. This is to be used
+fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
 been called.</p>
 <p>Use this function if you intend to be force the model through
@@ -302,7 +302,7 @@ x_c and y_c, while performing a custom optimization.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>var</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
-<dd><p class="first last">The break point locations, or variable, in a custom
+<dd><p class="first last">The breakpoint locations, or variable, in a custom
 optimization routine.</p>
 </dd>
 </dl>
@@ -328,7 +328,7 @@ optimization routine.</p>
 <p>You should run use_custom_opt to initialize necessary object
 attributes first.</p>
 <p>Unlike fit_with_breaks_force_points, fit_force_points_opt
-automatically assumes that the first and last break points occur
+automatically assumes that the first and last breakpoints occur
 at the min and max values of x.</p>
 </dd></dl>
 
@@ -336,7 +336,7 @@ at the min and max values of x.</p>
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks">
 <code class="descname">fit_with_breaks</code><span class="sig-paren">(</span><em>breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
-for specified break point locations.</p>
+for specified breakpoint locations.</p>
 <p>The function minimizes the sum of the square of the residuals for the
 x y data.</p>
 <p>If you want to understand the math behind this read
@@ -352,7 +352,7 @@ x y data.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
 <dd><p class="first last">The x locations where each line segment terminates. These are
-referred to as break points for each line segment. This should be
+referred to as breakpoints for each line segment. This should be
 structured as a 1-D numpy array.</p>
 </dd>
 </dl>
@@ -395,7 +395,7 @@ random.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (1-D)</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 <dt><strong>n_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The number of model parameters. This is equivalent to the
@@ -426,7 +426,7 @@ of the first line segment.</p>
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks_force_points">
 <code class="descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em>breaks</em>, <em>x_c</em>, <em>y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
-for specified break point locations, where you force the
+for specified breakpoint locations, where you force the
 fit to go through the data points at x_c and y_c.</p>
 <p>The function minimizes the sum of the square of the residuals for the
 pair of x, y data points.</p>
@@ -439,7 +439,7 @@ pair of x, y data points.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
 <dd><p class="first last">The x locations where each line segment terminates. These are
-referred to as break points for each line segment. This should be
+referred to as breakpoints for each line segment. This should be
 structured as a 1-D numpy array.</p>
 </dd>
 <dt><strong>x_c</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
@@ -494,7 +494,7 @@ through the point (0.0, 0.0)</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (1-D)</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 <dt><strong>n_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The number of model parameters. This is equivalent to the
@@ -539,7 +539,7 @@ function will be forced to go through.</p>
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks_opt">
 <code class="descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
-fit for a specified number of break points. This is to be used
+fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
 been called.</p>
 <p>This was intended for advanced users only.</p>
@@ -551,7 +551,7 @@ been called.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>var</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
-<dd><p class="first last">The break point locations, or variable, in a custom
+<dd><p class="first last">The breakpoint locations, or variable, in a custom
 optimization routine.</p>
 </dd>
 </dl>
@@ -577,7 +577,7 @@ optimization routine.</p>
 <p>You should run use_custom_opt to initialize necessary object
 attributes first.</p>
 <p>Unlike fit_with_breaks, fit_with_breaks_opt automatically
-assumes that the first and last break points occur at the min and max
+assumes that the first and last breakpoints occur at the min and max
 values of x.</p>
 </dd></dl>
 
@@ -585,7 +585,7 @@ values of x.</p>
 <dt id="pwlf.PiecewiseLinFit.fitfast">
 <code class="descname">fitfast</code><span class="sig-paren">(</span><em>n_segments</em>, <em>pop=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fitfast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses multi start LBFGSB optimization to find the location of
-break points for a given number of line segments by minimizing the sum
+breakpoints for a given number of line segments by minimizing the sum
 of the square of the errors.</p>
 <p>The idea is that we generate n random latin hypercube samples
 and run LBFGSB optimization on each one. This isn’t guaranteed to
@@ -617,7 +617,7 @@ information.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 </dl>
 </td>
@@ -669,7 +669,7 @@ samples.</p>
 <dd><p class="first last">Optimal sum of square error.</p>
 </dd>
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (1-D)</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 <dt><strong>n_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The number of model parameters. This is equivalent to the
@@ -704,7 +704,7 @@ of the first line segment.</p>
 <code class="descname">p_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the p-values for each beta parameter.</p>
 <p>This calculates the p-values for the beta parameters under the
-assumption that your break point locations are known. Section 2.4.2 of
+assumption that your breakpoint locations are known. Section 2.4.2 of
 <a class="reference internal" href="#r665247553e58-2" id="id9">[2]</a> defines how to calculate the p-value of individual parameters.
 This is really a marginal test since each parameter is dependent upon
 the other parameters.</p>
@@ -728,8 +728,8 @@ beta[0] and so forth</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>This assumes that your break point locations are exact! and does
-not consider the uncertainty with your break point locations.</p>
+<p>This assumes that your breakpoint locations are exact! and does
+not consider the uncertainty with your breakpoint locations.</p>
 <p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
 <p class="rubric">References</p>
 <table class="docutils citation" frame="void" id="r665247553e58-2" rules="none">
@@ -760,7 +760,7 @@ parameter</p>
 <code class="descname">predict</code><span class="sig-paren">(</span><em>x</em>, <em>sorted_data=False</em>, <em>beta=None</em>, <em>breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the fitted continuous piecewise linear function at untested
 points.</p>
-<p>You can manfully specify the break points and calculated
+<p>You can manfully specify the breakpoints and calculated
 values for beta if you want to quickly predict from different models
 and the same data set.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -785,7 +785,7 @@ Default is None.</p>
 </dd>
 <dt><strong>breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">none or array_like, optional</span></dt>
 <dd><p class="first last">The x locations where each line segment terminates. These are
-referred to as break points for each line segment. This should be
+referred to as breakpoints for each line segment. This should be
 structured as a 1-D numpy array. Default is None.</p>
 </dd>
 </dl>
@@ -827,7 +827,7 @@ avoid sorting already sorted data.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>fit_breaks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (1-D)</span></dt>
-<dd><p class="first last">Break point locations stored as a 1-D numpy array.</p>
+<dd><p class="first last">breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
 <dt><strong>n_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The number of model parameters. This is equivalent to the
@@ -896,8 +896,8 @@ sorted, pwlf will use numpy to sort the data. Default is False.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>This assumes that your break point locations are exact! and does
-not consider the uncertainty with your break point locations.</p>
+<p>This assumes that your breakpoint locations are exact! and does
+not consider the uncertainty with your breakpoint locations.</p>
 <p class="rubric">Examples</p>
 <p>Calculate the prediction variance at x_new after performing a simple
 fit.</p>
@@ -991,7 +991,7 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>Note, this assumes no uncertainty in break point locations.</p>
+<p>Note, this assumes no uncertainty in breakpoint locations.</p>
 <p class="rubric">References</p>
 <table class="docutils citation" frame="void" id="rb5b41547ab31-1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -1030,7 +1030,7 @@ custom optimization routine.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>n_segments</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first last">The x locations where each line segment terminates. These are
-referred to as break points for each line segment. This should be
+referred to as breakpoints for each line segment. This should be
 structured as a 1-D numpy array.</p>
 </dd>
 <dt><strong>x_c</strong> <span class="classifier-delimiter">:</span> <span class="classifier">none or array_like, optional</span></dt>
@@ -1049,7 +1049,7 @@ function will be forced to go through.</p>
 <p class="rubric">Notes</p>
 <p>Optimize fit_with_breaks_opt(var) where var is a 1D array
 containing the x locations of your variables
-var has length n_segments - 1, because the two break points
+var has length n_segments - 1, because the two breakpoints
 are always defined (1. the min of x, 2. the max of x).</p>
 <p>fit_with_breaks_opt(var) will return the sum of the square of the
 residuals which you’ll want to minimize with your optimization
