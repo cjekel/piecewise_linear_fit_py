@@ -172,7 +172,8 @@ my_pwlf.use_custom_opt(number_of_line_segments)
 
 # i have number_of_line_segments - 1 number of variables
 # let's guess the correct location of the two unknown variables
-# (the program defaults to have end segments at x0= min(x) and xn=max(x)
+# (the program defaults to have end segments at x0= min(x)
+# and xn=max(x)
 xGuess = np.zeros(number_of_line_segments - 1)
 xGuess[0] = 0.02
 xGuess[1] = 0.10
