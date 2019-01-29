@@ -22,3 +22,5 @@ setup.cfg
 # temporary documentation folder
 tempdocs
 tempdocs/*
+sphinxdocs/build
+sphinxdocs/build/*
