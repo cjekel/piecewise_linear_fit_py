@@ -90,10 +90,10 @@ class PiecewiseLinFit(object):
             should be faster than fit() for large problems. The tradeoff may
             be that fitfast() results in a lower quality model.
         fit_with_breaks(breaks)
-            Fit a continuous piecewise linear function where the break point
+            Fit a continuous piecewise linear function where the breakpoint
             locations are known.
         fit_with_breaks_force_points(breaks, x_c, y_c)
-            Fit a continuous piecewise linear function where the break point
+            Fit a continuous piecewise linear function where the breakpoint
             locations are known, and force the fit to go through points at x_c
             and y_c.
         predict(x, sorted_data=False, beta=None, breaks=None)
@@ -101,7 +101,7 @@ class PiecewiseLinFit(object):
             points.
         fit_with_breaks_opt(var)
             The objective function to perform a continuous piecewise linear
-            fit for a specified number of break points. This is to be used
+            fit for a specified number of breakpoints. This is to be used
             with a custom optimization routine, and after use_custom_opt has
             been called.
         fit_force_points_opt(var)'
@@ -117,7 +117,7 @@ class PiecewiseLinFit(object):
         standard_errors()
             Calculate the standard error of each model parameter in the fitted
             piecewise linear function. Note, this assumes no uncertainty in
-            break point locations.
+            breakpoint locations.
         prediction_variance(x, sorted_data=True)
             Calculate the prediction variance at x locations for the fitted
             piecewise linear function. Note, assumes no uncertainty in break
@@ -176,7 +176,7 @@ class PiecewiseLinFit(object):
     def fit_with_breaks(self, breaks):
         r"""
         A function which fits a continuous piecewise linear function
-        for specified break point locations.
+        for specified breakpoint locations.
 
         The function minimizes the sum of the square of the residuals for the
         x y data.
@@ -193,13 +193,13 @@ class PiecewiseLinFit(object):
         ----------
         breaks : array_like
             The x locations where each line segment terminates. These are
-            referred to as break points for each line segment. This should be
+            referred to as breakpoints for each line segment. This should be
             structured as a 1-D numpy array.
 
         Attributes
         ----------
         fit_breaks : ndarray (1-D)
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
@@ -305,7 +305,7 @@ class PiecewiseLinFit(object):
     def fit_with_breaks_force_points(self, breaks, x_c, y_c):
         r"""
         A function which fits a continuous piecewise linear function
-        for specified break point locations, where you force the
+        for specified breakpoint locations, where you force the
         fit to go through the data points at x_c and y_c.
 
         The function minimizes the sum of the square of the residuals for the
@@ -318,7 +318,7 @@ class PiecewiseLinFit(object):
         ----------
         breaks : array_like
             The x locations where each line segment terminates. These are
-            referred to as break points for each line segment. This should be
+            referred to as breakpoints for each line segment. This should be
             structured as a 1-D numpy array.
         x_c : array_like
             The x locations of the data points that the piecewise linear
@@ -330,7 +330,7 @@ class PiecewiseLinFit(object):
         Attributes
         ----------
         fit_breaks : ndarray (1-D)
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
@@ -433,7 +433,7 @@ class PiecewiseLinFit(object):
         C[:, 1] = self.x_c - breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
-            # find the locations where x > break point values
+            # find the locations where x > breakpoint values
             int_locations = self.x_c > breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
@@ -495,7 +495,7 @@ class PiecewiseLinFit(object):
         Evaluate the fitted continuous piecewise linear function at untested
         points.
 
-        You can manfully specify the break points and calculated
+        You can manfully specify the breakpoints and calculated
         values for beta if you want to quickly predict from different models
         and the same data set.
 
@@ -515,13 +515,13 @@ class PiecewiseLinFit(object):
             Default is None.
         breaks : none or array_like, optional
             The x locations where each line segment terminates. These are
-            referred to as break points for each line segment. This should be
+            referred to as breakpoints for each line segment. This should be
             structured as a 1-D numpy array. Default is None.
 
         Attributes
         ----------
         fit_breaks : ndarray (1-D)
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
@@ -588,7 +588,7 @@ class PiecewiseLinFit(object):
         A[:, 1] = x - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
-            # find the locations where x > break point values
+            # find the locations where x > breakpoint values
             int_locations = x > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
@@ -606,7 +606,7 @@ class PiecewiseLinFit(object):
     def fit_with_breaks_opt(self, var):
         r"""
         The objective function to perform a continuous piecewise linear
-        fit for a specified number of break points. This is to be used
+        fit for a specified number of breakpoints. This is to be used
         with a custom optimization routine, and after use_custom_opt has
         been called.
 
@@ -618,7 +618,7 @@ class PiecewiseLinFit(object):
         Parameters
         ----------
         var : array_like
-            The break point locations, or variable, in a custom
+            The breakpoint locations, or variable, in a custom
             optimization routine.
 
         Returns
@@ -637,7 +637,7 @@ class PiecewiseLinFit(object):
         attributes first.
 
         Unlike fit_with_breaks, fit_with_breaks_opt automatically
-        assumes that the first and last break points occur at the min and max
+        assumes that the first and last breakpoints occur at the min and max
         values of x.
         """
 
@@ -696,7 +696,7 @@ class PiecewiseLinFit(object):
     def fit_force_points_opt(self, var):
         r"""
         The objective function to perform a continuous piecewise linear
-        fit for a specified number of break points. This is to be used
+        fit for a specified number of breakpoints. This is to be used
         with a custom optimization routine, and after use_custom_opt has
         been called.
 
@@ -711,7 +711,7 @@ class PiecewiseLinFit(object):
         Parameters
         ----------
         var : array_like
-            The break point locations, or variable, in a custom
+            The breakpoint locations, or variable, in a custom
             optimization routine.
 
         Returns
@@ -730,7 +730,7 @@ class PiecewiseLinFit(object):
         attributes first.
 
         Unlike fit_with_breaks_force_points, fit_force_points_opt
-        automatically assumes that the first and last break points occur
+        automatically assumes that the first and last breakpoints occur
         at the min and max values of x.
         """
 
@@ -763,7 +763,7 @@ class PiecewiseLinFit(object):
         C[:, 1] = self.x_c - breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
-            # find the locations where x > break point values
+            # find the locations where x > breakpoint values
             int_locations = self.x_c > breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
@@ -820,7 +820,7 @@ class PiecewiseLinFit(object):
         r"""
         Fit a continuous piecewise linear function for a specified number
         of line segments. Uses differential evolution to finds the optimum
-        location of break points for a given number of line segments by
+        location of breakpoints for a given number of line segments by
         minimizing the sum of the square error.
 
         Parameters
@@ -843,7 +843,7 @@ class PiecewiseLinFit(object):
         ssr : float
             Optimal sum of square error.
         fit_breaks : ndarray (1-D)
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
@@ -877,7 +877,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         fit_breaks : float
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
 
         Raises
         ------
@@ -995,7 +995,7 @@ class PiecewiseLinFit(object):
     def fitfast(self, n_segments, pop=2, **kwargs):
         r"""
         Uses multi start LBFGSB optimization to find the location of
-        break points for a given number of line segments by minimizing the sum
+        breakpoints for a given number of line segments by minimizing the sum
         of the square of the errors.
 
         The idea is that we generate n random latin hypercube samples
@@ -1026,7 +1026,7 @@ class PiecewiseLinFit(object):
         ssr : float
             Optimal sum of square error.
         fit_breaks : ndarray (1-D)
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
@@ -1046,7 +1046,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         fit_breaks : float
-            Break point locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D numpy array.
 
         Notes
         -----
@@ -1133,7 +1133,7 @@ class PiecewiseLinFit(object):
 
         self.ssr = best_val
 
-        # obtain the break point locations from the best result
+        # obtain the breakpoint locations from the best result
         var = np.sort(best_break)
         breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
@@ -1161,7 +1161,7 @@ class PiecewiseLinFit(object):
         ----------
         n_segments : int
             The x locations where each line segment terminates. These are
-            referred to as break points for each line segment. This should be
+            referred to as breakpoints for each line segment. This should be
             structured as a 1-D numpy array.
         x_c : none or array_like, optional
             The x locations of the data points that the piecewise linear
@@ -1192,7 +1192,7 @@ class PiecewiseLinFit(object):
         -----
         Optimize fit_with_breaks_opt(var) where var is a 1D array
         containing the x locations of your variables
-        var has length n_segments - 1, because the two break points
+        var has length n_segments - 1, because the two breakpoints
         are always defined (1. the min of x, 2. the max of x).
 
         fit_with_breaks_opt(var) will return the sum of the square of the
@@ -1290,7 +1290,7 @@ class PiecewiseLinFit(object):
 
         Notes
         -----
-        Note, this assumes no uncertainty in break point locations.
+        Note, this assumes no uncertainty in breakpoint locations.
 
         References
         ----------
@@ -1387,8 +1387,8 @@ class PiecewiseLinFit(object):
 
         Notes
         -----
-        This assumes that your break point locations are exact! and does
-        not consider the uncertainty with your break point locations.
+        This assumes that your breakpoint locations are exact! and does
+        not consider the uncertainty with your breakpoint locations.
 
         Examples
         --------
@@ -1461,7 +1461,7 @@ class PiecewiseLinFit(object):
         A[:, 1] = x - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
-            # find the locations where x > break point values
+            # find the locations where x > breakpoint values
             int_locations = x > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
@@ -1533,7 +1533,7 @@ class PiecewiseLinFit(object):
         Calculate the p-values for each beta parameter.
 
         This calculates the p-values for the beta parameters under the
-        assumption that your break point locations are known. Section 2.4.2 of
+        assumption that your breakpoint locations are known. Section 2.4.2 of
         [2]_ defines how to calculate the p-value of individual parameters.
         This is really a marginal test since each parameter is dependent upon
         the other parameters.
@@ -1550,8 +1550,8 @@ class PiecewiseLinFit(object):
 
         Notes
         -----
-        This assumes that your break point locations are exact! and does
-        not consider the uncertainty with your break point locations.
+        This assumes that your breakpoint locations are exact! and does
+        not consider the uncertainty with your breakpoint locations.
 
         See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
 
