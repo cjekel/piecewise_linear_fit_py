@@ -1,5 +1,7 @@
-Welcome to pwlf's documentation!
+pwlf: piecewise linear fitting
 ================================
+
+Fit piecewise linear functions to data!
 
 .. toctree::
    :maxdepth: 2
