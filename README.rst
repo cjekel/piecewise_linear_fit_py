@@ -12,14 +12,14 @@ Read the `blog
 post <http://jekel.me/2017/Fit-a-piecewise-linear-function-to-data/>`__.
 
 .. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/examplePiecewiseFit.png
-   :alt: Example of a continuous piecewise linear fit to a data set.
+   :alt: Example of a continuous piecewise linear fit to data.
 
-   Example of a continuous piecewise linear fit to a data set.
+   Example of a continuous piecewise linear fit to data.
 
 .. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/sinWaveFit.png
-   :alt: Example of a continuous piecewise linear fit to a sin wave
+   :alt: Example of a continuous piecewise linear fit to a sine wave
 
-   Example of a continuous piecewise linear fit to a sin wave
+   Example of a continuous piecewise linear fit to a sine wave.
 
 Features
 ========
