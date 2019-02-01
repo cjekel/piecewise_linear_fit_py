@@ -14,6 +14,7 @@
 #
 import os
 import sys
+import pwlf
 sys.path.insert(0, os.path.abspath('../../pwlf'))
 
 
@@ -26,7 +27,7 @@ author = 'Charles Jekel'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.3.2'
+release = pwlf.__version__
 
 
 # -- General configuration ---------------------------------------------------
