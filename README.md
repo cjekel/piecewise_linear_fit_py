@@ -63,7 +63,7 @@ MIT License
 
 # Citation
 
-```biblatex
+```bibtex
 @Manual{pwlf,
 	author = {Jekel, Charles F. and Venter, Gerhard},
 	title = {{pwlf:} A Python Library for Fitting 1D Continuous Piecewise Linear Functions},

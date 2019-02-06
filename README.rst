@@ -124,7 +124,7 @@ MIT License
 Citation
 ========
 
-.. code:: biblatex
+.. code:: bibtex
 
     @Manual{pwlf,
         author = {Jekel, Charles F. and Venter, Gerhard},
