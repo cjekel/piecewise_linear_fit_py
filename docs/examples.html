@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Examples &#8212; pwlf 0.3.3 documentation</title>
+    <title>Examples &#8212; pwlf 0.3.4 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -44,8 +44,6 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="getting-started">
-<h2>getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>All of these examples will use the following data and imports.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -110,8 +108,9 @@ keywords</a></li>
 <li><a class="reference external" href="#find-the-best-number-of-line-segments">find the best number of line
 segments</a></li>
 <li><a class="reference external" href="#model-persistence">model persistence</a></li>
+<li><a class="reference external" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than
+data</a></li>
 </ol>
-</div>
 <div class="section" id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
 <p>You can perform a least squares fit if you know the breakpoint
@@ -138,6 +137,10 @@ locations.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure" id="id1">
+<img alt="fit with known breakpoint locations" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png" />
+<p class="caption"><span class="caption-text">fit with known breakpoint locations</span></p>
+</div>
 </div>
 <div class="section" id="fit-for-specified-number-of-line-segments">
 <h2>fit for specified number of line segments<a class="headerlink" href="#fit-for-specified-number-of-line-segments" title="Permalink to this headline">¶</a></h2>
@@ -161,6 +164,10 @@ from scipy.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
+</div>
+<div class="figure" id="id2">
+<img alt="fit for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png" />
+<p class="caption"><span class="caption-text">fit for specified number of line segments</span></p>
 </div>
 </div>
 <div class="section" id="fitfast-for-specified-number-of-line-segments">
@@ -187,6 +194,10 @@ for a small number of starting points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
+</div>
+<div class="figure" id="id3">
+<img alt="fitfast for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png" />
+<p class="caption"><span class="caption-text">fitfast for specified number of line segments</span></p>
 </div>
 </div>
 <div class="section" id="force-a-fit-through-data-points">
@@ -215,6 +226,10 @@ finds the best 4 line segments that go through two data points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
+</div>
+<div class="figure" id="id4">
+<img alt="force a fit through data points" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png" />
+<p class="caption"><span class="caption-text">force a fit through data points</span></p>
 </div>
 </div>
 <div class="section" id="use-custom-optimization-routine">
@@ -376,6 +391,34 @@ best number of line segments.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="bad-fits-when-you-have-more-unknowns-than-data">
+<h2>bad fits when you have more unknowns than data<a class="headerlink" href="#bad-fits-when-you-have-more-unknowns-than-data" title="Permalink to this headline">¶</a></h2>
+<p>You can get very bad fits with pwlf when you have more unknowns than
+data points. The following example will fit 99 line segments to the 59
+data points. While this will result in an error of zero, the model will
+have very weird predictions within the data. You should not fit more
+unknowns than you have data with pwlf!</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">break_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">break_locations</span><span class="p">)</span>
+
+<span class="c1"># predict for the determined points</span>
+<span class="n">xHat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">yHat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
+
+<span class="c1"># plot the results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure" id="id5">
+<img alt="bad fits when you have more unknowns than data" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png" />
+<p class="caption"><span class="caption-text">bad fits when you have more unknowns than data</span></p>
+</div>
+</div>
 </div>
 
 
@@ -399,7 +442,6 @@ best number of line segments.</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#getting-started">getting started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fit-with-known-breakpoint-locations">fit with known breakpoint locations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fit-for-specified-number-of-line-segments">fit for specified number of line segments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line segments</a></li>
@@ -408,6 +450,7 @@ best number of line segments.</p>
 <li class="toctree-l2"><a class="reference internal" href="#pass-differential-evolution-keywords">pass differential evolution keywords</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#find-the-best-number-of-line-segments">find the best number of line segments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#model-persistence">model persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than data</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
@@ -454,7 +497,7 @@ best number of line segments.</p>
       &copy;2019, Charles Jekel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
