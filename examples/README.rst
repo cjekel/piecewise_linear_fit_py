@@ -66,6 +66,8 @@ All of these examples will use the following data and imports.
 7. `find the best number of line
    segments <#find-the-best-number-of-line-segments>`__
 8. `model persistence <#model-persistence>`__
+9. `bad fits when you have more unknowns than
+   data <#bad-fits-when-you-have-more-unknowns-than-data>`__
 
 fit with known breakpoint locations
 -----------------------------------
@@ -96,6 +98,11 @@ locations.
     plt.plot(xHat, yHat, '-')
     plt.show()
 
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png
+   :alt: fit with known breakpoint locations
+
+   fit with known breakpoint locations
+
 fit for specified number of line segments
 -----------------------------------------
 
@@ -121,6 +128,11 @@ from scipy.
     plt.plot(x, y, 'o')
     plt.plot(xHat, yHat, '-')
     plt.show()
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png
+   :alt: fit for specified number of line segments
+
+   fit for specified number of line segments
 
 fitfast for specified number of line segments
 ---------------------------------------------
@@ -149,6 +161,11 @@ for a small number of starting points.
     plt.plot(x, y, 'o')
     plt.plot(xHat, yHat, '-')
     plt.show()
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png
+   :alt: fitfast for specified number of line segments
+
+   fitfast for specified number of line segments
 
 force a fit through data points
 -------------------------------
@@ -179,6 +196,11 @@ finds the best 4 line segments that go through two data points.
     plt.plot(x, y, 'o')
     plt.plot(xHat, yHat, '-')
     plt.show()
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png
+   :alt: force a fit through data points
+
+   force a fit through data points
 
 use custom optimization routine
 -------------------------------
@@ -346,3 +368,34 @@ You can save fitted models with pickle. Alternatively see
     # load the fitted model
     with open('my_fit.pkl', 'rb') as f:
         my_pwlf = pickle.load(f)
+
+bad fits when you have more unknowns than data
+----------------------------------------------
+
+You can get very bad fits with pwlf when you have more unknowns than
+data points. The following example will fit 99 line segments to the 59
+data points. While this will result in an error of zero, the model will
+have very weird predictions within the data. You should not fit more
+unknowns than you have data with pwlf!
+
+.. code:: python
+
+    break_locations = np.linspace(min(x), max(x), num=100)
+    # initialize piecewise linear fit with your x and y data
+    my_pwlf = pwlf.PiecewiseLinFit(x, y)
+    my_pwlf.fit_with_breaks(break_locations)
+
+    # predict for the determined points
+    xHat = np.linspace(min(x), max(x), num=10000)
+    yHat = my_pwlf.predict(xHat)
+
+    # plot the results
+    plt.figure()
+    plt.plot(x, y, 'o')
+    plt.plot(xHat, yHat, '-')
+    plt.show()
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png
+   :alt: bad fits when you have more unknowns than data
+
+   bad fits when you have more unknowns than data
