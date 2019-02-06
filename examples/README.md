@@ -56,6 +56,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 6. [pass differential evolution keywords](#pass-differential-evolution-keywords)
 7. [find the best number of line segments](#find-the-best-number-of-line-segments)
 8. [model persistence](#model-persistence)
+9. [bad fits when you have more unknowns than data](#bad-fits-when-you-have-more-unknowns-than-data)
 
 ## fit with known breakpoint locations
 
@@ -84,6 +85,9 @@ plt.plot(xHat, yHat, '-')
 plt.show()
 ```
 
+![fit with known breakpoint locations](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png)
+
+
 ## fit for specified number of line segments
 
 Use a global optimization to find the breakpoint locations that minimize the sum of squares error. This uses [Differential Evolution](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) from scipy.
@@ -105,6 +109,9 @@ plt.plot(x, y, 'o')
 plt.plot(xHat, yHat, '-')
 plt.show()
 ```
+
+![fit for specified number of line segments](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png)
+
 
 ## fitfast for specified number of line segments
 
@@ -128,6 +135,9 @@ plt.plot(x, y, 'o')
 plt.plot(xHat, yHat, '-')
 plt.show()
 ```
+
+![fitfast for specified number of line segments](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png)
+
 
 ## force a fit through data points
 
@@ -154,8 +164,10 @@ plt.figure()
 plt.plot(x, y, 'o')
 plt.plot(xHat, yHat, '-')
 plt.show()
-
 ```
+
+![force a fit through data points](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png)
+
 
 ## use custom optimization routine
 
@@ -311,3 +323,26 @@ with open('my_fit.pkl', 'wb') as f:
 with open('my_fit.pkl', 'rb') as f:
     my_pwlf = pickle.load(f)
 ```
+
+## bad fits when you have more unknowns than data
+
+You can get very bad fits with pwlf when you have more unknowns than data points. The following example will fit 99 line segments to the 59 data points. While this will result in an error of zero, the model will have very weird predictions within the data. You should not fit more unknowns than you have points with pwlf!
+
+```python
+break_locations = np.linspace(min(x), max(x), num=100)
+# initialize piecewise linear fit with your x and y data
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
+my_pwlf.fit_with_breaks(break_locations)
+
+# predict for the determined points
+xHat = np.linspace(min(x), max(x), num=10000)
+yHat = my_pwlf.predict(xHat)
+
+# plot the results
+plt.figure()
+plt.plot(x, y, 'o')
+plt.plot(xHat, yHat, '-')
+plt.show()
+```
+
+![bad fits when you have more unknowns than data](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png)
