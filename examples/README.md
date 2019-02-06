@@ -326,7 +326,7 @@ with open('my_fit.pkl', 'rb') as f:
 
 ## bad fits when you have more unknowns than data
 
-You can get very bad fits with pwlf when you have more unknowns than data points. The following example will fit 99 line segments to the 59 data points. While this will result in an error of zero, the model will have very weird predictions within the data. You should not fit more unknowns than you have points with pwlf!
+You can get very bad fits with pwlf when you have more unknowns than data points. The following example will fit 99 line segments to the 59 data points. While this will result in an error of zero, the model will have very weird predictions within the data. You should not fit more unknowns than you have data with pwlf!
 
 ```python
 break_locations = np.linspace(min(x), max(x), num=100)
