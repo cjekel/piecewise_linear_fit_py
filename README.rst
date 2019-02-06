@@ -17,7 +17,7 @@ post <http://jekel.me/2017/Fit-a-piecewise-linear-function-to-data/>`__.
    Example of a continuous piecewise linear fit to data.
 
 .. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/sinWaveFit.png
-   :alt: Example of a continuous piecewise linear fit to a sine wave
+   :alt: Example of a continuous piecewise linear fit to a sine wave.
 
    Example of a continuous piecewise linear fit to a sine wave.
 
@@ -75,6 +75,10 @@ then install with pip
 How it works
 ============
 
+This
+`paper <https://github.com/cjekel/piecewise_linear_fit_py/raw/master/paper/pwlf_Jekel_Venter_v1.pdf>`__
+explains how this library works in detail.
+
 This is based on a formulation of a piecewise linear least squares fit,
 where the user must specify the location of break points. See `this
 post <http://jekel.me/2018/Continous-piecewise-linear-regression/>`__
@@ -92,15 +96,6 @@ to pass your own differential evolution keywords to the library. See
 `this
 example <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/fitForSpecifiedNumberOfLineSegments_passDiffEvoKeywords.py>`__.
 
-Why
-===
-
-All other methods require the user to specify the specific location of
-break points, but in most cases the best location for these break points
-is unknown. It makes more sense to rather have the user specify the
-desired number of line segments, and then to quantitatively choose the
-best location for the ends of these line segments.
-
 Changelog
 =========
 
@@ -113,7 +108,7 @@ follows numpydoc style...
 Requirements
 ============
 
-Python 2.7+ (Python 2.7 and Python 3.4 have been tested)
+Python 2.7+
 
 NumPy (Tested on version >= 1.14.0)
 
@@ -125,3 +120,15 @@ License
 =======
 
 MIT License
+
+Citation
+========
+
+.. code:: biblatex
+
+    @Manual{pwlf,
+        author = {Jekel, Charles F. and Venter, Gerhard},
+        title = {{pwlf:} A Python Library for Fitting 1D Continuous Piecewise Linear Functions},
+        year = {2019},
+        url = {https://github.com/cjekel/piecewise_linear_fit_py}
+    }
