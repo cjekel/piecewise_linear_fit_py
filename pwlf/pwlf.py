@@ -1509,7 +1509,7 @@ class PiecewiseLinFit(object):
         >>> y = np.random.random(10)
         >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
         >>> breaks = my_pwlf.fitfast(3)
-        >>> rsq = PiecewiseLinFit.r_squared()
+        >>> rsq = my_pwlf.r_squared()
 
         """
         try:
