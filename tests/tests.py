@@ -20,6 +20,17 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
 
+    def test_assembly(self):
+        # check that I can fit when break points spot on a
+        my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        A = my_fit.assemble_regression_matrix(x0, my_fit.x_data)
+        Asb = np.array([[1.,  0.,  0.,  0.],
+                        [1.,  x0[1]-x0[0],  0.,  0.],
+                        [1.,  x0[2]-x0[0], x0[2]-x0[1], 0.],
+                        [1.,  x0[3]-x0[0], x0[3]-x0[1], x0[3]-x0[2]]])
+        self.assertTrue(np.allclose(A, Asb))
+
     def test_break_point_spot_on_r2(self):
         # test r squared value with known solution
         my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
@@ -116,12 +127,7 @@ class TestEverything(unittest.TestCase):
         x_c = [0.0]
         y_c = [0.0]
         res = my_fit.fit(3, x_c, y_c)
-        print(res)
-        print(my_fit.fit_breaks)
         yhat = my_fit.predict(x_c)
-        print(my_fit.fit_breaks)
-
-        print(y_c, yhat)
         self.assertTrue(np.isclose(y_c, yhat))
 
     def test_multi_start_fitfast(self):
