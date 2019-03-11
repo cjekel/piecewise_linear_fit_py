@@ -9,9 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new assemble_regression_matrix() function that returns the linear regression matrix
 - test function for the linear regression matrix
 ### Changed
-- consolidated the assembly of the linear regression matrix to a single function
-### Removed
-
+- consolidated the assembly of the linear regression matrix to a single function (and removed the duplicate code)
 
 ## [0.3.5] - 2019-02-25
 ### Changed

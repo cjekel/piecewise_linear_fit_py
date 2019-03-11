@@ -444,7 +444,7 @@ class PiecewiseLinFit(object):
         >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
-    
+
         """
 
         # check if x_c and y_c are numpy array, if not convert to numpy array
@@ -478,9 +478,9 @@ class PiecewiseLinFit(object):
                 # one data point in x_c > breaks[i+1]
                 # find the first index of x where it is greater than the break
                 # point value
-                int_index = np.argmax(int_locations)
+                int_ind = np.argmax(int_locations)
                 # only change the non-zero values of A
-                C[int_index:, i+2] = self.x_c[int_index:] - self.fit_breaks[i+1]
+                C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
@@ -532,7 +532,7 @@ class PiecewiseLinFit(object):
         r"""
         Evaluate the fitted continuous piecewise linear function at untested
         points.
-    
+
         You can manfully specify the breakpoints and calculated
         values for beta if you want to quickly predict from different models
         and the same data set.
@@ -1332,7 +1332,7 @@ class PiecewiseLinFit(object):
             return self.se
 
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def prediction_variance(self, x, sorted_data=False):
         r"""
@@ -1424,8 +1424,7 @@ class PiecewiseLinFit(object):
             variance = np.dot(e, e) / (ny - nb)
 
         except np.linalg.LinAlgError:
-            raise("Unable to calculate prediction variance."
-                  " Something went wrong.")
+            raise np.linalg.LinAlgError('Singular matrix')
 
         # Regression matrix on prediction data
         A = self.assemble_regression_matrix(self.fit_breaks, x)
@@ -1437,7 +1436,7 @@ class PiecewiseLinFit(object):
             return pre_var.diagonal()
 
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def r_squared(self):
         r"""
@@ -1484,7 +1483,7 @@ class PiecewiseLinFit(object):
             rsq = 1.0 - (ssr/sst)
             return rsq
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def p_values(self):
         r"""
