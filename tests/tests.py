@@ -116,7 +116,12 @@ class TestEverything(unittest.TestCase):
         x_c = [0.0]
         y_c = [0.0]
         res = my_fit.fit(3, x_c, y_c)
+        print(res)
+        print(my_fit.fit_breaks)
         yhat = my_fit.predict(x_c)
+        print(my_fit.fit_breaks)
+
+        print(y_c, yhat)
         self.assertTrue(np.isclose(y_c, yhat))
 
     def test_multi_start_fitfast(self):
