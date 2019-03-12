@@ -1140,6 +1140,139 @@ class PiecewiseLinFit(object):
 
         return self.fit_breaks
 
+    def fit_guess(self, guess_breakpoints, **kwargs):
+        r"""
+        Uses L-BFGS-B optimization to find the location of breakpoints
+        from a guess of where breakpoint locations should be.
+
+        In some cases you may have a good idea where the breakpoint locations
+        occur. It generally won't be necessary to run a full global
+        optimization to search the entire domain for the breakpoints when you
+        have a good idea where the breakpoints occur. Here a local optimization
+        is run from a guess of the breakpoint locations.
+
+        Parameters
+        ----------
+        guess_breakpoints : array_like
+            Guess where the breakpoints occur. This should be a list or numpy
+            array containing the locations where it appears breakpoints occur.
+
+        Attributes
+        ----------
+        ssr : float
+            Optimal sum of square error.
+        fit_breaks : ndarray (1-D)
+            breakpoint locations stored as a 1-D numpy array.
+        n_parameters : int
+            The number of model parameters. This is equivalent to the
+            len(beta).
+        n_segments : int
+            The number of line segments.
+        nVar : int
+            The number of variables in the global optimization problem.
+        beta : ndarray (1-D)
+            The model parameters for the continuous piecewise linear fit.
+        slopes : ndarray (1-D)
+            The slope of each ling segment as a 1-D numpy array. This assumes
+            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
+            of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
+
+        Returns
+        -------
+        fit_breaks : float
+            breakpoint locations stored as a 1-D numpy array.
+
+        Notes
+        -----
+        All **kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
+        **kwargs is used, it will override my defaults. This allows
+        advanced users to tweak their own optimization. For me information see:
+        https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
+
+        You do not need to specify the x.min() or x.max() in geuss_breakpoints!
+
+        Examples
+        --------
+        In this example we see two distinct linear regions, and we believe a
+        breakpoint occurs at 6.0. We'll use the fit_guess() function to find
+        the best breakpoint location starting with this guess. 
+
+        >>> import pwlf
+        >>> x = np.array([4., 5., 6., 7., 8.,])
+        >>> y = np.array([11., 13., 16., 28.92, 42.81])
+        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> breaks = my_pwlf.fit_guess([6.0])
+
+        Note specifying one breakpoint will result in two line segments. 
+        If we wanted three line segemtns, we'll have to specify two
+        breakpoints. 
+
+        >>> breaks = my_pwlf.fit_guess([5.5, 6.0])
+
+        """
+        # calculate the number of variables I have to solve for
+        self.nVar = len(guess_breakpoints)
+        self.n_segments = self.nVar + 1
+        self.n_parameters = self.n_segments + 1
+
+        # initiate the bounds of the optimization
+        bounds = np.zeros([self.nVar, 2])
+        bounds[:, 0] = self.break_0
+        bounds[:, 1] = self.break_n
+
+        # perform latin hypercube sampling
+        mypop = lhs(self.nVar, samples=pop, criterion='maximin')
+        # scale the sampling to my variable range
+        mypop = mypop * (self.break_n - self.break_0) + self.break_0
+
+        x = np.zeros((pop, self.nVar))
+        f = np.zeros(pop)
+        d = []
+
+        for i, x0 in enumerate(mypop):
+            if len(kwargs) == 0:
+                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
+                                                 fprime=None, args=(),
+                                                 approx_grad=True,
+                                                 bounds=bounds, m=10,
+                                                 factr=1e2, pgtol=1e-05,
+                                                 epsilon=1e-08, iprint=-1,
+                                                 maxfun=15000, maxiter=15000,
+                                                 disp=None, callback=None)
+            else:
+                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
+                                                 fprime=None, approx_grad=True,
+                                                 bounds=bounds, **kwargs)
+            x[i, :] = resx
+            f[i] = resf
+            d.append(resd)
+            if self.print is True:
+                print(i + 1, 'of ' + str(pop) + ' complete')
+
+        # find the best result
+        best_ind = np.nanargmin(f)
+        best_val = f[best_ind]
+        best_break = x[best_ind]
+        res = (x[best_ind], f[best_ind], d[best_ind])
+        if self.print is True:
+            print(res)
+
+        self.ssr = best_val
+
+        # obtain the breakpoint locations from the best result
+        var = np.sort(best_break)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break_0
+        breaks[-1] = self.break_n
+
+        # assign parameters
+        self.fit_with_breaks(breaks)
+
+        return self.fit_breaks
+
     def use_custom_opt(self, n_segments, x_c=None, y_c=None):
         r"""
         Provide the number of line segments you want to use with your
