@@ -130,12 +130,6 @@ class TestEverything(unittest.TestCase):
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
-    def test_multi_start_fitfast(self):
-        print('Last test! - multi start (fitfast) test')
-        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
-        res = my_pwlf.fitfast(4, 50)
-        self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
-
     def test_se(self):
         # check to see if it will let me calculate standard errors
         my_pwlf = pwlf.PiecewiseLinFit(np.random.random(20),
@@ -165,6 +159,29 @@ class TestEverything(unittest.TestCase):
         my_pwlf.predict(x, beta=np.array((1e-4, 1e-2, 1e-3)),
                         breaks=np.array((0.0, 0.5, 1.0)))
 
+    def test_fit_guess(self):
+        x = np.array([4., 5., 6., 7., 8.,])
+        y = np.array([11., 13., 16., 28.92, 42.81])
+        my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        breaks = my_pwlf.fit_guess([6.0])
+        self.assertTrue(np.isclose(breaks[1], 6.0705297))
+
+    def test_fit_guess_kwrds(self):
+        x = np.array([4., 5., 6., 7., 8.,])
+        y = np.array([11., 13., 16., 28.92, 42.81])
+        my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        breaks = my_pwlf.fit_guess([6.0], m=10,
+                                   factr=1e2, pgtol=1e-05,
+                                   epsilon=1e-6, iprint=-1,
+                                   maxfun=1500000, maxiter=150000,
+                                   disp=None)
+        self.assertTrue(np.isclose(breaks[1], 6.0705297))
+
+    def test_multi_start_fitfast(self):
+        print('Last test! - multi start (fitfast) test')
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        res = my_pwlf.fitfast(4, 50)
+        self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
 if __name__ == '__main__':
     unittest.main()
