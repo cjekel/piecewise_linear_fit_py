@@ -1200,7 +1200,7 @@ class PiecewiseLinFit(object):
         the best breakpoint location starting with this guess.
 
         >>> import pwlf
-        >>> x = np.array([4., 5., 6., 7., 8.,])
+        >>> x = np.array([4., 5., 6., 7., 8.])
         >>> y = np.array([11., 13., 16., 28.92, 42.81])
         >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
         >>> breaks = my_pwlf.fit_guess([6.0])
