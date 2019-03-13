@@ -28,7 +28,7 @@ from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
 from scipy import stats
 from pyDOE import lhs
-# from deap import algorithms
+
 # piecewise linear fit library
 
 
@@ -261,7 +261,7 @@ class PiecewiseLinFit(object):
 
         Other useful resources:
         http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
-        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic algorithm objects. The library includes tools for using genetic algorithms to do optimization in any C++ program using any representation and genetic operators. The documentation includes an extensive overview of how to implement a genetic algorithm 
         http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
 
         Parameters
@@ -1251,152 +1251,6 @@ class PiecewiseLinFit(object):
         self.fit_with_breaks(breaks)
 
         return self.fit_breaks
-
-    # def fit_possible_breakpoints(self, n_segments, breaks=self.x_data, pop=30):
-    #     r"""
-    #     Fit a continuous piecewise linear function for a specified number
-    #     of line segments. Uses differential evolution to finds the optimum
-    #     location of breakpoints for a given number of line segments by
-    #     minimizing the sum of the square error.
-
-    #     Parameters
-    #     ----------
-    #     n_segments : int
-    #         The desired number of line segments.
-    #     x_c : array_like, optional
-    #         The x locations of the data points that the piecewise linear
-    #         function will be forced to go through.
-    #     y_c : array_like, optional
-    #         The x locations of the data points that the piecewise linear
-    #         function will be forced to go through.
-    #     **kwargs : optional
-    #         Directly passed into scipy.optimize.differential_evolution(). This
-    #         will override any pwlf defaults when provided. See Note for more
-    #         information.
-
-    #     Attributes
-    #     ----------
-    #     ssr : float
-    #         Optimal sum of square error.
-    #     fit_breaks : ndarray (1-D)
-    #         breakpoint locations stored as a 1-D numpy array.
-    #     n_parameters : int
-    #         The number of model parameters. This is equivalent to the
-    #         len(beta).
-    #     n_segments : int
-    #         The number of line segments.
-    #     nVar : int
-    #         The number of variables in the global optimization problem.
-    #     beta : ndarray (1-D)
-    #         The model parameters for the continuous piecewise linear fit.
-    #     zeta : ndarray (1-D)
-    #         The model parameters associated with the constraint function,
-    #         if x_c and y_c is provided. Only created if x_c and y_c provided.
-    #     slopes : ndarray (1-D)
-    #         The slope of each ling segment as a 1-D numpy array. This assumes
-    #         that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-    #         of the first line segment.
-    #     intercepts : ndarray (1-D)
-    #         The y-intercept of each line segment as a 1-D numpy array.
-    #     x_c : ndarray (1-D)
-    #         The x locations of the data points that the piecewise linear
-    #         function will be forced to go through. Only created if x_c
-    #         and y_c provided.
-    #     y_c : ndarray (1-D)
-    #         The x locations of the data points that the piecewise linear
-    #         function will be forced to go through. Only created if x_c
-    #         and y_c provided.
-    #     c_n : int
-    #         The number of constraint points. This is the same as len(x_c).
-    #         Only created if x_c and y_c provided.
-
-    #     Returns
-    #     -------
-    #     fit_breaks : float
-    #         breakpoint locations stored as a 1-D numpy array.
-
-    #     Raises
-    #     ------
-    #     ValueError
-    #         You probably provided x_c without y_c (or vice versa).
-    #         You must provide both x_c and y_c if you plan to force
-    #         the model through data point(s).
-
-    #     Notes
-    #     -----
-    #     All **kwargs are passed into sicpy.optimize.differential_evolution.
-    #     If any **kwargs is used, it will override my differential_evolution,
-    #     defaults. This allows advanced users to tweak their own optimization.
-    #     For me information see:
-    #     https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
-
-    #     Examples
-    #     --------
-    #     This example shows you how to fit three continuous piecewise lines to
-    #     a dataset. This assumes that x is linearly spaced from [0, 1), and y is
-    #     random.
-
-    #     >>> import pwlf
-    #     >>> x = np.linspace(0.0, 1.0, 10)
-    #     >>> y = np.random.random(10)
-    #     >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
-    #     >>> breaks = my_pwlf.fit(3)
-
-    #     Additionally you desired that the piecewise linear function go
-    #     through the point (0.0, 0.0).
-
-    #     >>> x_c = [0.0]
-    #     >>> y_c = [0.0]
-    #     >>> breaks = my_pwlf.fit(3, x_c=x_c, y_c=y_c)
-
-    #     Additionally you desired that the piecewise linear function go
-    #     through the points (0.0, 0.0) and (1.0, 1.0).
-
-    #     >>> x_c = [0.0, 1.0]
-    #     >>> y_c = [0.0, 1.0]
-    #     >>> breaks = my_pwlf.fit(3, x_c=x_c, y_c=y_c)
-
-    #     """
-
-    #     # set the function to minimize
-    #     min_function = self.fit_with_breaks_opt
-
-    #     # store the number of line segments and number of parameters
-    #     self.n_segments = int(n_segments)
-    #     self.n_parameters = self.n_segments + 1
-
-    #     # calculate the number of variables I have to solve for
-    #     self.nVar = self.n_segments - 1
-
-    #     # initiate the bounds of the optimization
-    #     bounds = np.zeros([self.nVar, 2])
-    #     bounds[:, 0] = self.break_0
-    #     bounds[:, 1] = self.break_n
-
-    #     # set up the GA
-    #     toolbox.register("evaluate", min_function)
-    #     toolbox.register("mate", tools.cxTwoPoint)
-    #     toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
-    #     toolbox.register("select", tools.selTournament, tournsize=3)
-
-    #     if self.print is True:
-    #         print(res)
-
-    #     self.ssr = res.fun
-
-    #     # pull the breaks out of the result
-    #     var = np.sort(res.x)
-    #     breaks = np.zeros(len(var) + 2)
-    #     breaks[1:-1] = var.copy()
-    #     breaks[0] = self.break_0
-    #     breaks[-1] = self.break_n
-
-    #     # assign values
-    #     if x_c is None and y_c is None:
-    #         self.fit_with_breaks(breaks)
-    #     else:
-    #         self.fit_with_breaks_force_points(breaks, self.x_c, self.y_c)
-    #     return self.fit_breaks
 
     def use_custom_opt(self, n_segments, x_c=None, y_c=None):
         r"""
