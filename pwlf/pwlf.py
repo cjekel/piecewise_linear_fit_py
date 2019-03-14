@@ -261,7 +261,7 @@ class PiecewiseLinFit(object):
 
         Other useful resources:
         http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
-        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic algorithm objects. The library includes tools for using genetic algorithms to do optimization in any C++ program using any representation and genetic operators. The documentation includes an extensive overview of how to implement a genetic algorithm 
+        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic
         http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
 
         Parameters
