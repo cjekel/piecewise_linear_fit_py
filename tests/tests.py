@@ -177,6 +177,18 @@ class TestEverything(unittest.TestCase):
                                    disp=None)
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
 
+    def test_ga(self):
+        total_set = set(np.arange(0, 100))
+        nvar = 6
+
+        def my_fun(x):
+            x = np.array(list(x))
+            return np.dot(x, x)
+
+        pop, hof, stats = pwlf.genetic_algorithm(total_set, nvar, my_fun,
+                                                 mu=20, lam=40, ngen=100)
+        self.assertTrue(np.isclose(hof[0].fitness.values[0], 55.))
+
     def test_multi_start_fitfast(self):
         print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)

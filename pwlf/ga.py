@@ -6,8 +6,9 @@ from deap import tools
 import random
 
 
-def genetic_algorithm(total_set, nvar, objective_function, ngen=50, mu=10,
-                      lam=20, cxpb=0.7, mutpb=0.2, selection='tourn'):
+def genetic_algorithm(total_set, nvar, objective_function, ngen=50, mu=20,
+                      lam=40, cxpb=0.7, mutpb=0.2, tournsize=3,
+                      verbose=False):
     # Creates a new class name set_mod which is based on the standard python
     # set. This means set_mod is just like set, with the addion of a fitness
     # attribute.
@@ -19,7 +20,8 @@ def genetic_algorithm(total_set, nvar, objective_function, ngen=50, mu=10,
         """Function to initlize individual in the population."""
         return set_mod(random.sample(total_set, size))
 
-    def evalKnapsack(individual):
+    def evaluation(individual):
+        """Evaluate the objective function."""
         return objective_function(list(individual)),
 
     def cxSet(ind1, ind2):
@@ -45,11 +47,11 @@ def genetic_algorithm(total_set, nvar, objective_function, ngen=50, mu=10,
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
     # set up the GA functions
-    toolbox.register("evaluate", evalKnapsack)
+    toolbox.register("evaluate", evaluation)
     toolbox.register("mate", cxSet)
     toolbox.register("mutate", mutSet)
     # toolbox.register("select", tools.selNSGA2)
-    toolbox.register("select", tools.selTournament, tournsize=3)
+    toolbox.register("select", tools.selTournament, tournsize=tournsize)
 
     # initialize the population
     pop = toolbox.population(n=mu)
@@ -61,5 +63,5 @@ def genetic_algorithm(total_set, nvar, objective_function, ngen=50, mu=10,
     stats.register("max", np.max, axis=0)
     # run the GA
     algorithms.eaMuPlusLambda(pop, toolbox, mu, lam, cxpb, mutpb, ngen, stats,
-                              halloffame=hof, verbose=True)
+                              halloffame=hof, verbose=verbose)
     return pop, hof, stats
