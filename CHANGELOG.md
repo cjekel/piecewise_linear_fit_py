@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2019-
+### Added
+- new ```assemble_regression_matrix()``` function that returns the linear regression matrix ```A``` which can allow you to do some more complicated [fits](https://jekel.me/2019/detect-number-of-line-segments-in-pwlf/)
+- test function for the linear regression matrix
+- new ```fit_guess()``` function to perform a fit when you have an estimate of the breakpoint locations
+### Changed
+- consolidated the assembly of the linear regression matrix to a single function (and removed the duplicate code)
+
 ## [0.3.5] - 2019-02-25
 ### Changed
 - minor correction to r_squared docstring example

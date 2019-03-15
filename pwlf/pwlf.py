@@ -173,6 +173,81 @@ class PiecewiseLinFit(object):
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
 
+    def assemble_regression_matrix(self, breaks, x, x_ordered=True):
+        r"""
+        Assemble the linear regression matrix A
+
+        Parameters
+        ----------
+        breaks : array_like
+            The x locations where each line segment terminates. These are
+            referred to as breakpoints for each line segment. This should be
+            structured as a 1-D numpy array.
+        x : ndarray (1-D)
+            The x locations which the linear regression matrix is assembled on.
+            This must be a numpy array!
+        x_ordered : bool, optional
+            Whether x is ordered from smallest to largest. Data needs to be
+            sorted such that x[0] <= x[1] <= ... <= x[n-1].
+            Default x_ordered=False.
+
+        Attributes
+        ----------
+        fit_breaks : ndarray (1-D)
+            breakpoint locations stored as a 1-D numpy array.
+        n_parameters : int
+            The number of model parameters. This is equivalent to the
+            len(beta).
+        n_segments : int
+            The number of line segments.
+
+        Returns
+        -------
+        A : ndarray (2-D)
+            The assembled linear regression matrix.
+
+        Examples
+        --------
+        Assemble the linear regression matrix on the x data for some set of
+        breakpoints.
+
+        >>> import pwlf
+        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> breaks = [0.0, 0.5, 1.0]
+        >>> A = assemble_regression_matrix(breaks, self.x_data)
+
+        """
+        if x_ordered is False:
+            # sort the data from least x to max x
+            order_arg = np.argsort(x)
+            x = x[order_arg]
+
+        # Sort the breaks, then store them
+        breaks_order = np.argsort(breaks)
+        self.fit_breaks = breaks[breaks_order]
+        # store the number of parameters and line segments
+        self.n_parameters = len(breaks)
+        self.n_segments = self.n_parameters - 1
+
+        # # initialize the regression matrix as zeros
+        A = np.zeros((len(x), self.n_parameters))
+        # The first two columns of the matrix are always defined as
+        A[:, 0] = 1.0
+        A[:, 1] = x - self.fit_breaks[0]
+        # Loop through the rest of A to determine the other columns
+        for i in range(self.n_segments-1):
+            # find the locations where x > breakpoint values
+            int_locations = x > self.fit_breaks[i+1]
+            if sum(int_locations) > 0:
+                # this if statement just ensures that there is at least
+                # one data point in x_c > breaks[i+1]
+                # find the first index of x where it is greater than the break
+                # point value
+                int_index = np.argmax(int_locations)
+                # only change the non-zero values of A
+                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+        return A
+
     def fit_with_breaks(self, breaks):
         r"""
         A function which fits a continuous piecewise linear function
@@ -186,7 +261,7 @@ class PiecewiseLinFit(object):
 
         Other useful resources:
         http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
-        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fit
+        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic
         http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
 
         Parameters
@@ -248,25 +323,7 @@ class PiecewiseLinFit(object):
         if isinstance(breaks, np.ndarray) is False:
             breaks = np.array(breaks)
 
-        # Sort the breaks, then store them
-        breaks_order = np.argsort(breaks)
-        self.fit_breaks = breaks[breaks_order]
-        # store the number of parameters and line segments
-        self.n_parameters = len(breaks)
-        self.n_segments = self.n_parameters - 1
-
-        # initialize the regression matrix as zeros
-        A = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = self.x_data - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = self.x_data[int_index:] - self.fit_breaks[i+1]
+        A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # try to solve the regression problem
         try:
@@ -355,7 +412,6 @@ class PiecewiseLinFit(object):
         c_n : int
             The number of constraint points. This is the same as len(x_c).
 
-
         Returns
         -------
         L : float
@@ -407,42 +463,24 @@ class PiecewiseLinFit(object):
         if isinstance(breaks, np.ndarray) is False:
             breaks = np.array(breaks)
 
-        # Sort the breaks, then store them
-        breaks_order = np.argsort(breaks)
-        self.fit_breaks = breaks[breaks_order]
-        # store the number of parameters and line segments
-        self.n_parameters = len(breaks)
-        self.n_segments = self.n_parameters - 1
-
-        # initialize the regression matrix as zeros
-        A = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = self.x_data - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = self.x_data[int_index:] - self.fit_breaks[i+1]
+        A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
         C = np.zeros((self.c_n, self.n_parameters))
         C[:, 0] = 1.0
-        C[:, 1] = self.x_c - breaks[0]
+        C[:, 1] = self.x_c - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
         for i in range(self.n_segments-1):
             # find the locations where x > breakpoint values
-            int_locations = self.x_c > breaks[i+1]
+            int_locations = self.x_c > self.fit_breaks[i+1]
             if sum(int_locations) > 0:
                 # this if statement just ensures that there is at least
                 # one data point in x_c > breaks[i+1]
                 # find the first index of x where it is greater than the break
                 # point value
-                int_index = np.argmax(int_locations)
+                int_ind = np.argmax(int_locations)
                 # only change the non-zero values of A
-                C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
+                C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
@@ -581,23 +619,7 @@ class PiecewiseLinFit(object):
             order_arg = np.argsort(x)
             x = x[order_arg]
 
-        # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = x - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = x > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+        A = self.assemble_regression_matrix(self.fit_breaks, x)
 
         # solve the regression problem
         y_hat = np.dot(A, self.beta)
@@ -647,22 +669,7 @@ class PiecewiseLinFit(object):
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
 
-        # Sort the breaks, then store them
-        breaks_order = np.argsort(breaks)
-        breaks = breaks[breaks_order]
-
-        # initialize the regression matrix as zeros
-        A = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = self.x_data - breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = self.x_data[int_index:] - breaks[i+1]
+        A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # try to solve the regression problem
         try:
@@ -704,7 +711,6 @@ class PiecewiseLinFit(object):
         x_c and y_c, while performing a custom optimization.
 
         This was intended for advanced users only.
-
         See the following example
         https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py
 
@@ -744,18 +750,7 @@ class PiecewiseLinFit(object):
         breaks_order = np.argsort(breaks)
         breaks = breaks[breaks_order]
 
-        # initialize the regression matrix as zeros
-        A = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = self.x_data - breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = self.x_data[int_index:] - breaks[i+1]
+        A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
         C = np.zeros((self.c_n, self.n_parameters))
@@ -1145,6 +1140,118 @@ class PiecewiseLinFit(object):
 
         return self.fit_breaks
 
+    def fit_guess(self, guess_breakpoints, **kwargs):
+        r"""
+        Uses L-BFGS-B optimization to find the location of breakpoints
+        from a guess of where breakpoint locations should be.
+
+        In some cases you may have a good idea where the breakpoint locations
+        occur. It generally won't be necessary to run a full global
+        optimization to search the entire domain for the breakpoints when you
+        have a good idea where the breakpoints occur. Here a local optimization
+        is run from a guess of the breakpoint locations.
+
+        Parameters
+        ----------
+        guess_breakpoints : array_like
+            Guess where the breakpoints occur. This should be a list or numpy
+            array containing the locations where it appears breakpoints occur.
+
+        Attributes
+        ----------
+        ssr : float
+            Optimal sum of square error.
+        fit_breaks : ndarray (1-D)
+            breakpoint locations stored as a 1-D numpy array.
+        n_parameters : int
+            The number of model parameters. This is equivalent to the
+            len(beta).
+        n_segments : int
+            The number of line segments.
+        nVar : int
+            The number of variables in the global optimization problem.
+        beta : ndarray (1-D)
+            The model parameters for the continuous piecewise linear fit.
+        slopes : ndarray (1-D)
+            The slope of each ling segment as a 1-D numpy array. This assumes
+            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
+            of the first line segment.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
+
+        Returns
+        -------
+        fit_breaks : float
+            breakpoint locations stored as a 1-D numpy array.
+
+        Notes
+        -----
+        All **kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
+        **kwargs is used, it will override my defaults. This allows
+        advanced users to tweak their own optimization. For me information see:
+        https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
+
+        You do not need to specify the x.min() or x.max() in geuss_breakpoints!
+
+        Examples
+        --------
+        In this example we see two distinct linear regions, and we believe a
+        breakpoint occurs at 6.0. We'll use the fit_guess() function to find
+        the best breakpoint location starting with this guess.
+
+        >>> import pwlf
+        >>> x = np.array([4., 5., 6., 7., 8.])
+        >>> y = np.array([11., 13., 16., 28.92, 42.81])
+        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> breaks = my_pwlf.fit_guess([6.0])
+
+        Note specifying one breakpoint will result in two line segments.
+        If we wanted three line segments, we'll have to specify two
+        breakpoints.
+
+        >>> breaks = my_pwlf.fit_guess([5.5, 6.0])
+
+        """
+        # calculate the number of variables I have to solve for
+        self.nVar = len(guess_breakpoints)
+        self.n_segments = self.nVar + 1
+        self.n_parameters = self.n_segments + 1
+
+        # initiate the bounds of the optimization
+        bounds = np.zeros([self.nVar, 2])
+        bounds[:, 0] = self.break_0
+        bounds[:, 1] = self.break_n
+
+        if len(kwargs) == 0:
+            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                          guess_breakpoints,
+                                          fprime=None, args=(),
+                                          approx_grad=True,
+                                          bounds=bounds, m=10,
+                                          factr=1e2, pgtol=1e-05,
+                                          epsilon=1e-08, iprint=-1,
+                                          maxfun=15000, maxiter=15000,
+                                          disp=None, callback=None)
+        else:
+            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                          guess_breakpoints,
+                                          fprime=None, approx_grad=True,
+                                          bounds=bounds, **kwargs)
+
+        self.ssr = resf
+
+        # pull the breaks out of the result
+        var = np.sort(resx)
+        breaks = np.zeros(len(var) + 2)
+        breaks[1:-1] = var.copy()
+        breaks[0] = self.break_0
+        breaks[-1] = self.break_n
+
+        # assign values
+        self.fit_with_breaks(breaks)
+
+        return self.fit_breaks
+
     def use_custom_opt(self, n_segments, x_c=None, y_c=None):
         r"""
         Provide the number of line segments you want to use with your
@@ -1320,18 +1427,7 @@ class PiecewiseLinFit(object):
 
         ny = len(self.y_data)
 
-        # initialize the regression matrix as zeros
-        A = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = self.x_data - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
-            # only change the non-zero values of A
-            A[int_index:, i+2] = self.x_data[int_index:] - self.fit_breaks[i+1]
+        A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
 
         # try to solve for the standard errors
         try:
@@ -1348,7 +1444,7 @@ class PiecewiseLinFit(object):
             return self.se
 
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def prediction_variance(self, x, sorted_data=False):
         r"""
@@ -1427,19 +1523,8 @@ class PiecewiseLinFit(object):
             order_arg = np.argsort(x)
             x = x[order_arg]
 
-        # calculate the prediction variance
-        Ad = np.zeros((self.n_data, self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        Ad[:, 0] = 1.0
-        Ad[:, 1] = self.x_data - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the first index of x where it is greater than the break
-            # point value
-            int_index = np.argmax(self.x_data > self.fit_breaks[i+1])
-            # only change the non-zero values of A
-            Ad[int_index:, i+2] = self.x_data[int_index:] - \
-                self.fit_breaks[i+1]
+        # Regression matrix on training data
+        Ad = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
 
         # try to solve for the unbiased variance estimation
         try:
@@ -1451,26 +1536,10 @@ class PiecewiseLinFit(object):
             variance = np.dot(e, e) / (ny - nb)
 
         except np.linalg.LinAlgError:
-            raise("Unable to calculate prediction variance."
-                  " Something went wrong.")
+            raise np.linalg.LinAlgError('Singular matrix')
 
-        # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = x - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = x > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+        # Regression matrix on prediction data
+        A = self.assemble_regression_matrix(self.fit_breaks, x)
 
         # try to solve for the prediction variance at the x locations
         try:
@@ -1479,7 +1548,7 @@ class PiecewiseLinFit(object):
             return pre_var.diagonal()
 
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def r_squared(self):
         r"""
@@ -1526,7 +1595,7 @@ class PiecewiseLinFit(object):
             rsq = 1.0 - (ssr/sst)
             return rsq
         except np.linalg.LinAlgError:
-            raise('Unable to calculate standard errors. Something went wrong.')
+            raise np.linalg.LinAlgError('Singular matrix')
 
     def p_values(self):
         r"""

@@ -51,23 +51,26 @@ All of these examples will use the following data and imports.
                   1.22120350e-01, 1.36931660e-01, 1.50958760e-01,
                   1.65299640e-01, 1.79942720e-01])
 
-1. `fit with known breakpoint
-   locations <#fit-with-known-breakpoint-locations>`__
-2. `fit for specified number of line
-   segments <#fit-for-specified-number-of-line-segments>`__
-3. `fitfast for specified number of line
-   segments <#fitfast-for-specified-number-of-line-segments>`__
-4. `force a fit through data
-   points <#force-a-fit-through-data-points>`__
-5. `use custom optimization
-   routine <#use-custom-optimization-routine>`__
-6. `pass differential evolution
-   keywords <#pass-differential-evolution-keywords>`__
-7. `find the best number of line
-   segments <#find-the-best-number-of-line-segments>`__
-8. `model persistence <#model-persistence>`__
-9. `bad fits when you have more unknowns than
-   data <#bad-fits-when-you-have-more-unknowns-than-data>`__
+1.  `fit with known breakpoint
+    locations <#fit-with-known-breakpoint-locations>`__
+2.  `fit for specified number of line
+    segments <#fit-for-specified-number-of-line-segments>`__
+3.  `fitfast for specified number of line
+    segments <#fitfast-for-specified-number-of-line-segments>`__
+4.  `force a fit through data
+    points <#force-a-fit-through-data-points>`__
+5.  `use custom optimization
+    routine <#use-custom-optimization-routine>`__
+6.  `pass differential evolution
+    keywords <#pass-differential-evolution-keywords>`__
+7.  `find the best number of line
+    segments <#find-the-best-number-of-line-segments>`__
+8.  `model persistence <#model-persistence>`__
+9.  `bad fits when you have more unknowns than
+    data <#bad-fits-when-you-have-more-unknowns-than-data>`__
+10. `fit with a breakpoint guess <#fit-with-a-breakpoint-guess>`__
+11. `get the linear regression
+    matrix <#get-the-linear-regression-matrix>`__
 
 fit with known breakpoint locations
 -----------------------------------
@@ -399,3 +402,83 @@ unknowns than you have data with pwlf!
    :alt: bad fits when you have more unknowns than data
 
    bad fits when you have more unknowns than data
+
+fit with a breakpoint guess
+---------------------------
+
+In this example we see two distinct linear regions, and we believe a
+breakpoint occurs at 6.0. We'll use the fit\_guess() function to find
+the best breakpoint location starting with this guess. These fits should
+be much faster than the ``fit`` or ``fitfast`` function when you have a
+reasonable idea where the breakpoints occur.
+
+.. code:: python
+
+    import numpy as np
+    import pwlf
+    x = np.array([4., 5., 6., 7., 8.])
+    y = np.array([11., 13., 16., 28.92, 42.81])
+    my_pwlf = pwlf.PiecewiseLinFit(x, y)
+    breaks = my_pwlf.fit_guess([6.0])
+
+Note specifying one breakpoint will result in two line segments. If we
+wanted three line segments, we'll have to specify two breakpoints.
+
+.. code:: python
+
+    breaks = my_pwlf.fit_guess([5.5, 6.0])
+
+get the linear regression matrix
+--------------------------------
+
+In some cases it may be desirable to work with the linear regression
+matrix directly. The following example grabs the linear regression
+matrix ``A`` for a specific set of breakpoints. In this case we assume
+that the breakpoints occur at each of the data points. Please see the
+`paper <https://github.com/cjekel/piecewise_linear_fit_py/tree/master/paper>`__
+for details about the regression matrix ``A``.
+
+.. code:: python
+
+    import numpy as np
+    import pwlf
+    # select random seed for reproducibility
+    np.random.seed(123)
+    # generate sin wave data
+    x = np.linspace(0, 10, num=100)
+    y = np.sin(x * np.pi / 2)
+    ytrue = y.copy()
+    # add noise to the data
+    y = np.random.normal(0, 0.05, 100) + ytrue
+
+    my_pwlf_en = pwlf.PiecewiseLinFit(x, y)
+    # copy the x data to use as break points
+    breaks = my_pwlf_en.x_data.copy()
+    # create the linear regression matrix A 
+    A = my_pwlf_en.assemble_regression_matrix(breaks, my_pwlf_en.x_data)
+
+We can perform fits that are more complicated than a least squares fit
+when we have the regression matrix. The following uses the Elastic Net
+regularizer to perform an interesting fit with the regression matrix.
+
+.. code:: python
+
+    from sklearn.linear_model import ElasticNetCV
+    # set up the elastic net
+    en_model = ElasticNetCV(cv=5,
+                            l1_ratio=[.1, .5, .7, .9,
+                                      .95, .99, 1],
+                            fit_intercept=False,
+                            max_iter=1000000, n_jobs=-1)
+    # fit the model using the elastic net
+    en_model.fit(A, my_pwlf_en.y_data)
+
+    # predict from the elastic net parameters
+    xhat = np.linspace(x.min(), x.max(), 1000)
+    yhat_en = my_pwlf_en.predict(xhat, breaks=breaks,
+                                 beta=en_model.coef_)
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png
+   :alt: interesting elastic net fit
+
+   interesting elastic net fit

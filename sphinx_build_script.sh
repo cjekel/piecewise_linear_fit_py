@@ -4,6 +4,7 @@
 rm -r docs/*
 rm -r doctrees/*
 # make the documentation in gitignore folder
+cp examples/README.rst sphinxdocs/source/examples.rst
 cd sphinxdocs
 make clean
 make html
