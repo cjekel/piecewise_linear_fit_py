@@ -1,5 +1,4 @@
 from .pwlf import PiecewiseLinFit
-from .ga import genetic_algorithm
 import os
 
 # add rudimentary version tracking
