@@ -1503,7 +1503,7 @@ class PiecewiseLinFit(object):
 
         """
         try:
-            k = len(self.beta)-1
+            k = len(self.beta) - 1
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
@@ -1665,5 +1665,5 @@ class PiecewiseLinFit(object):
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
         # calculate the p-values
-        p = 2.0*stats.t.sf(np.abs(t), df=n-k-1)
+        p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p
