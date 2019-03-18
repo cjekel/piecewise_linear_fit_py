@@ -1419,7 +1419,7 @@ class PiecewiseLinFit(object):
 
         """
         try:
-            k = len(self.beta) - 1
+            nb = len(self.beta)
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
@@ -1436,7 +1436,7 @@ class PiecewiseLinFit(object):
             e = y_hat - self.y_data
 
             # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - k)
+            variance = np.dot(e, e) / (ny - nb)
 
             self.se = np.sqrt(variance * (np.linalg.inv(np.dot(A.T,
                                                                A)).diagonal()))
@@ -1503,7 +1503,7 @@ class PiecewiseLinFit(object):
 
         """
         try:
-            k = len(self.beta) - 1
+            nb = len(self.beta)
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
@@ -1533,7 +1533,7 @@ class PiecewiseLinFit(object):
             e = y_hat - self.y_data
 
             # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - k)
+            variance = np.dot(e, e) / (ny - nb)
 
         except np.linalg.LinAlgError:
             raise np.linalg.LinAlgError('Singular matrix')
