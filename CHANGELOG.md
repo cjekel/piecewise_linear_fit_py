@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2019-03-18
+### Changed
+- p_values() now uses the correct degrees of freedom (Thanks to Tong Qiu for pointing this out!)
+- p_values() now returns a value that can be compared to alpha; previous values would have been compared to alpha/2
+
 ## [0.4.0] - 2019-03-14
 ### Added
 - new ```assemble_regression_matrix()``` function that returns the linear regression matrix ```A``` which can allow you to do some more complicated [fits](https://jekel.me/2019/detect-number-of-line-segments-in-pwlf/)

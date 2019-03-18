@@ -1607,6 +1607,9 @@ class PiecewiseLinFit(object):
         This is really a marginal test since each parameter is dependent upon
         the other parameters.
 
+        These values are typically compared to some confidence level alpha for
+        significance. A 95% confidence level would have alpha = 0.05.
+
         Returns
         -------
         p : ndarray (1-D)
