@@ -217,6 +217,9 @@ class PiecewiseLinFit(object):
         >>> A = assemble_regression_matrix(breaks, self.x_data)
 
         """
+        # Check if breaks in ndarray, if not convert to np.array
+        if isinstance(breaks, np.ndarray) is False:
+            breaks = np.array(breaks)
         if x_ordered is False:
             # sort the data from least x to max x
             order_arg = np.argsort(x)
