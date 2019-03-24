@@ -574,8 +574,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         y_hat : ndarray (1-D)
-            Returns the Lagrangian function value. This is the sum of squares
-            of the residuals plus the constraint penalty.
+            The predicted values at x.
 
         Notes
         -----
