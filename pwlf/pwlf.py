@@ -2037,15 +2037,17 @@ class PiecewiseLinFitTF(object):
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
         """
-        self.c_n = len(self.x_c)
+        self.c_n = len(x_c)
         if isinstance(x_c, np.ndarray) is False:
             x_c = np.array(x_c)
         if isinstance(y_c, np.ndarray) is False:
             y_c = np.array(y_c)
         # sort the x_c and y_c data points, then store them
         x_c_order = np.argsort(x_c)
-        self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1))
-        self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1))
+        self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1),
+                                        self.dtype)
+        self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
+                                        self.dtype)
 
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
@@ -2054,13 +2056,13 @@ class PiecewiseLinFitTF(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # penalty matrix
-        zeros = tf.zeros_like(x_c)
+        zeros = tf.zeros_like(self.x_c)
         C_list = []
-        C_list.append(tf.ones((self.c_n, 1), tf.float64))
-        C_list.append(x_c - self.fit_breaks[0])
+        C_list.append(tf.ones_like(self.x_c))
+        C_list.append(self.x_c - self.fit_breaks[0])
         for i in range(self.n_segments - 1):
-            mask = tf.greater(x_c, self.fit_breaks[i+1])
-            C_list.append(tf.where(mask, x_c - self.fit_breaks[i+1], zeros))
+            mask = tf.greater(self.x_c, self.fit_breaks[i+1])
+            C_list.append(tf.where(mask, self.x_c - self.fit_breaks[i+1], zeros))
         C = tf.concat(C_list, axis=1)
 
         # assemble the KKT matrix K
@@ -2070,10 +2072,10 @@ class PiecewiseLinFitTF(object):
         Cz = tf.concat([C, tf.zeros((self.c_n, self.c_n), tf.float64)], axis=1)
         K = tf.concat([K, Cz], axis=0)
         yt = 2.0 * tf.linalg.matmul(tf.transpose(A), self.y_data)
-        z = tf.concat([yt, y_c], axis=0)
+        z = tf.concat([yt, self.y_c], axis=0)
 
-        # solve the regression problem 
-        beta = tf.linalg.lstsq(K, z)
+        # solve the regression problem
+        beta = tf.linalg.matmul(tf.linalg.inv(K), z)
 
         # compute the sum of square of the residuals
         y_hat = tf.matmul(A, beta[0:self.n_parameters])
@@ -2083,14 +2085,16 @@ class PiecewiseLinFitTF(object):
         # Calculate the Lagrangian function
         p = tf.matmul(CT, beta[self.n_parameters:])
 
-        self.betaTF = beta
+        self.beta_prime = beta
         with tf.Session():
             # save the beta parameters
             beta_prime = beta.eval()
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
+            self.betaTF = beta[0:self.n_parameters]
             # save the zeta parameters
             self.zeta = beta_prime[self.n_parameters:]
+            self.zetaTF = beta[self.n_parameters:]
             ssr = SSr.eval()
             L = ssr[0, 0] + np.sum(np.abs(p.eval()))
 
