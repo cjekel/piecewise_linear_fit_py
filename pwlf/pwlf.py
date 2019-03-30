@@ -1941,7 +1941,7 @@ class PiecewiseLinFitTF(object):
         # compute the sum of square of the residuals
         SSr = tf.matmul(tf.transpose(e), e)
         self.betaTF = beta
-        with tf.Session() as sess:
+        with tf.Session():
             # save the beta parameters
             self.beta = beta.eval().flatten()
             ssr = SSr.eval()
@@ -2037,18 +2037,15 @@ class PiecewiseLinFitTF(object):
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
         """
-
-        # check if x_c and y_c are numpy array, if not convert to numpy array
+        self.c_n = len(self.x_c)
         if isinstance(x_c, np.ndarray) is False:
             x_c = np.array(x_c)
         if isinstance(y_c, np.ndarray) is False:
             y_c = np.array(y_c)
         # sort the x_c and y_c data points, then store them
         x_c_order = np.argsort(x_c)
-        self.x_c = x_c[x_c_order]
-        self.y_c = y_c[x_c_order]
-        # store the number of constraints
-        self.c_n = len(self.x_c)
+        self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1))
+        self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1))
 
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
@@ -2056,67 +2053,49 @@ class PiecewiseLinFitTF(object):
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
-        # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters))
-        C[:, 0] = 1.0
-        C[:, 1] = self.x_c - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = self.x_c > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_ind = np.argmax(int_locations)
-                # only change the non-zero values of A
-                C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
+        # penalty matrix
+        zeros = tf.zeros_like(x_c)
+        C_list = []
+        C_list.append(tf.ones((self.c_n, 1), tf.float64))
+        C_list.append(x_c - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            mask = tf.greater(x_c, self.fit_breaks[i+1])
+            C_list.append(tf.where(mask, x_c - self.fit_breaks[i+1], zeros))
+        C = tf.concat(C_list, axis=1)
 
-        # Assemble the square constrained least squares matrix
-        K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n))
-        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
-        K[:self.n_parameters, self.n_parameters:] = C.T
-        K[self.n_parameters:, :self.n_parameters] = C
-        # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
+        # assemble the KKT matrix K
+        A2T = 2.0 * tf.linalg.matmul(tf.transpose(A), A)
+        CT = tf.transpose(C)
+        K = tf.concat([A2T, CT], axis=1)
+        Cz = tf.concat([C, tf.zeros((self.c_n, self.c_n), tf.float64)], axis=1)
+        K = tf.concat([K, Cz], axis=0)
+        yt = 2.0 * tf.linalg.matmul(tf.transpose(A), self.y_data)
+        z = tf.concat([yt, y_c], axis=0)
 
-        # try to solve the regression problem
-        try:
-            # Solve the least squares problem
-            beta_prime = np.linalg.solve(K, z)
+        # solve the regression problem 
+        beta = tf.linalg.lstsq(K, z)
 
+        # compute the sum of square of the residuals
+        y_hat = tf.matmul(A, beta[0:self.n_parameters])
+        e = y_hat - self.y_data
+        SSr = tf.matmul(tf.transpose(e), e)
+
+        # Calculate the Lagrangian function
+        p = tf.matmul(CT, beta[self.n_parameters:])
+
+        self.betaTF = beta
+        with tf.Session():
+            # save the beta parameters
+            beta_prime = beta.eval()
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
             # save the zeta parameters
             self.zeta = beta_prime[self.n_parameters:]
+            ssr = SSr.eval()
+            L = ssr[0, 0] + np.sum(np.abs(p.eval()))
 
-            # save the slopes
-            self.calc_slopes()
-
-            # Calculate ssr
-            # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-            ssr = np.dot(e, e)
-
-            # Calculate the Lagrangian function
-            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
-
-        except np.linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return L = np.inf
-            # You might have a singular Matrix!!!
-            L = np.inf
-        if L is None:
-            L = np.inf
-            # something went wrong...
+        # save the slopes
+        self.calc_slopes()
         return L
 
     def predict(self, x, beta=None, breaks=None):
@@ -2196,7 +2175,7 @@ class PiecewiseLinFitTF(object):
 
         # solve the regression problem
         y_hat = tf.matmul(A, self.betaTF)
-        with tf.Session() as sess:
+        with tf.Session():
             return y_hat.eval().flatten()
 
     def fit_with_breaks_opt(self, var):
