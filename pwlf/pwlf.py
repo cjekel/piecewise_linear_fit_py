@@ -34,7 +34,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False):
+    def __init__(self, x, y, disp_res=False, sorted_data=False, rcond=None):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -62,6 +62,12 @@ class PiecewiseLinFit(object):
             speed up the assembly of the regression matrix. A process that
             could be repeated several thousand times. If your data is not
             sorted, pwlf will use numpy to sort the data. Default is False.
+        rcond : float, optional
+            Cut-off ratio for small singular values when performing
+            np.linalg.lstsq. This default was changed in numpy == '1.14.0'.
+            The old behavior used rcond=-1. The default value is rcond=None.
+            For more information see
+            https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.lstsq.html
 
         Attributes
         ----------
@@ -78,6 +84,9 @@ class PiecewiseLinFit(object):
         print : bool
             Whether the optimization results should be printed. Default is
             False.
+        rcond : float
+            The cut-off ratio for small singular values in the least squares
+            solver.
 
         Methods
         -------
@@ -145,7 +154,7 @@ class PiecewiseLinFit(object):
         """
 
         self.print = disp_res
-
+        self.rcond = rcond
         # x and y should be numpy arrays
         # if they are not convert to numpy array
         if isinstance(x, np.ndarray) is False:
@@ -331,7 +340,8 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
+                                                 rcond=self.rcond)
             # save the beta parameters
             self.beta = beta
 
@@ -676,7 +686,8 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
+                                                 rcond=self.rcond)
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
