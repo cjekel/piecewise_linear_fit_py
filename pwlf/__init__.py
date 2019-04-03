@@ -1,5 +1,11 @@
 from .pwlf import PiecewiseLinFit
-from .pwlftf import PiecewiseLinFitTF
+try:
+    from .pwlftf import PiecewiseLinFitTF
+except ImportError:
+    class PiecewiseLinFitTF(object):
+
+        def __init__(self, *args, **kwargs):
+            ImportWarning('Possible error with importing TensorFlow')
 import os
 
 # add rudimentary version tracking

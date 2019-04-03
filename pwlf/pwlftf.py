@@ -588,34 +588,18 @@ class PiecewiseLinFitTF(object):
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
-        # try to solve the regression problem
-        try:
-            # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
-
-            # ssr is only calculated if self.n_data > self.n_parameters
-            # in all other cases I'll need to calculate ssr manually
-            # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-            # if ssr still hasn't been calculated... Then try again
-            if len(ssr) == 0:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-        except np.linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return ssr = np.inf
-            # You might have a singular Matrix!!!
-            ssr = np.inf
-        if ssr is None:
-            ssr = np.inf
-            # something went wrong...
-        return ssr[0]
+        # least squares solver
+        beta = tf.linalg.lstsq(A, self.y_data)
+        y_hat = tf.matmul(A, beta)
+        e = y_hat - self.y_data
+        # compute the sum of square of the residuals
+        SSr = tf.matmul(tf.transpose(e), e)
+        self.betaTF = beta
+        # with tf.Session():
+        # save the beta parameters
+        self.beta = beta.eval().flatten()
+        ssr = SSr.eval()
+        return ssr[0, 0]
 
     def fit_force_points_opt(self, var):
         r"""
@@ -669,63 +653,49 @@ class PiecewiseLinFitTF(object):
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
-        # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters))
-        C[:, 0] = 1.0
-        C[:, 1] = self.x_c - breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = self.x_c > breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
+        # penalty matrix
+        zeros = tf.zeros_like(self.x_c)
+        C_list = []
+        C_list.append(tf.ones_like(self.x_c))
+        C_list.append(self.x_c - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            mask = tf.greater(self.x_c, self.fit_breaks[i+1])
+            C_list.append(tf.where(mask, self.x_c - self.fit_breaks[i+1],
+                                   zeros))
+        C = tf.concat(C_list, axis=1)
 
-        # Assemble the square constrained least squares matrix
-        K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n))
-        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
-        K[:self.n_parameters, self.n_parameters:] = C.T
-        K[self.n_parameters:, :self.n_parameters] = C
-        # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
+        # assemble the KKT matrix K
+        A2T = 2.0 * tf.linalg.matmul(tf.transpose(A), A)
+        CT = tf.transpose(C)
+        K = tf.concat([A2T, CT], axis=1)
+        Cz = tf.concat([C, tf.zeros((self.c_n, self.c_n), tf.float64)], axis=1)
+        K = tf.concat([K, Cz], axis=0)
+        yt = 2.0 * tf.linalg.matmul(tf.transpose(A), self.y_data)
+        z = tf.concat([yt, self.y_c], axis=0)
 
-        # try to solve the regression problem
-        try:
-            # Solve the least squares problem
-            beta_prime = np.linalg.solve(K, z)
+        # solve the regression problem
+        beta = tf.linalg.matmul(tf.linalg.inv(K), z)
 
-            # save the beta parameters
-            self.beta = beta_prime[0:self.n_parameters]
-            # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters:]
+        # compute the sum of square of the residuals
+        y_hat = tf.matmul(A, beta[0:self.n_parameters])
+        e = y_hat - self.y_data
+        SSr = tf.matmul(tf.transpose(e), e)
 
-            # Calculate ssr
-            # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-            ssr = np.dot(e, e)
+        # Calculate the Lagrangian function
+        p = tf.matmul(CT, beta[self.n_parameters:])
 
-            # Calculate the Lagrangian function
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
-
-        except np.linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return L = np.inf
-            # You might have a singular Matrix!!!
-            L = np.inf
-        if L is None:
-            L = np.inf
-            # something went wrong...
+        self.beta_prime = beta
+        # with tf.Session():
+        # save the beta parameters
+        beta_prime = beta.eval()
+        # save the beta parameters
+        self.beta = beta_prime[0:self.n_parameters]
+        self.betaTF = beta[0:self.n_parameters]
+        # save the zeta parameters
+        self.zeta = beta_prime[self.n_parameters:]
+        self.zetaTF = beta[self.n_parameters:]
+        ssr = SSr.eval()
+        L = ssr[0, 0] + np.sum(np.abs(p.eval()))
         return L
 
     def fit(self, n_segments, x_c=None, y_c=None, **kwargs):
@@ -873,17 +843,18 @@ class PiecewiseLinFitTF(object):
         bounds[:, 1] = self.break_n
 
         # run the optimization
-        if len(kwargs) == 0:
-            res = differential_evolution(min_function, bounds,
-                                         strategy='best1bin', maxiter=1000,
-                                         popsize=50, tol=1e-3,
-                                         mutation=(0.5, 1), recombination=0.7,
-                                         seed=None, callback=None, disp=False,
-                                         polish=True, init='latinhypercube',
-                                         atol=1e-4)
-        else:
-            res = differential_evolution(min_function,
-                                         bounds, **kwargs)
+        with tf.Session():
+            if len(kwargs) == 0:
+                res = differential_evolution(min_function, bounds,
+                                            strategy='best1bin', maxiter=1000,
+                                            popsize=50, tol=1e-3,
+                                            mutation=(0.5, 1), recombination=0.7,
+                                            seed=None, callback=None, disp=False,
+                                            polish=True, init='latinhypercube',
+                                            atol=1e-4)
+            else:
+                res = differential_evolution(min_function,
+                                            bounds, **kwargs)
         if self.print is True:
             print(res)
 
@@ -1014,26 +985,26 @@ class PiecewiseLinFitTF(object):
         x = np.zeros((pop, self.nVar))
         f = np.zeros(pop)
         d = []
-
-        for i, x0 in enumerate(mypop):
-            if len(kwargs) == 0:
-                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                 fprime=None, args=(),
-                                                 approx_grad=True,
-                                                 bounds=bounds, m=10,
-                                                 factr=1e2, pgtol=1e-05,
-                                                 epsilon=1e-08, iprint=-1,
-                                                 maxfun=15000, maxiter=15000,
-                                                 disp=None, callback=None)
-            else:
-                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                 fprime=None, approx_grad=True,
-                                                 bounds=bounds, **kwargs)
-            x[i, :] = resx
-            f[i] = resf
-            d.append(resd)
-            if self.print is True:
-                print(i + 1, 'of ' + str(pop) + ' complete')
+        with tf.Session():
+            for i, x0 in enumerate(mypop):
+                if len(kwargs) == 0:
+                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
+                                                    fprime=None, args=(),
+                                                    approx_grad=True,
+                                                    bounds=bounds, m=10,
+                                                    factr=1e2, pgtol=1e-05,
+                                                    epsilon=1e-08, iprint=-1,
+                                                    maxfun=15000, maxiter=15000,
+                                                    disp=None, callback=None)
+                else:
+                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
+                                                    fprime=None, approx_grad=True,
+                                                    bounds=bounds, **kwargs)
+                x[i, :] = resx
+                f[i] = resf
+                d.append(resd)
+                if self.print is True:
+                    print(i + 1, 'of ' + str(pop) + ' complete')
 
         # find the best result
         best_ind = np.nanargmin(f)
@@ -1138,22 +1109,22 @@ class PiecewiseLinFitTF(object):
         bounds = np.zeros([self.nVar, 2])
         bounds[:, 0] = self.break_0
         bounds[:, 1] = self.break_n
-
-        if len(kwargs) == 0:
-            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                          guess_breakpoints,
-                                          fprime=None, args=(),
-                                          approx_grad=True,
-                                          bounds=bounds, m=10,
-                                          factr=1e2, pgtol=1e-05,
-                                          epsilon=1e-08, iprint=-1,
-                                          maxfun=15000, maxiter=15000,
-                                          disp=None, callback=None)
-        else:
-            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                          guess_breakpoints,
-                                          fprime=None, approx_grad=True,
-                                          bounds=bounds, **kwargs)
+        with tf.Session():
+            if len(kwargs) == 0:
+                resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                            guess_breakpoints,
+                                            fprime=None, args=(),
+                                            approx_grad=True,
+                                            bounds=bounds, m=10,
+                                            factr=1e2, pgtol=1e-05,
+                                            epsilon=1e-08, iprint=-1,
+                                            maxfun=15000, maxiter=15000,
+                                            disp=None, callback=None)
+            else:
+                resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                            guess_breakpoints,
+                                            fprime=None, approx_grad=True,
+                                            bounds=bounds, **kwargs)
 
         self.ssr = resf
 
@@ -1336,34 +1307,25 @@ class PiecewiseLinFitTF(object):
 
         """
         try:
-            nb = len(self.beta)
+            nb = self.beta.size
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
 
-        ny = len(self.y_data)
+        ny = self.n_data
 
         A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
-
-        # try to solve for the standard errors
-        try:
-
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-
-            # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - nb)
-
-            self.se = np.sqrt(variance * (np.linalg.inv(np.dot(A.T,
-                                                               A)).diagonal()))
-
+        y_hat = tf.matmul(A, self.betaTF)
+        e = y_hat - self.y_data
+        variance = tf.matmul(tf.transpose(e), e) / (ny - nb)
+        AtAinv = tf.linalg.inv(tf.matmul(tf.transpose(A), A))
+        with tf.Session():
+            var = variance.eval()[0, 0] * AtAinv.eval().diagonal()
+            self.se = np.sqrt(var)
             return self.se
 
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
-
-    def prediction_variance(self, x, sorted_data=False):
+    def prediction_variance(self, x):
         r"""
         Calculate the prediction variance for each specified x location. The
         prediction variance is the uncertainty of the model due to the lack of
@@ -1379,12 +1341,6 @@ class PiecewiseLinFitTF(object):
         x : array_like
             The x locations where you want the prediction variance from the
             fitted continuous piecewise linear function.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implentation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A processes that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
 
         Returns
         -------
@@ -1420,52 +1376,35 @@ class PiecewiseLinFitTF(object):
 
         """
         try:
-            nb = len(self.beta)
+            nb = self.beta.size
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
 
-        ny = len(self.y_data)
+        ny = self.n_data
 
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if sorted_data is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
+        # convert x to a tensor
+        x = tf.convert_to_tensor(x.reshape(-1, 1), dtype=self.dtype)
 
         # Regression matrix on training data
         Ad = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
 
-        # try to solve for the unbiased variance estimation
-        try:
-
-            y_hat = np.dot(Ad, self.beta)
-            e = y_hat - self.y_data
-
-            # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - nb)
-
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        y_hat = tf.matmul(Ad, self.betaTF)
+        e = y_hat - self.y_data
+        variance = tf.matmul(tf.transpose(e), e) / (ny - nb)
 
         # Regression matrix on prediction data
         A = self.assemble_regression_matrix(self.fit_breaks, x)
+        AdtAdinv = tf.linalg.inv(tf.matmul(tf.transpose(Ad), Ad))
+        AAdtAdinvAT = tf.matmul(tf.matmul(A, AdtAdinv), tf.transpose(A))
 
-        # try to solve for the prediction variance at the x locations
-        try:
-            pre_var = variance * \
-                np.dot(np.dot(A, np.linalg.inv(np.dot(Ad.T, Ad))), A.T)
-            return pre_var.diagonal()
-
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        with tf.Session():
+            pre_var = variance.eval()[0, 0] * AAdtAdinvAT.eval().diagonal()
+            return pre_var
 
     def r_squared(self):
         r"""
@@ -1505,14 +1444,12 @@ class PiecewiseLinFitTF(object):
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
         ssr = self.fit_with_breaks(fit_breaks)
-        ybar = np.ones(self.n_data) * np.mean(self.y_data)
+        ybar = tf.ones_like(self.y_data) * tf.reduce_mean(self.y_data, axis=None)
+        # ybar = np.ones(self.n_data) * np.mean(self.y_data)
         ydiff = self.y_data - ybar
-        try:
-            sst = np.dot(ydiff, ydiff)
-            rsq = 1.0 - (ssr/sst)
-            return rsq
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        sst = tf.matmul(tf.transpose(ydiff), ydiff)
+        with tf.Session():
+            rsq = 1.0 - (ssr/sst.eval()[0, 0])
 
     def p_values(self):
         r"""
