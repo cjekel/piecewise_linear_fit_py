@@ -37,13 +37,14 @@ class TestEverything(unittest.TestCase):
             A = A.eval()
         self.assertTrue(np.allclose(A, Asb))
 
-    # def test_break_point_spot_on_r2(self):
-    #     # test r squared value with known solution
-    #     my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
-    #     x0 = self.x_small.copy()
-    #     ssr = my_fit1.fit_with_breaks(x0)
-    #     rsq = my_fit1.r_squared()
-    #     self.assertTrue(np.isclose(rsq, 1.0))
+    def test_break_point_spot_on_r2(self):
+        # test r squared value with known solution
+        my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        rsq = my_fit1.r_squared()
+        print(rsq)
+        self.assertTrue(np.isclose(rsq, 1.0))
 
     # def test_break_point_diff_x0_0(self):
     #     # check diff loc

@@ -1450,6 +1450,7 @@ class PiecewiseLinFitTF(object):
         sst = tf.matmul(tf.transpose(ydiff), ydiff)
         with tf.Session():
             rsq = 1.0 - (ssr/sst.eval()[0, 0])
+        return rsq
 
     def p_values(self):
         r"""
