@@ -596,7 +596,12 @@ class PiecewiseLinFitTF(object):
         SSr = tf.matmul(tf.transpose(e), e)
         self.betaTF = beta
         # save the beta parameters
-        self.beta = beta.eval().flatten()
+        try:
+            self.beta = beta.eval().flatten()
+        except tf.errors.InvalidArgumentError:
+            # this means the Cholesky decomposition was not successful!
+            # the try; except must be placed around the executing code in tf!
+            return np.inf
         ssr = SSr.eval()
         return ssr[0, 0]
 
