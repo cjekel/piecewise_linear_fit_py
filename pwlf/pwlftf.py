@@ -23,21 +23,23 @@
 
 from __future__ import print_function
 # import libraries
+import tensorflow as tf
 import numpy as np
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
 from scipy import stats
 from pyDOE import lhs
+from pwlf import PiecewiseLinFit
 
 # piecewise linear fit library
 
 
-class PiecewiseLinFit(object):
+class PiecewiseLinFitTF(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False):
+    def __init__(self, x, y, disp_res=False, dtype='float64'):
         r"""
         An object to fit a continuous piecewise linear function
-        to data.
+        to data using TensorFlow.
 
         Initiate the library with the supplied x and y data.
         Supply the x and y data of which you'll be fitting
@@ -56,18 +58,15 @@ class PiecewiseLinFit(object):
         disp_res : bool, optional
             Whether the optimization results should be printed. Default is
             False.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implementation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A process that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
+        dtype : str, optional
+            Data type to use for tensorflow, either 'float64' or 'float32'.
+            Default is 'float64'.
 
         Attributes
         ----------
-        x_data : ndarray (1-D)
+        x_data : tf.tensor (n_data, 1)
             The inputted parameter x from the 1-D data set.
-        y_data : ndarray (1-D)
+        y_data : tf.tensor (n_data, 1)
             The inputted parameter y from the 1-D data set.
         n_data : int
             The number of data points.
@@ -143,37 +142,22 @@ class PiecewiseLinFit(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
-
-        self.print = disp_res
-
-        # x and y should be numpy arrays
-        # if they are not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
-        if isinstance(y, np.ndarray) is False:
-            y = np.array(y)
-
-        self.sorted_data = sorted_data
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if self.sorted_data:
-            self.x_data = x
-            self.y_data = y
+        if dtype == 'float64':
+            self.dtype = tf.float64
         else:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            self.x_data = x[order_arg]
-            self.y_data = y[order_arg]
+            self.dtype = tf.float32
+        self.print = disp_res
         # calculate the number of data points
-        self.n_data = len(x)
+        self.n_data = x.size
 
         # set the first and last break x values to be the min and max of x
-        self.break_0 = np.min(self.x_data)
-        self.break_n = np.max(self.x_data)
+        self.break_0 = np.min(x)
+        self.break_n = np.max(x)
 
-    def assemble_regression_matrix(self, breaks, x, x_ordered=True):
+        self.x_data = tf.convert_to_tensor(x.reshape(-1, 1), dtype=self.dtype)
+        self.y_data = tf.convert_to_tensor(y.reshape(-1, 1), dtype=self.dtype)
+
+    def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
 
@@ -183,13 +167,9 @@ class PiecewiseLinFit(object):
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
             structured as a 1-D numpy array.
-        x : ndarray (1-D)
+        x : tf.tensor (n_data, 1)
             The x locations which the linear regression matrix is assembled on.
             This must be a numpy array!
-        x_ordered : bool, optional
-            Whether x is ordered from smallest to largest. Data needs to be
-            sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            Default x_ordered=False.
 
         Attributes
         ----------
@@ -203,7 +183,7 @@ class PiecewiseLinFit(object):
 
         Returns
         -------
-        A : ndarray (2-D)
+        A : tf.tensor (2-D)
             The assembled linear regression matrix.
 
         Examples
@@ -220,10 +200,6 @@ class PiecewiseLinFit(object):
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
             breaks = np.array(breaks)
-        if x_ordered is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
 
         # Sort the breaks, then store them
         breaks_order = np.argsort(breaks)
@@ -232,23 +208,15 @@ class PiecewiseLinFit(object):
         self.n_parameters = len(breaks)
         self.n_segments = self.n_parameters - 1
 
-        # # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = x - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = x > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+        # Assemble the regression matrix
+        A_list = []
+        A_list.append(tf.ones_like(x))
+        A_list.append(x - self.fit_breaks[0])
+        zeros = tf.zeros_like(x)
+        for i in range(self.n_segments - 1):
+            mask = tf.greater(x, self.fit_breaks[i+1])
+            A_list.append(tf.where(mask, x - self.fit_breaks[i+1], zeros))
+        A = tf.concat(A_list, axis=1)
         return A
 
     def fit_with_breaks(self, breaks):
@@ -285,6 +253,8 @@ class PiecewiseLinFit(object):
             The number of line segments.
         beta : ndarray (1-D)
             The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
+            The model parameters for the continuous piecewise linear fit.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
@@ -296,11 +266,6 @@ class PiecewiseLinFit(object):
         -------
         ssr : float
             Returns the sum of squares of the residuals.
-
-        Raises
-        ------
-        LinAlgError
-            This typically means your regression problem is ill-conditioned.
 
         Notes
         -----
@@ -328,39 +293,21 @@ class PiecewiseLinFit(object):
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
-        # try to solve the regression problem
-        try:
-            # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+        # least squares solver
+        beta = tf.linalg.lstsq(A, self.y_data)
+        y_hat = tf.matmul(A, beta)
+        e = y_hat - self.y_data
+        # compute the sum of square of the residuals
+        SSr = tf.matmul(tf.transpose(e), e)
+        self.betaTF = beta
+        with tf.Session():
             # save the beta parameters
-            self.beta = beta
+            self.beta = beta.eval().flatten()
+            ssr = SSr.eval()
 
-            # save the slopes
-            self.calc_slopes()
-
-            # ssr is only calculated if self.n_data > self.n_parameters
-            # in this case I'll need to calculate ssr manually
-            # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-            # if ssr still hasn't been calculated... Then try again
-            if len(ssr) == 0:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-        except np.linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return ssr = np.print_function
-            # You might have a singular Matrix!!!
-            ssr = np.inf
-        if ssr is None:
-            ssr = np.inf
-            # something went wrong...
-        return ssr[0]
+        # save the slopes
+        self.calc_slopes()
+        return ssr[0, 0]
 
     def fit_with_breaks_force_points(self, breaks, x_c, y_c):
         r"""
@@ -449,18 +396,17 @@ class PiecewiseLinFit(object):
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
         """
-
-        # check if x_c and y_c are numpy array, if not convert to numpy array
+        self.c_n = len(x_c)
         if isinstance(x_c, np.ndarray) is False:
             x_c = np.array(x_c)
         if isinstance(y_c, np.ndarray) is False:
             y_c = np.array(y_c)
         # sort the x_c and y_c data points, then store them
         x_c_order = np.argsort(x_c)
-        self.x_c = x_c[x_c_order]
-        self.y_c = y_c[x_c_order]
-        # store the number of constraints
-        self.c_n = len(self.x_c)
+        self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1),
+                                        self.dtype)
+        self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
+                                        self.dtype)
 
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
@@ -468,70 +414,55 @@ class PiecewiseLinFit(object):
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
-        # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters))
-        C[:, 0] = 1.0
-        C[:, 1] = self.x_c - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = self.x_c > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_ind = np.argmax(int_locations)
-                # only change the non-zero values of A
-                C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
+        # penalty matrix
+        zeros = tf.zeros_like(self.x_c)
+        C_list = []
+        C_list.append(tf.ones_like(self.x_c))
+        C_list.append(self.x_c - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            mask = tf.greater(self.x_c, self.fit_breaks[i+1])
+            C_list.append(tf.where(mask, self.x_c - self.fit_breaks[i+1],
+                                   zeros))
+        C = tf.concat(C_list, axis=1)
 
-        # Assemble the square constrained least squares matrix
-        K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n))
-        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
-        K[:self.n_parameters, self.n_parameters:] = C.T
-        K[self.n_parameters:, :self.n_parameters] = C
-        # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
+        # assemble the KKT matrix K
+        A2T = 2.0 * tf.linalg.matmul(tf.transpose(A), A)
+        CT = tf.transpose(C)
+        K = tf.concat([A2T, CT], axis=1)
+        Cz = tf.concat([C, tf.zeros((self.c_n, self.c_n), tf.float64)], axis=1)
+        K = tf.concat([K, Cz], axis=0)
+        yt = 2.0 * tf.linalg.matmul(tf.transpose(A), self.y_data)
+        z = tf.concat([yt, self.y_c], axis=0)
 
-        # try to solve the regression problem
-        try:
-            # Solve the least squares problem
-            beta_prime = np.linalg.solve(K, z)
+        # solve the regression problem
+        beta = tf.linalg.matmul(tf.linalg.inv(K), z)
 
+        # compute the sum of square of the residuals
+        y_hat = tf.matmul(A, beta[0:self.n_parameters])
+        e = y_hat - self.y_data
+        SSr = tf.matmul(tf.transpose(e), e)
+
+        # Calculate the Lagrangian function
+        p = tf.matmul(CT, beta[self.n_parameters:])
+
+        self.beta_prime = beta
+        with tf.Session():
+            # save the beta parameters
+            beta_prime = beta.eval()
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
+            self.betaTF = beta[0:self.n_parameters]
             # save the zeta parameters
             self.zeta = beta_prime[self.n_parameters:]
+            self.zetaTF = beta[self.n_parameters:]
+            ssr = SSr.eval()
+            L = ssr[0, 0] + np.sum(np.abs(p.eval()))
 
-            # save the slopes
-            self.calc_slopes()
-
-            # Calculate ssr
-            # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-            ssr = np.dot(e, e)
-
-            # Calculate the Lagrangian function
-            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
-
-        except np.linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return L = np.inf
-            # You might have a singular Matrix!!!
-            L = np.inf
-        if L is None:
-            L = np.inf
-            # something went wrong...
+        # save the slopes
+        self.calc_slopes()
         return L
 
-    def predict(self, x, sorted_data=False, beta=None, breaks=None):
+    def predict(self, x, beta=None, breaks=None):
         r"""
         Evaluate the fitted continuous piecewise linear function at untested
         points.
@@ -545,12 +476,6 @@ class PiecewiseLinFit(object):
         x : array_like
             The x locations where you want to predict the output of the fitted
             continuous piecewise linear function.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implentation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A processes that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
         beta : none or ndarray (1-D), optional
             The model parameters for the continuous piecewise linear fit.
             Default is None.
@@ -595,14 +520,11 @@ class PiecewiseLinFit(object):
         >>> x_new = np.linspace(0.0, 1.0, 100)
         >>> yhat = my_pwlf.predict(x_new)
 
-        If the x data is already sorted you can add the sorted_data=True to
-        avoid sorting already sorted data.
-
-        >>> yhat = my_pwlf.predict(x_new, sorted_data=False)
-
         """
         if beta is not None and breaks is not None:
             self.beta = beta
+            self.betaTF = tf.convert_to_tensor(beta.reshape(-1, 1),
+                                               dtype=self.dtype)
             # Sort the breaks, then store them
             breaks_order = np.argsort(breaks)
             self.fit_breaks = breaks[breaks_order]
@@ -612,20 +534,13 @@ class PiecewiseLinFit(object):
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if sorted_data is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
-
-        A = self.assemble_regression_matrix(self.fit_breaks, x)
+        X = tf.convert_to_tensor(x.reshape(-1, 1), dtype=self.dtype)
+        A = self.assemble_regression_matrix(self.fit_breaks, X)
 
         # solve the regression problem
-        y_hat = np.dot(A, self.beta)
-        return y_hat
+        y_hat = tf.matmul(A, self.betaTF)
+        with tf.Session():
+            return y_hat.eval().flatten()
 
     def fit_with_breaks_opt(self, var):
         r"""
@@ -1672,4 +1587,3 @@ class PiecewiseLinFit(object):
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p
-

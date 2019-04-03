@@ -49,7 +49,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
               1.65299640e-01, 1.79942720e-01])
 
 # initialize piecewise linear fit with your x and y data
-my_pwlf = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+my_pwlf = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
 
 # fit the function with four line segments
 # force the function to go through the data points

@@ -1,5 +1,5 @@
 from .pwlf import PiecewiseLinFit
-from .pwlf import PiecewiseLinFitTF
+from .pwlftf import PiecewiseLinFitTF
 import os
 
 # add rudimentary version tracking
