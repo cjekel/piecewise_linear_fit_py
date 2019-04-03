@@ -595,7 +595,6 @@ class PiecewiseLinFitTF(object):
         # compute the sum of square of the residuals
         SSr = tf.matmul(tf.transpose(e), e)
         self.betaTF = beta
-        # with tf.Session():
         # save the beta parameters
         self.beta = beta.eval().flatten()
         ssr = SSr.eval()
@@ -685,9 +684,13 @@ class PiecewiseLinFitTF(object):
         p = tf.matmul(CT, beta[self.n_parameters:])
 
         self.beta_prime = beta
-        # with tf.Session():
         # save the beta parameters
-        beta_prime = beta.eval()
+        try:
+            beta_prime = beta.eval()
+        except tf.errors.InvalidArgumentError:
+            # the K matrix was not invertible!
+            # the try; except must be placed around the executing code in tf!
+            return np.inf
         # save the beta parameters
         self.beta = beta_prime[0:self.n_parameters]
         self.betaTF = beta[0:self.n_parameters]
@@ -823,11 +826,11 @@ class PiecewiseLinFitTF(object):
                 y_c = np.array(y_c)
             # sort the x_c and y_c data points, then store them
             x_c_order = np.argsort(x_c)
+            x_c_np = x_c[x_c_order]
+            y_c_np = y_c[x_c_order]
             self.c_n = len(x_c)
-            self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1),
-                                            self.dtype)
-            self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
-                                            self.dtype)
+            self.x_c = tf.convert_to_tensor(x_c_np.reshape(-1, 1), self.dtype)
+            self.y_c = tf.convert_to_tensor(y_c_np.reshape(-1, 1), self.dtype)
             # Use a different function to minimize
             min_function = self.fit_force_points_opt
 
@@ -872,7 +875,7 @@ class PiecewiseLinFitTF(object):
         if x_c is None and y_c is None:
             self.fit_with_breaks(breaks)
         else:
-            self.fit_with_breaks_force_points(breaks, self.x_c, self.y_c)
+            self.fit_with_breaks_force_points(breaks, x_c_np, y_c_np)
 
         return self.fit_breaks
 
@@ -986,8 +989,8 @@ class PiecewiseLinFitTF(object):
         x = np.zeros((pop, self.nVar))
         f = np.zeros(pop)
         d = []
-        for i, x0 in enumerate(mypop):
-            with tf.Session():
+        with tf.Session():
+            for i, x0 in enumerate(mypop):
                 if len(kwargs) == 0:
                     resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
                                                     fprime=None, args=(),
@@ -1007,22 +1010,22 @@ class PiecewiseLinFitTF(object):
                 if self.print is True:
                     print(i + 1, 'of ' + str(pop) + ' complete')
 
-        # find the best result
-        best_ind = np.nanargmin(f)
-        best_val = f[best_ind]
-        best_break = x[best_ind]
-        res = (x[best_ind], f[best_ind], d[best_ind])
-        if self.print is True:
-            print(res)
+            # find the best result
+            best_ind = np.nanargmin(f)
+            best_val = f[best_ind]
+            best_break = x[best_ind]
+            res = (x[best_ind], f[best_ind], d[best_ind])
+            if self.print is True:
+                print(res)
 
-        self.ssr = best_val
+            self.ssr = best_val
 
-        # obtain the breakpoint locations from the best result
-        var = np.sort(best_break)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
+            # obtain the breakpoint locations from the best result
+            var = np.sort(best_break)
+            breaks = np.zeros(len(var) + 2)
+            breaks[1:-1] = var.copy()
+            breaks[0] = self.break_0
+            breaks[-1] = self.break_n
 
         # assign parameters
         self.fit_with_breaks(breaks)

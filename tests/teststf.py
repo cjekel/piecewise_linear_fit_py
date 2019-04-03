@@ -2,6 +2,7 @@ import numpy as np
 import unittest
 import pwlf
 import tensorflow as tf
+import time
 
 class TestEverything(unittest.TestCase):
     # let's just test all of my use cases...
@@ -12,10 +13,6 @@ class TestEverything(unittest.TestCase):
     yk = 2.0*xk + -.5
     x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
     y = np.array([5, 7, 9, 11, 13, 15, 28.92, 42.81, 56.7, 70.59, 84.47, 98.36, 112.25, 126.14, 140.03])
-
-    # def test_is_five_prime(self):
-    #     """Is five successfully determined to be prime?"""
-    #     self.assertTrue(is_prime(5))
 
     def test_break_point_spot_on(self):
         # check that I can fit when break points spot on a
@@ -132,7 +129,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
         x_c = [0.0]
         y_c = [0.0]
-        res = my_fit.fit(3, x_c, y_c)
+        res = my_fit.fit(3, x_c, y_c, maxiter=2, disp=False)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
@@ -142,6 +139,7 @@ class TestEverything(unittest.TestCase):
                                          np.linspace(0, 100, num=100))
         ssr = my_pwlf.fitfast(2)
         se = my_pwlf.standard_errors()
+        self.assertTrue(True)
 
     def test_p(self):
         # check to see if it will let me calculate p-values
@@ -149,6 +147,7 @@ class TestEverything(unittest.TestCase):
                                          np.linspace(0, 100, num=100))
         ssr = my_pwlf.fitfast(2)
         p = my_pwlf.p_values()
+        self.assertTrue(True)
 
     def test_pv(self):
         # check to see if it will let me calculate prediction variance for
@@ -157,6 +156,7 @@ class TestEverything(unittest.TestCase):
                                          np.linspace(0, 100, num=100))
         ssr = my_pwlf.fitfast(2)
         pv = my_pwlf.prediction_variance(np.random.random(20))
+        self.assertTrue(True)
 
     def test_predict_with_custom_param(self):
         # check to see if predict runs with custom parameters
@@ -164,6 +164,7 @@ class TestEverything(unittest.TestCase):
         my_pwlf = pwlf.PiecewiseLinFitTF(x, np.random.random(20))
         my_pwlf.predict(x, beta=np.array((1e-4, 1e-2, 1e-3)),
                         breaks=np.array((0.0, 0.5, 1.0)))
+        self.assertTrue(True)
 
     def test_fit_guess(self):
         # x = np.array([4., 5., 6., 7., 8.])
@@ -184,7 +185,7 @@ class TestEverything(unittest.TestCase):
     def test_multi_start_fitfast(self):
         print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
-        res = my_pwlf.fitfast(2, 5)
+        res = my_pwlf.fitfast(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
 if __name__ == '__main__':
