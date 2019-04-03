@@ -823,10 +823,11 @@ class PiecewiseLinFitTF(object):
                 y_c = np.array(y_c)
             # sort the x_c and y_c data points, then store them
             x_c_order = np.argsort(x_c)
-            self.x_c = x_c[x_c_order]
-            self.y_c = y_c[x_c_order]
-            # store the number of constraints
-            self.c_n = len(self.x_c)
+            self.c_n = len(x_c)
+            self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1),
+                                            self.dtype)
+            self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
+                                            self.dtype)
             # Use a different function to minimize
             min_function = self.fit_force_points_opt
 
@@ -985,8 +986,8 @@ class PiecewiseLinFitTF(object):
         x = np.zeros((pop, self.nVar))
         f = np.zeros(pop)
         d = []
-        with tf.Session():
-            for i, x0 in enumerate(mypop):
+        for i, x0 in enumerate(mypop):
+            with tf.Session():
                 if len(kwargs) == 0:
                     resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
                                                     fprime=None, args=(),
@@ -1209,10 +1210,11 @@ class PiecewiseLinFitTF(object):
                 y_c = np.array(y_c)
             # sort the x_c and y_c data points, then store them
             x_c_order = np.argsort(x_c)
-            self.x_c = x_c[x_c_order]
-            self.y_c = y_c[x_c_order]
-            # store the number of constraints
             self.c_n = len(self.x_c)
+            self.x_c = tf.convert_to_tensor(x_c[x_c_order].reshape(-1, 1),
+                                            self.dtype)
+            self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
+                                            self.dtype)
 
     def calc_slopes(self):
         r"""
