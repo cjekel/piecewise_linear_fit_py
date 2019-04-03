@@ -1219,50 +1219,6 @@ class PiecewiseLinFitTF(object):
             self.y_c = tf.convert_to_tensor(y_c[x_c_order].reshape(-1, 1),
                                             self.dtype)
 
-    def calc_slopes(self):
-        r"""
-        Calculate the slopes of the lines after a piecewise linear
-        function has been fitted.
-
-        This will also calculate the y-intercept from each line in the form
-        y = mx + b. The intercepts are stored at self.intercepts.
-
-        Attributes
-        ----------
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-
-        Returns
-        -------
-        slopes : ndarray(1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-
-        Examples
-        --------
-        Calculate the slopes after performing a simple fit
-
-        >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
-        >>> breaks = my_pwlf.fit(3)
-        >>> slopes = my_pwlf.slopes()
-
-        """
-        y_hat = self.predict(self.fit_breaks)
-        self.slopes = np.zeros(self.n_segments)
-        for i in range(self.n_segments):
-            self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
-                        (self.fit_breaks[i+1]-self.fit_breaks[i])
-        self.intercepts = y_hat[0:-1] - self.slopes*self.fit_breaks[0:-1]
-        return self.slopes
-
     def standard_errors(self):
         r"""
         Calculate the standard errors for each beta parameter determined
@@ -1457,76 +1413,7 @@ class PiecewiseLinFitTF(object):
             rsq = 1.0 - (ssr/sst.eval()[0, 0])
         return rsq
 
-    def p_values(self):
-        r"""
-        Calculate the p-values for each beta parameter.
+    calc_slopes = PiecewiseLinFit.calc_slopes
 
-        This calculates the p-values for the beta parameters under the
-        assumption that your breakpoint locations are known. Section 2.4.2 of
-        [2]_ defines how to calculate the p-value of individual parameters.
-        This is really a marginal test since each parameter is dependent upon
-        the other parameters.
+    p_values = PiecewiseLinFit.p_values
 
-        These values are typically compared to some confidence level alpha for
-        significance. A 95% confidence level would have alpha = 0.05.
-
-        Returns
-        -------
-        p : ndarray (1-D)
-            p-values for each beta parameter where p-value[0] corresponds to
-            beta[0] and so forth
-
-        Raises
-        ------
-        ValueError
-            You have probably not performed a fit yet.
-
-        Notes
-        -----
-        This assumes that your breakpoint locations are exact! and does
-        not consider the uncertainty with your breakpoint locations.
-
-        See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
-
-        References
-        ----------
-        .. [2] Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
-            methodology . Hoboken. New Jersey: John Wiley & Sons, Inc.
-            2009;20:38-44.
-
-        Examples
-        --------
-        After performing a fit, one can calculate the p-value for each beta
-        parameter
-
-        >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
-        >>> breaks = my_pwlf.fitfast(3)
-        >>> x_new = np.linspace(0.0, 1.0, 100)
-        >>> p = my_pwlf.p_values(x_new)
-
-        see also examples/standard_errrors_and_p-values.py
-
-        """
-        # calculate the standard errors associated with each beta parameter
-        # not that these standard errors and p-values are only meaningful if
-        # you have specified the specific line segment end locations
-        # at least for now...
-        self.standard_errors()
-
-        # calculate my t-value
-        t = self.beta / self.se
-
-        # degrees of freedom for t-distribution
-        n = self.n_data
-        try:
-            k = len(self.beta) - 1
-        except ValueError:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
-        # calculate the p-values
-        p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
-        return p

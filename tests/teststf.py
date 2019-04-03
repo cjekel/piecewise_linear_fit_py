@@ -84,7 +84,7 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(ssr6, 0.0))
 
     def test_diff_evo(self):
-        my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
+        my_pwlf = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
         res = my_pwlf.fit(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
