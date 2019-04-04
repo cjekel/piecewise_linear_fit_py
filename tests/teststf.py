@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 import pwlf
 import tensorflow as tf
-import time
+
 
 class TestEverything(unittest.TestCase):
     # let's just test all of my use cases...
@@ -47,7 +47,7 @@ class TestEverything(unittest.TestCase):
         # test r squared value with known solution
         my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
         x0 = self.x_small.copy()
-        ssr = my_fit1.fit_with_breaks(x0)
+        my_fit1.fit_with_breaks(x0)
         rsq = my_fit1.r_squared()
         self.assertTrue(np.isclose(rsq, 1.0))
 
@@ -94,12 +94,12 @@ class TestEverything(unittest.TestCase):
 
     def test_diff_evo(self):
         my_pwlf = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
-        res = my_pwlf.fit(4)
+        my_pwlf.fit(4)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
     def test_predict(self):
         my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
-        res = my_pwlf.fit_with_breaks([0.5])
+        my_pwlf.fit_with_breaks([0.5])
         x = np.linspace(self.xk.min(), self.xk.max(), 10)
         yHat = my_pwlf.predict(x)
         e = np.sum(np.abs(yHat - self.yk))
@@ -118,7 +118,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
         x_c = [-0.5]
         y_c = [-0.5]
-        ssr = my_fit.fit_with_breaks_force_points([0.2, 1.0], x_c, y_c)
+        my_fit.fit_with_breaks_force_points([0.2, 1.0], x_c, y_c)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
@@ -126,7 +126,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
         x_c = [2.0]
         y_c = [1.5]
-        ssr = my_fit.fit_with_breaks_force_points([0.2, 1.0], x_c, y_c)
+        my_fit.fit_with_breaks_force_points([0.2, 1.0], x_c, y_c)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
@@ -138,7 +138,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
         x_c = [0.0]
         y_c = [0.0]
-        res = my_fit.fit(3, x_c, y_c, popsize=5, maxiter=2, disp=False)
+        my_fit.fit(3, x_c, y_c, popsize=5, maxiter=2, disp=False)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
@@ -146,16 +146,16 @@ class TestEverything(unittest.TestCase):
         # check to see if it will let me calculate standard errors
         my_pwlf = pwlf.PiecewiseLinFitTF(np.linspace(0, 100, num=100),
                                          np.linspace(0, 100, num=100))
-        ssr = my_pwlf.fitfast(2)
-        se = my_pwlf.standard_errors()
+        my_pwlf.fitfast(2)
+        my_pwlf.standard_errors()
         self.assertTrue(True)
 
     def test_p(self):
         # check to see if it will let me calculate p-values
         my_pwlf = pwlf.PiecewiseLinFitTF(np.linspace(0, 100, num=100),
                                          np.linspace(0, 100, num=100))
-        ssr = my_pwlf.fitfast(2)
-        p = my_pwlf.p_values()
+        my_pwlf.fitfast(2)
+        my_pwlf.p_values()
         self.assertTrue(True)
 
     def test_pv(self):
@@ -163,8 +163,8 @@ class TestEverything(unittest.TestCase):
         # random data
         my_pwlf = pwlf.PiecewiseLinFitTF(np.linspace(0, 100, num=100),
                                          np.linspace(0, 100, num=100))
-        ssr = my_pwlf.fitfast(2)
-        pv = my_pwlf.prediction_variance(np.random.random(20))
+        my_pwlf.fitfast(2)
+        my_pwlf.prediction_variance(np.random.random(20))
         self.assertTrue(True)
 
     def test_predict_with_custom_param(self):
@@ -194,9 +194,9 @@ class TestEverything(unittest.TestCase):
     def test_multi_start_fitfast(self):
         print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
-        res = my_pwlf.fitfast(2)
+        my_pwlf.fitfast(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+
 
 if __name__ == '__main__':
     unittest.main()
-
