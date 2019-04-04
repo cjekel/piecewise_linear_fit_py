@@ -138,7 +138,7 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
         x_c = [0.0]
         y_c = [0.0]
-        res = my_fit.fit(3, x_c, y_c, pop=5, maxiter=2, disp=False)
+        res = my_fit.fit(3, x_c, y_c, popsize=5, maxiter=2, disp=False)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
