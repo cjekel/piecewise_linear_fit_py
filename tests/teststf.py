@@ -12,11 +12,20 @@ class TestEverything(unittest.TestCase):
     xk = np.linspace(0, 1, num=10)
     yk = 2.0*xk + -.5
     x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-    y = np.array([5, 7, 9, 11, 13, 15, 28.92, 42.81, 56.7, 70.59, 84.47, 98.36, 112.25, 126.14, 140.03])
+    y = np.array([5, 7, 9, 11, 13, 15, 28.92, 42.81, 56.7, 70.59, 84.47, 98.36,
+                  112.25, 126.14, 140.03])
 
     def test_break_point_spot_on(self):
         # check that I can fit when break points spot on a
         my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        self.assertTrue(np.isclose(ssr, 0.0))
+
+    def test_single_precision(self):
+        # check that I can fit when break points spot on a
+        my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small,
+                                         dtype='float32')
         x0 = self.x_small.copy()
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
