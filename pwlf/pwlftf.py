@@ -27,7 +27,6 @@ import tensorflow as tf
 import numpy as np
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
-from scipy import stats
 from pyDOE import lhs
 from pwlf import PiecewiseLinFit
 
@@ -855,15 +854,15 @@ class PiecewiseLinFitTF(object):
         with tf.Session():
             if len(kwargs) == 0:
                 res = differential_evolution(min_function, bounds,
-                                            strategy='best1bin', maxiter=1000,
-                                            popsize=50, tol=1e-3,
-                                            mutation=(0.5, 1), recombination=0.7,
-                                            seed=None, callback=None, disp=False,
-                                            polish=True, init='latinhypercube',
-                                            atol=1e-4)
+                                             strategy='best1bin', maxiter=1000,
+                                             popsize=50, tol=1e-3,
+                                             mutation=(0.5, 1),
+                                             recombination=0.7, seed=None,
+                                             callback=None, disp=False,
+                                             polish=True,
+                                             init='latinhypercube', atol=1e-4)
             else:
-                res = differential_evolution(min_function,
-                                            bounds, **kwargs)
+                res = differential_evolution(min_function, bounds, **kwargs)
         if self.print is True:
             print(res)
 
@@ -997,18 +996,20 @@ class PiecewiseLinFitTF(object):
         with tf.Session():
             for i, x0 in enumerate(mypop):
                 if len(kwargs) == 0:
-                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                    fprime=None, args=(),
-                                                    approx_grad=True,
-                                                    bounds=bounds, m=10,
-                                                    factr=1e2, pgtol=1e-05,
-                                                    epsilon=1e-08, iprint=-1,
-                                                    maxfun=15000, maxiter=15000,
-                                                    disp=None, callback=None)
+                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                                     x0, fprime=None, args=(),
+                                                     approx_grad=True,
+                                                     bounds=bounds, m=10,
+                                                     factr=1e2, pgtol=1e-05,
+                                                     epsilon=1e-08,
+                                                     iprint=-1, maxfun=15000,
+                                                     maxiter=15000, disp=None,
+                                                     callback=None)
                 else:
-                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                    fprime=None, approx_grad=True,
-                                                    bounds=bounds, **kwargs)
+                    resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt,
+                                                     x0, fprime=None,
+                                                     approx_grad=True,
+                                                     bounds=bounds, **kwargs)
                 x[i, :] = resx
                 f[i] = resf
                 d.append(resd)
@@ -1121,19 +1122,19 @@ class PiecewiseLinFitTF(object):
         with tf.Session():
             if len(kwargs) == 0:
                 resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                            guess_breakpoints,
-                                            fprime=None, args=(),
-                                            approx_grad=True,
-                                            bounds=bounds, m=10,
-                                            factr=1e2, pgtol=1e-05,
-                                            epsilon=1e-08, iprint=-1,
-                                            maxfun=15000, maxiter=15000,
-                                            disp=None, callback=None)
+                                              guess_breakpoints,
+                                              fprime=None, args=(),
+                                              approx_grad=True,
+                                              bounds=bounds, m=10,
+                                              factr=1e2, pgtol=1e-05,
+                                              epsilon=1e-08, iprint=-1,
+                                              maxfun=15000, maxiter=15000,
+                                              disp=None, callback=None)
             else:
                 resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                            guess_breakpoints,
-                                            fprime=None, approx_grad=True,
-                                            bounds=bounds, **kwargs)
+                                              guess_breakpoints,
+                                              fprime=None, approx_grad=True,
+                                              bounds=bounds, **kwargs)
 
         self.ssr = resf
 
@@ -1410,8 +1411,8 @@ class PiecewiseLinFitTF(object):
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
         ssr = self.fit_with_breaks(fit_breaks)
-        ybar = tf.ones_like(self.y_data) * tf.reduce_mean(self.y_data, axis=None)
-        # ybar = np.ones(self.n_data) * np.mean(self.y_data)
+        ybar = tf.ones_like(self.y_data) * tf.reduce_mean(self.y_data)
+        # tf.reduce_mean defaults to flattening the entire tensor
         ydiff = self.y_data - ybar
         sst = tf.matmul(tf.transpose(ydiff), ydiff)
         with tf.Session():
@@ -1421,4 +1422,3 @@ class PiecewiseLinFitTF(object):
     calc_slopes = PiecewiseLinFit.calc_slopes
 
     p_values = PiecewiseLinFit.p_values
-

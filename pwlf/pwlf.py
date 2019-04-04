@@ -1672,4 +1672,3 @@ class PiecewiseLinFit(object):
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p
-

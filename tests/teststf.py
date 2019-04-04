@@ -199,5 +199,4 @@ class TestEverything(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    # Test = TestEverything()
-    # Test.test_se()
+
