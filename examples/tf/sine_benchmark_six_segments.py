@@ -22,7 +22,7 @@ my_pwlf = pwlf.PiecewiseLinFit(x, y)
 # res = my_pwlf.fit(16)
 breaks = my_pwlf.fit(6)
 t1 = time()
-print('run time t1 - t0')
+print('run time:', t1 - t0)
 # # predict for the determined points
 # xHat = np.linspace(min(x), max(x), num=10000)
 # yHat = my_pwlf.predict(xHat)
