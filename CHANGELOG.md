@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2019
+### Added
+- New ```PiecewiseLinFitTF``` class which uses TensorFlow to accerlate pwlf. This class is nearly identical to ```PiecewiseLinFit```, with the exception of the removed ```sorted_data``` options. If you have TensorFlow installed you'll be able to use ```PiecewiseLinFitTF```. If you do not have TensorFlow installed, importing pwlf will issue a warning that ```PiecewiseLinFitTF``` is not available. See this blog post for more information.
+
 ## [0.4.2] - 2019-03-22
 ### Changed
 - ```assemble_regression_matrix()``` now checks if breaks is a numpy array

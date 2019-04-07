@@ -47,7 +47,7 @@ Global optimization is used to find the best location for the user defined numbe
 # Changelog
 All changes now stored in [CHANGELOG.md](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/CHANGELOG.md)
 
-New r_squared() function, new p_values() function,  all docstrings follows numpydoc style... 
+New ```PiecewiseLinFitTF``` class to accelerate pwlf with TensorFlow!
 
 # Requirements
 Python 2.7+
@@ -57,6 +57,10 @@ NumPy (Tested on version >= 1.14.0)
 SciPy (Tested on version >= 0.19.0)
 
 pyDOE (Tested on version >= 0.3.8)
+
+Optional:
+
+TensorFlow (Tested on version == 1.13.1)
 
 # License
 MIT License
