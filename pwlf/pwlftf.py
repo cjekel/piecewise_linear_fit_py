@@ -344,7 +344,11 @@ class PiecewiseLinFitTF(object):
             The number of line segments.
         beta : ndarray (1-D)
             The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
+            The model parameters for the continuous piecewise linear fit.
         zeta : ndarray (1-D)
+            The model parameters associated with the constraint function.
+        zetaTF : tf.tensor (c_n, 1)
             The model parameters associated with the constraint function.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
@@ -352,10 +356,10 @@ class PiecewiseLinFitTF(object):
             of the first line segment.
         intercepts : ndarray (1-D)
             The y-intercept of each line segment as a 1-D numpy array.
-        x_c : ndarray (1-D)
+        x_c : tf.tensor (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
-        y_c : ndarray (1-D)
+        y_c : tf.tensor (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
         c_n : int
@@ -493,6 +497,8 @@ class PiecewiseLinFitTF(object):
         n_segments : int
             The number of line segments.
         beta : ndarray (1-D)
+            The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
             The model parameters for the continuous piecewise linear fit.
 
         Returns
@@ -742,7 +748,12 @@ class PiecewiseLinFitTF(object):
             The number of variables in the global optimization problem.
         beta : ndarray (1-D)
             The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
+            The model parameters for the continuous piecewise linear fit.
         zeta : ndarray (1-D)
+            The model parameters associated with the constraint function,
+            if x_c and y_c is provided. Only created if x_c and y_c provided.
+        zetaTF : tf.tensor (c_n, 1)
             The model parameters associated with the constraint function,
             if x_c and y_c is provided. Only created if x_c and y_c provided.
         slopes : ndarray (1-D)
@@ -751,11 +762,11 @@ class PiecewiseLinFitTF(object):
             of the first line segment.
         intercepts : ndarray (1-D)
             The y-intercept of each line segment as a 1-D numpy array.
-        x_c : ndarray (1-D)
+        x_c : tf.tensor (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through. Only created if x_c
             and y_c provided.
-        y_c : ndarray (1-D)
+        y_c : ndarray (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through. Only created if x_c
             and y_c provided.
@@ -927,6 +938,8 @@ class PiecewiseLinFitTF(object):
             The number of variables in the global optimization problem.
         beta : ndarray (1-D)
             The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
+            The model parameters for the continuous piecewise linear fit.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
@@ -1070,6 +1083,8 @@ class PiecewiseLinFitTF(object):
             The number of variables in the global optimization problem.
         beta : ndarray (1-D)
             The model parameters for the continuous piecewise linear fit.
+        betaTF : tf.tensor (n_parameters, 1)
+            The model parameters for the continuous piecewise linear fit.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
@@ -1184,10 +1199,10 @@ class PiecewiseLinFitTF(object):
             The number of variables in the global optimization problem.
         n_segments : int
             The number of line segments.
-        x_c : ndarray (1-D)
+        x_c : tf.tensor (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
-        y_c : ndarray (1-D)
+        y_c : ndarray (c_n, 1)
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
         c_n : int
