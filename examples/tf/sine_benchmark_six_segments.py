@@ -6,7 +6,7 @@ from time import time
 # set random seed
 np.random.seed(256)
 
-n_data = int(1e7)
+n_data = int(1e3)
 
 # generate sin wave data
 x = np.linspace(0, 10, num=n_data)
@@ -16,7 +16,7 @@ y = np.random.normal(0, 0.05, size=n_data) + y
 
 t0 = time()
 # initialize piecewise linear fit with your x and y data
-my_pwlf = pwlf.PiecewiseLinFit(x, y)
+my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
 
 # # fit the data for four line segments
 # res = my_pwlf.fit(16)
