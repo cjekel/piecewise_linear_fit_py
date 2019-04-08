@@ -6,7 +6,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 breaks = np.array((0.0, 0.94, 2.96, 4.93, 7.02, 9.04, 10.0))
 
-n = np.logspace(3, 7, dtype=np.int)
+n = np.logspace(3, 7, num=15, dtype=np.int)
 n_repeats = 10
 # run_times = np.zeros((3, n.size, n_repeats))
 run_times = np.load('bench_run_times/6_break_times.npy')
