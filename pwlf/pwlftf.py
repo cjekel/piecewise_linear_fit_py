@@ -35,7 +35,7 @@ from pwlf import PiecewiseLinFit
 
 class PiecewiseLinFitTF(object):
 
-    def __init__(self, x, y, disp_res=False, dtype='float64'):
+    def __init__(self, x, y, disp_res=False, dtype='float64', fast=True):
         r"""
         An object to fit a continuous piecewise linear function
         to data using TensorFlow.
@@ -60,6 +60,10 @@ class PiecewiseLinFitTF(object):
         dtype : str, optional
             Data type to use for tensorflow, either 'float64' or 'float32'.
             Default is 'float64'.
+        fast : boolean, optional
+            If fast is True, then the solution is computed by solving the
+            normal equations using Cholesky decomposition. Default fast=True.
+            https://www.tensorflow.org/api_docs/python/tf/linalg/lstsq
 
         Attributes
         ----------
@@ -76,6 +80,10 @@ class PiecewiseLinFitTF(object):
         print : bool
             Whether the optimization results should be printed. Default is
             False.
+        fast : boolean, optional
+            If fast is True, then the solution is computed by solving the
+            normal equations using Cholesky decomposition. Default fast=True.
+            https://www.tensorflow.org/api_docs/python/tf/linalg/lstsq
 
         Methods
         -------
@@ -141,6 +149,7 @@ class PiecewiseLinFitTF(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
+        self.fast = fast
         if dtype == 'float64':
             self.dtype = tf.float64
         else:
@@ -293,7 +302,7 @@ class PiecewiseLinFitTF(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # least squares solver
-        beta = tf.linalg.lstsq(A, self.y_data)
+        beta = tf.linalg.lstsq(A, self.y_data, fast=self.fast)
         y_hat = tf.matmul(A, beta)
         e = y_hat - self.y_data
         # compute the sum of square of the residuals
@@ -594,7 +603,7 @@ class PiecewiseLinFitTF(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # least squares solver
-        beta = tf.linalg.lstsq(A, self.y_data)
+        beta = tf.linalg.lstsq(A, self.y_data, fast=self.fast)
         y_hat = tf.matmul(A, beta)
         e = y_hat - self.y_data
         # compute the sum of square of the residuals
