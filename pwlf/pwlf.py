@@ -35,7 +35,8 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False):
+    def __init__(self, x, y, disp_res=False, sorted_data=False,
+                 lapack_driver='gelsd'):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -63,6 +64,11 @@ class PiecewiseLinFit(object):
             speed up the assembly of the regression matrix. A process that
             could be repeated several thousand times. If your data is not
             sorted, pwlf will use numpy to sort the data. Default is False.
+        lapack_driver : str, optional
+            Which LAPACK driver is used to solve the least-squares problem.
+            Default lapack_driver='gelsd'. Options are 'gelsd', 'gelsy',
+            'gelss'. For more see
+            https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
 
         Attributes
         ----------
@@ -79,6 +85,8 @@ class PiecewiseLinFit(object):
         print : bool
             Whether the optimization results should be printed. Default is
             False.
+        lapack_driver : str
+            Which LAPACK driver is used to solve the least-squares problem.
 
         Methods
         -------
@@ -145,7 +153,7 @@ class PiecewiseLinFit(object):
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
         self.print = disp_res
-
+        self.lapack_driver = lapack_driver
         # x and y should be numpy arrays
         # if they are not convert to numpy array
         if isinstance(x, np.ndarray) is False:
@@ -331,7 +339,8 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = linalg.lstsq(A, self.y_data, lapack_driver='gelsy')
+            beta, ssr, rank, s = linalg.lstsq(A, self.y_data,
+                                              lapack_driver=self.lapack_driver)
 
             # save the beta parameters
             self.beta = beta
@@ -680,7 +689,8 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = linalg.lstsq(A, self.y_data, lapack_driver='gelsy')
+            beta, ssr, rank, s = linalg.lstsq(A, self.y_data,
+                                              lapack_driver=self.lapack_driver)
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
