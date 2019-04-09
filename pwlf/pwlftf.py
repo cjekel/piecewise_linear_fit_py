@@ -80,6 +80,8 @@ class PiecewiseLinFitTF(object):
         print : bool
             Whether the optimization results should be printed. Default is
             False.
+        dtype : str, optional
+            Data type to use for tensorflow tensors.
         fast : boolean, optional
             If fast is True, then the solution is computed by solving the
             normal equations using Cholesky decomposition. Default fast=True.

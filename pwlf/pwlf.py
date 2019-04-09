@@ -69,6 +69,7 @@ class PiecewiseLinFit(object):
             Default lapack_driver='gelsd'. Options are 'gelsd', 'gelsy',
             'gelss'. For more see
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
+            http://www.netlib.org/lapack/lug/node27.html
 
         Attributes
         ----------
