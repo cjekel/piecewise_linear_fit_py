@@ -331,7 +331,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+            beta, ssr, rank, s = linalg.lstsq(A, self.y_data, lapack_driver='gelsy')
 
             # save the beta parameters
             self.beta = beta
@@ -356,7 +356,7 @@ class PiecewiseLinFit(object):
                 else:
                     ssr = ssr[0]
 
-        except np.linalg.LinAlgError:
+        except linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return ssr = np.print_function
             # You might have a singular Matrix!!!
@@ -504,7 +504,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # Solve the least squares problem
-            beta_prime = np.linalg.solve(K, z)
+            beta_prime = linalg.solve(K, z)
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
@@ -525,7 +525,7 @@ class PiecewiseLinFit(object):
             p = np.dot(C.T, self.zeta)
             L = np.sum(np.abs(p)) + ssr
 
-        except np.linalg.LinAlgError:
+        except linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return L = np.inf
             # You might have a singular Matrix!!!
@@ -680,7 +680,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+            beta, ssr, rank, s = linalg.lstsq(A, self.y_data, lapack_driver='gelsy')
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
@@ -699,7 +699,7 @@ class PiecewiseLinFit(object):
                 else:
                     ssr = ssr[0]
 
-        except np.linalg.LinAlgError:
+        except linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
@@ -793,7 +793,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # Solve the least squares problem
-            beta_prime = np.linalg.solve(K, z)
+            beta_prime = linalg.solve(K, z)
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
@@ -810,7 +810,7 @@ class PiecewiseLinFit(object):
             p = np.dot(C.T, self.zeta)
             L = np.sum(np.abs(p)) + ssr
 
-        except np.linalg.LinAlgError:
+        except linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return L = np.inf
             # You might have a singular Matrix!!!
@@ -1447,13 +1447,13 @@ class PiecewiseLinFit(object):
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
 
-            self.se = np.sqrt(variance * (np.linalg.inv(np.dot(A.T,
-                                                               A)).diagonal()))
+            self.se = np.sqrt(variance * (linalg.inv(np.dot(A.T,
+                                                            A)).diagonal()))
 
             return self.se
 
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        except linalg.LinAlgError:
+            raise linalg.LinAlgError('Singular matrix')
 
     def prediction_variance(self, x, sorted_data=False):
         r"""
@@ -1544,8 +1544,8 @@ class PiecewiseLinFit(object):
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
 
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        except linalg.LinAlgError:
+            raise linalg.LinAlgError('Singular matrix')
 
         # Regression matrix on prediction data
         A = self.assemble_regression_matrix(self.fit_breaks, x)
@@ -1553,11 +1553,11 @@ class PiecewiseLinFit(object):
         # try to solve for the prediction variance at the x locations
         try:
             pre_var = variance * \
-                np.dot(np.dot(A, np.linalg.inv(np.dot(Ad.T, Ad))), A.T)
+                np.dot(np.dot(A, linalg.inv(np.dot(Ad.T, Ad))), A.T)
             return pre_var.diagonal()
 
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        except linalg.LinAlgError:
+            raise linalg.LinAlgError('Singular matrix')
 
     def r_squared(self):
         r"""
@@ -1603,8 +1603,8 @@ class PiecewiseLinFit(object):
             sst = np.dot(ydiff, ydiff)
             rsq = 1.0 - (ssr/sst)
             return rsq
-        except np.linalg.LinAlgError:
-            raise np.linalg.LinAlgError('Singular matrix')
+        except linalg.LinAlgError:
+            raise linalg.LinAlgError('Singular matrix')
 
     def p_values(self):
         r"""
