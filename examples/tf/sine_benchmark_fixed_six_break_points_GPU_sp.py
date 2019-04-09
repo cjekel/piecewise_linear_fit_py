@@ -16,7 +16,7 @@ for i, n_data in enumerate(n):
     x = np.linspace(0, 10, num=n_data, dtype=np.float32)
     y = np.sin(x * np.pi / 2)
     # add noise to the data
-    y = np.random.normal(0, 0.05, size=n_data, dtype=np.float32) + y
+    y = np.random.normal(0, 0.05, size=n_data).astype(np.float32) + y
     for j in range(n_repeats):
         # normal PWLF fit
         t0 = time()
