@@ -152,7 +152,7 @@ class PiecewiseLinFit(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
-
+        self.fast = fast
         self.print = disp_res
 
         # x and y should be numpy arrays
