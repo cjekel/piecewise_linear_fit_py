@@ -342,10 +342,12 @@ class PiecewiseLinFit(object):
             ssr = None
             if self.fast:
                 c, low = linalg.cho_factor(A, check_finite=False)
-                beta = linalg.cho_solve((c, low), self.y_data, check_finite=False)
+                beta = linalg.cho_solve((c, low), self.y_data,
+                                        check_finite=False)
             else:
                 # least squares solver
-                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
+                                                     rcond=None)
             # save the beta parameters
             self.beta = beta
 
@@ -366,7 +368,7 @@ class PiecewiseLinFit(object):
             #     e = y_hat - self.y_data
             #     ssr = [np.dot(e, e)]
 
-        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:
+        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
             # the computation could not converge!
             # on an error, return ssr = np.print_function
             # You might have a singular Matrix!!!
@@ -693,10 +695,12 @@ class PiecewiseLinFit(object):
             # least squares solver
             if self.fast:
                 c, low = linalg.cho_factor(A, check_finite=False)
-                beta = linalg.cho_solve((c, low), self.y_data, check_finite=False)
+                beta = linalg.cho_solve((c, low), self.y_data,
+                                        check_finite=False)
             else:
                 # least squares solver
-                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
+                                                     rcond=None)
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
@@ -712,7 +716,7 @@ class PiecewiseLinFit(object):
             #     e = y_hat - self.y_data
             #     ssr = [np.dot(e, e)]
 
-        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _::
+        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
             # the computation could not converge!
             # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
