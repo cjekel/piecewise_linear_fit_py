@@ -35,7 +35,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False, fast=False):
+    def __init__(self, x, y, disp_res=False, sorted_data=False):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -63,10 +63,6 @@ class PiecewiseLinFit(object):
             speed up the assembly of the regression matrix. A process that
             could be repeated several thousand times. If your data is not
             sorted, pwlf will use numpy to sort the data. Default is False.
-        fast : bool, optional
-            Whether to use the Cholesky factorization of A to solve the least
-            squares problem. Default fast=True. New in pwfl.__version__ ==
-            0.5.0. To get the old behavior, use fast=False.
 
         Attributes
         ----------
@@ -83,10 +79,6 @@ class PiecewiseLinFit(object):
         print : bool
             Whether the optimization results should be printed. Default is
             False.
-        fast : bool, optional
-            Whether to use the Cholesky factorization of A to solve the least
-            squares problem. Default fast=True. New in pwfl.__version__ ==
-            0.5.0. To get the old behavior, use fast=False.
 
         Methods
         -------
@@ -152,7 +144,6 @@ class PiecewiseLinFit(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
-        self.fast = fast
         self.print = disp_res
 
         # x and y should be numpy arrays
@@ -339,15 +330,9 @@ class PiecewiseLinFit(object):
 
         # try to solve the regression problem
         try:
-            ssr = None
-            if self.fast:
-                c, low = linalg.cho_factor(A, check_finite=False)
-                beta = linalg.cho_solve((c, low), self.y_data,
-                                        check_finite=False)
-            else:
-                # least squares solver
-                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
-                                                     rcond=None)
+            # least squares solver
+            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
+
             # save the beta parameters
             self.beta = beta
 
@@ -357,7 +342,7 @@ class PiecewiseLinFit(object):
             # ssr is only calculated if self.n_data > self.n_parameters
             # in this case I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters or ssr is None:
+            if self.n_data <= self.n_parameters:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
@@ -371,7 +356,7 @@ class PiecewiseLinFit(object):
                 else:
                     ssr = ssr[0]
 
-        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
+        except np.linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return ssr = np.print_function
             # You might have a singular Matrix!!!
@@ -694,21 +679,13 @@ class PiecewiseLinFit(object):
 
         # try to solve the regression problem
         try:
-            ssr = None
             # least squares solver
-            if self.fast:
-                c, low = linalg.cho_factor(A, check_finite=False)
-                beta = linalg.cho_solve((c, low), self.y_data,
-                                        check_finite=False)
-            else:
-                # least squares solver
-                beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data,
-                                                     rcond=None)
+            beta, ssr, rank, s = np.linalg.lstsq(A, self.y_data, rcond=None)
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters or ssr is None:
+            if self.n_data <= self.n_parameters:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
@@ -722,7 +699,7 @@ class PiecewiseLinFit(object):
                 else:
                     ssr = ssr[0]
 
-        except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
+        except np.linalg.LinAlgError:
             # the computation could not converge!
             # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
