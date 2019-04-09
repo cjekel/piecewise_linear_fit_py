@@ -3,7 +3,7 @@ import pwlf
 from time import time
 import os
 
-breaks = np.array((0.0, 0.94, 2.96, 4.93, 7.02, 9.04, 10.0))
+breaks = np.array((0.0, 0.94, 2.96, 4.93, 7.02, 9.04, 10.0), dtype=np.float32)
 
 n = np.logspace(3, 7, num=15, dtype=np.int)
 n_repeats = 10
