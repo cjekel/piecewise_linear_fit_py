@@ -35,7 +35,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False, fast=True):
+    def __init__(self, x, y, disp_res=False, sorted_data=False, fast=False):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -360,13 +360,16 @@ class PiecewiseLinFit(object):
             if self.n_data <= self.n_parameters or ssr is None:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-            # # if ssr still hasn't been calculated... Then try again
-            # if len(ssr) == 0:
-            #     y_hat = np.dot(A, beta)
-            #     e = y_hat - self.y_data
-            #     ssr = [np.dot(e, e)]
+                ssr = np.dot(e, e)
+            if type(ssr) == list:
+                ssr = ssr[0]
+            elif type(ssr) == np.ndarray:
+                if ssr.size == 0:
+                    y_hat = np.dot(A, beta)
+                    e = y_hat - self.y_data
+                    ssr = np.dot(e, e)
+                else:
+                    ssr = ssr[0]
 
         except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
             # the computation could not converge!
@@ -376,7 +379,7 @@ class PiecewiseLinFit(object):
         if ssr is None:
             ssr = np.inf
             # something went wrong...
-        return ssr[0]
+        return ssr
 
     def fit_with_breaks_force_points(self, breaks, x_c, y_c):
         r"""
@@ -708,13 +711,16 @@ class PiecewiseLinFit(object):
             if self.n_data <= self.n_parameters or ssr is None:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
-                ssr = [np.dot(e, e)]
-
-            # # if ssr still hasn't been calculated... Then try again
-            # if len(ssr) == 0:
-            #     y_hat = np.dot(A, beta)
-            #     e = y_hat - self.y_data
-            #     ssr = [np.dot(e, e)]
+                ssr = np.dot(e, e)
+            if type(ssr) == list:
+                ssr = ssr[0]
+            elif type(ssr) == np.ndarray:
+                if ssr.size == 0:
+                    y_hat = np.dot(A, beta)
+                    e = y_hat - self.y_data
+                    ssr = np.dot(e, e)
+                else:
+                    ssr = ssr[0]
 
         except (np.linalg.LinAlgError, linalg.LinAlgError, ValueError) as _:  # noqa E841
             # the computation could not converge!
@@ -724,7 +730,7 @@ class PiecewiseLinFit(object):
         if ssr is None:
             ssr = np.inf
             # something went wrong...
-        return ssr[0]
+        return ssr
 
     def fit_force_points_opt(self, var):
         r"""
