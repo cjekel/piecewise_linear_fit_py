@@ -60,7 +60,7 @@ class PiecewiseLinFitTF(object):
         dtype : str, optional
             Data type to use for tensorflow, either 'float64' or 'float32'.
             Default is 'float64'.
-        fast : boolean, optional
+        fast : bool, optional
             If fast is True, then the solution is computed by solving the
             normal equations using Cholesky decomposition. Default fast=True.
             https://www.tensorflow.org/api_docs/python/tf/linalg/lstsq
