@@ -18,7 +18,8 @@ run_times1 = np.load('intel_i5_6300u_gelsy/6_break_times.npy')
 run_times_means = run_times.mean(axis=2)
 run_times_stds = run_times.std(axis=2, ddof=1)
 
-
+run_times_means1 = run_times1.mean(axis=2)
+run_times_stds1 = run_times1.std(axis=2, ddof=1)
 
 plt.figure()
 plt.grid()
