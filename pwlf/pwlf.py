@@ -72,7 +72,10 @@ class PiecewiseLinFit(object):
             http://www.netlib.org/lapack/lug/node27.html
         dtype : str, optional
             Data type to use. Either 'float64' or 'float32'. Default is
-            'float64'. This won't change the data type of the x or y data.
+            'float64'. This won't change the data type of the x or y data. If
+            you use float32 and the fit_guess function, you will need specify
+            a larger epsilon (finite difference step size) than the default of
+            1e-8.
 
         Attributes
         ----------
