@@ -1398,7 +1398,7 @@ class PiecewiseLinFit(object):
 
         """
         y_hat = self.predict(self.fit_breaks)
-        self.slopes = np.zeros(self.n_segments, dtype=self.dtype)
+        self.slopes = np.zeros(self.n_segments)
         for i in range(self.n_segments):
             self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
                         (self.fit_breaks[i+1]-self.fit_breaks[i])
@@ -1623,7 +1623,7 @@ class PiecewiseLinFit(object):
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
         ssr = self.fit_with_breaks(fit_breaks)
-        ybar = np.ones(self.n_data, dtype=self.dtype) * np.mean(self.y_data)
+        ybar = np.ones(self.n_data) * np.mean(self.y_data)
         ydiff = self.y_data - ybar
         try:
             sst = np.dot(ydiff, ydiff)
