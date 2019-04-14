@@ -20,17 +20,6 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
 
-    def test_break_point_spot_on_float32(self):
-        # check that I can fit when break points spot on a
-        my_fit1 = pwlf.PiecewiseLinFit(self.x_small.astype(np.float32),
-                                       self.y_small.astype(np.float32),
-                                       dtype='float32')
-
-        x0 = self.x_small.copy()
-        ssr = my_fit1.fit_with_breaks(x0)
-        self.assertTrue(ssr.dtype == np.float32)
-        self.assertTrue(np.isclose(ssr, 0.0))
-
     def test_assembly(self):
         # check that I can fit when break points spot on a
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
@@ -176,14 +165,6 @@ class TestEverything(unittest.TestCase):
         my_pwlf = pwlf.PiecewiseLinFit(x, y)
         breaks = my_pwlf.fit_guess([6.0])
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
-
-    def test_fit_guess_float32(self):
-        x = np.array([4., 5., 6., 7., 8.], dtype=np.float32)
-        y = np.array([11., 13., 16., 28.92, 42.81], dtype=np.float32)
-        my_pwlf = pwlf.PiecewiseLinFit(x, y,  dtype='float32')
-        breaks = my_pwlf.fit_guess([6.0], epsilon=1e-5)
-        self.assertTrue(breaks.dtype == np.float32)
-        self.assertTrue(np.isclose(breaks[1], 6.070364))
 
     def test_fit_guess_kwrds(self):
         x = np.array([4., 5., 6., 7., 8.])

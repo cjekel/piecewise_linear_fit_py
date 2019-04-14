@@ -36,7 +36,7 @@ from pyDOE import lhs
 class PiecewiseLinFit(object):
 
     def __init__(self, x, y, disp_res=False, sorted_data=False,
-                 lapack_driver='gelsd', dtype='float64'):
+                 lapack_driver='gelsd'):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -70,12 +70,6 @@ class PiecewiseLinFit(object):
             'gelss'. For more see
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
             http://www.netlib.org/lapack/lug/node27.html
-        dtype : str, optional
-            Data type to use. Either 'float64' or 'float32'. Default is
-            'float64'. This won't change the data type of the x or y data. If
-            you use float32 and the fit_guess function, you will need specify
-            a larger epsilon (finite difference step size) than the default of
-            1e-8.
 
         Attributes
         ----------
@@ -94,8 +88,6 @@ class PiecewiseLinFit(object):
             False.
         lapack_driver : str
             Which LAPACK driver is used to solve the least-squares problem.
-        dtype : type
-            Numpy data type to use.
 
         Methods
         -------
@@ -187,12 +179,6 @@ class PiecewiseLinFit(object):
         # calculate the number of data points
         self.n_data = len(x)
 
-        # set the data type
-        if dtype == 'float64':
-            self.dtype = np.float64
-        else:
-            self.dtype = np.float32
-
         # set the first and last break x values to be the min and max of x
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
@@ -257,7 +243,7 @@ class PiecewiseLinFit(object):
         self.n_segments = self.n_parameters - 1
 
         # # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters), dtype=self.dtype)
+        A = np.zeros((len(x), self.n_parameters))
         # The first two columns of the matrix are always defined as
         A[:, 0] = 1.0
         A[:, 1] = x - self.fit_breaks[0]
@@ -498,7 +484,7 @@ class PiecewiseLinFit(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters), dtype=self.dtype)
+        C = np.zeros((self.c_n, self.n_parameters))
         C[:, 0] = 1.0
         C[:, 1] = self.x_c - self.fit_breaks[0]
         # Loop through the rest of A to determine the other columns
@@ -516,13 +502,13 @@ class PiecewiseLinFit(object):
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n), dtype=self.dtype)
+                      self.n_parameters + self.c_n))
         K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
         K[:self.n_parameters, self.n_parameters:] = C.T
         K[self.n_parameters:, :self.n_parameters] = C
         # Assemble right hand side vector
         yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n, dtype=self.dtype)
+        z = np.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
 
@@ -695,7 +681,7 @@ class PiecewiseLinFit(object):
         """
 
         var = np.sort(var)
-        breaks = np.zeros(len(var) + 2, dtype=self.dtype)
+        breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -776,7 +762,7 @@ class PiecewiseLinFit(object):
         """
 
         var = np.sort(var)
-        breaks = np.zeros(len(var) + 2, dtype=self.dtype)
+        breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -788,7 +774,7 @@ class PiecewiseLinFit(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters), dtype=self.dtype)
+        C = np.zeros((self.c_n, self.n_parameters))
         C[:, 0] = 1.0
         C[:, 1] = self.x_c - breaks[0]
         # Loop through the rest of A to determine the other columns
@@ -806,13 +792,13 @@ class PiecewiseLinFit(object):
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n), dtype=self.dtype)
+                      self.n_parameters + self.c_n))
         K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
         K[:self.n_parameters, self.n_parameters:] = C.T
         K[self.n_parameters:, :self.n_parameters] = C
         # Assemble right hand side vector
         yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n, self.dtype)
+        z = np.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
 
@@ -986,7 +972,7 @@ class PiecewiseLinFit(object):
         self.nVar = self.n_segments - 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2], dtype=self.dtype)
+        bounds = np.zeros([self.nVar, 2])
         bounds[:, 0] = self.break_0
         bounds[:, 1] = self.break_n
 
@@ -1009,7 +995,7 @@ class PiecewiseLinFit(object):
 
         # pull the breaks out of the result
         var = np.sort(res.x)
-        breaks = np.zeros(len(var) + 2, dtype=self.dtype)
+        breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -1120,7 +1106,7 @@ class PiecewiseLinFit(object):
         self.nVar = self.n_segments - 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2], dtype=self.dtype)
+        bounds = np.zeros([self.nVar, 2])
         bounds[:, 0] = self.break_0
         bounds[:, 1] = self.break_n
 
@@ -1129,8 +1115,8 @@ class PiecewiseLinFit(object):
         # scale the sampling to my variable range
         mypop = mypop * (self.break_n - self.break_0) + self.break_0
 
-        x = np.zeros((pop, self.nVar), dtype=self.dtype)
-        f = np.zeros(pop, dtype=self.dtype)
+        x = np.zeros((pop, self.nVar))
+        f = np.zeros(pop)
         d = []
 
         for i, x0 in enumerate(mypop):
@@ -1165,7 +1151,7 @@ class PiecewiseLinFit(object):
 
         # obtain the breakpoint locations from the best result
         var = np.sort(best_break)
-        breaks = np.zeros(len(var) + 2, dtype=self.dtype)
+        breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -1253,7 +1239,7 @@ class PiecewiseLinFit(object):
         self.n_parameters = self.n_segments + 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2], dtype=self.dtype)
+        bounds = np.zeros([self.nVar, 2])
         bounds[:, 0] = self.break_0
         bounds[:, 1] = self.break_n
 
@@ -1277,7 +1263,7 @@ class PiecewiseLinFit(object):
 
         # pull the breaks out of the result
         var = np.sort(resx)
-        breaks = np.zeros(len(var) + 2, dtype=self.dtype)
+        breaks = np.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
