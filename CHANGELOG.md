@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Now use scipy.linalg instead of numpy.linalg because scipy is always compiled with lapack
 - least squares fit now defaults to scipy instead of numpy
 ### Removed
-- ```rcond`` optional parameter
+- ```rcond``` optional parameter; was not necessary with scipy.linalg
 
 ## [0.4.2] - 2019-03-22
 ### Changed
