@@ -20,6 +20,13 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
 
+    def test_legacy_rcond(self):
+        # check that I can fit when break points spot on a
+        my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small, rcond=-1)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        self.assertTrue(np.isclose(ssr, 0.0))
+
     def test_assembly(self):
         # check that I can fit when break points spot on a
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
