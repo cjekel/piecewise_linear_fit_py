@@ -2,6 +2,7 @@ import numpy as np
 import unittest
 import pwlf
 import tensorflow as tf
+import os
 
 
 class TestEverything(unittest.TestCase):
@@ -18,6 +19,14 @@ class TestEverything(unittest.TestCase):
     def test_break_point_spot_on(self):
         # check that I can fit when break points spot on a
         my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        self.assertTrue(np.isclose(ssr, 0.0))
+
+    def test_fast_false(self):
+        # check that I can fit when break points spot on a
+        my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small,
+                                         fast=False)
         x0 = self.x_small.copy()
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
@@ -199,4 +208,6 @@ class TestEverything(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    # force TF to use CPU
+    os.environ['CUDA_VISIBLE_DEVICES'] = ''
     unittest.main()
