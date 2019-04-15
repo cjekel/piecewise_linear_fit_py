@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2019-04-15
+### Added
+- New ```PiecewiseLinFitTF``` class which uses TensorFlow to accelerate pwlf. This class is nearly identical to ```PiecewiseLinFit```, with the exception of the removed ```sorted_data``` options. If you have TensorFlow installed you'll be able to use ```PiecewiseLinFitTF```. If you do not have TensorFlow installed, importing pwlf will issue a warning that ```PiecewiseLinFitTF``` is not available. See this blog [post](https://jekel.me/2019/Adding-tensorflow-to-pwlf/) for more information and benchmarks. The new class includes an option to use float32 or float64 data types. 
+- ```lapack_driver``` option to choose between the least squares backend. For more see https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html and http://www.netlib.org/lapack/lug/node27.html
+### Changed
+- Now use scipy.linalg instead of numpy.linalg because scipy is always compiled with lapack
+- least squares fit now defaults to scipy instead of numpy
+### Removed
+- ```rcond``` optional parameter; was not necessary with scipy.linalg
+
 ## [0.4.3] - 2019-04-02
 ### Changed
 - You can now manually specify ```rcond``` for the numpy least squares solver. For more see https://github.com/cjekel/piecewise_linear_fit_py/issues/21 . 

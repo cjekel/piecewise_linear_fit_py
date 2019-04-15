@@ -59,6 +59,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 9. [bad fits when you have more unknowns than data](#bad-fits-when-you-have-more-unknowns-than-data)
 10. [fit with a breakpoint guess](#fit-with-a-breakpoint-guess)
 11. [get the linear regression matrix](#get-the-linear-regression-matrix)
+12. [use of TensorFlow](#use-of-TensorFlow)
 
 ## fit with known breakpoint locations
 
@@ -411,3 +412,34 @@ yhat_en = my_pwlf_en.predict(xhat, breaks=breaks,
 ```
 
 ![interesting elastic net fit](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png)
+
+## use of TensorFlow
+
+You'll be able to use the ```PiecewiseLinFitTF``` class if you have TensorFlow installed, which may offer performance improvements for larger data sets over the original ```PiecewiseLinFit``` class. For performance benchmarks see this blog [post](https://jekel.me/2019/Adding-tensorflow-to-pwlf/).
+
+The use of the TF class is nearly identical to the original class, however note the following exceptions.
+```PiecewiseLinFitTF``` does:
+
+- not sort data, so there are no ```sorted_data``` optional parameters
+- not have a ```lapack_driver``` option
+- have an optional parameter ```dtype```, so you can choose between the float64 and float32 data types
+- have an optional parameter ```fast``` to switch between Cholesky decomposition (default ```fast=True```), and orthogonal decomposition (```fast=False```)
+
+
+
+```python
+# your desired line segment end locations
+x0 = np.array([min(x), 0.039, 0.10, max(x)])
+
+# initialize TF piecewise linear fit with your x and y data
+my_pwlf = pwlf.PiecewiseLinFitTF(x, y, dtype='float32)
+
+# fit the data with the specified break points
+# (ie the x locations of where the line segments
+# will terminate)
+my_pwlf.fit_with_breaks(x0)
+
+# predict for the determined points
+xHat = np.linspace(min(x), max(x), num=10000)
+yHat = my_pwlf.predict(xHat)
+```
