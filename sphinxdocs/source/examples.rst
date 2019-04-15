@@ -71,6 +71,7 @@ All of these examples will use the following data and imports.
 10. `fit with a breakpoint guess <#fit-with-a-breakpoint-guess>`__
 11. `get the linear regression
     matrix <#get-the-linear-regression-matrix>`__
+12. `use of TensorFlow <#use-of-TensorFlow>`__
 
 fit with known breakpoint locations
 -----------------------------------
@@ -482,3 +483,40 @@ regularizer to perform an interesting fit with the regression matrix.
    :alt: interesting elastic net fit
 
    interesting elastic net fit
+
+use of TensorFlow
+-----------------
+
+You'll be able to use the ``PiecewiseLinFitTF`` class if you have
+TensorFlow installed, which may offer performance improvements for
+larger data sets over the original ``PiecewiseLinFit`` class. For
+performance benchmarks see this blog
+`post <https://jekel.me/2019/Adding-tensorflow-to-pwlf/>`__.
+
+The use of the TF class is nearly identical to the original class,
+however note the following exceptions. ``PiecewiseLinFitTF`` does:
+
+-  not sort data, so there are no ``sorted_data`` optional parameters
+-  not have a ``lapack_driver`` option
+-  have an optional parameter ``dtype``, so you can choose between the
+   float64 and float32 data types
+-  have an optional parameter ``fast`` to switch between Cholesky
+   decomposition (default ``fast=True``), and orthogonal decomposition
+   (``fast=False``)
+
+.. code:: python
+
+    # your desired line segment end locations
+    x0 = np.array([min(x), 0.039, 0.10, max(x)])
+
+    # initialize TF piecewise linear fit with your x and y data
+    my_pwlf = pwlf.PiecewiseLinFitTF(x, y, dtype='float32)
+
+    # fit the data with the specified break points
+    # (ie the x locations of where the line segments
+    # will terminate)
+    my_pwlf.fit_with_breaks(x0)
+
+    # predict for the determined points
+    xHat = np.linspace(min(x), max(x), num=10000)
+    yHat = my_pwlf.predict(xHat)

@@ -139,17 +139,17 @@ class PiecewiseLinFitTF(object):
         Initialize for x, y data
 
         >>> import pwlf
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
 
         Initialize for x,y data and print optimization results
 
-        >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        >>> my_pWLF = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
 
         If your data is already sorted such that x[0] <= x[1] <= ... <= x[n-1],
         use sorted_data=True for a slight performance increase while
         initializing the object
 
-        >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
+        >>> my_pWLF = pwlf.PiecewiseLinFitTF(x, y, sorted_data=True)
         """
         self.fast = fast
         if dtype == 'float64':
@@ -202,7 +202,7 @@ class PiecewiseLinFitTF(object):
         breakpoints.
 
         >>> import pwlf
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = [0.0, 0.5, 1.0]
         >>> A = assemble_regression_matrix(breaks, self.x_data)
 
@@ -291,7 +291,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> ssr = my_pwlf.fit_with_breaks(breaks)
 
@@ -405,7 +405,7 @@ class PiecewiseLinFitTF(object):
         >>> y = np.random.random(10)
         >>> x_c = [0.0]
         >>> y_c = [0.0]
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
@@ -530,7 +530,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> ssr = my_pwlf.fit_with_breaks(breaks)
         >>> x_new = np.linspace(0.0, 1.0, 100)
@@ -814,7 +814,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fit(3)
 
         Additionally you desired that the piecewise linear function go
@@ -986,7 +986,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fitfast(3)
 
         You can change the number of latin hypercube samples (or starting
@@ -1126,7 +1126,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.array([4., 5., 6., 7., 8.])
         >>> y = np.array([11., 13., 16., 28.92, 42.81])
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fit_guess([6.0])
 
         Note specifying one breakpoint will result in two line segments.
@@ -1294,7 +1294,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> se = my_pwlf.standard_errors()
 
@@ -1360,7 +1360,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> x_new = np.linspace(0.0, 1.0, 100)
         >>> pre_var = my_pwlf.prediction_variance(x_new)
@@ -1425,7 +1425,7 @@ class PiecewiseLinFitTF(object):
         >>> import pwlf
         >>> x = np.linspace(0.0, 1.0, 10)
         >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitTF(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> rsq = my_pwlf.r_squared()
 
