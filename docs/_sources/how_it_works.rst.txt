@@ -2,7 +2,7 @@ How it works
 ============
 
 This
-`paper <https://github.com/cjekel/piecewise_linear_fit_py/raw/master/paper/pwlf_Jekel_Venter_v1.pdf>`__
+`paper <https://github.com/cjekel/piecewise_linear_fit_py/raw/master/paper/pwlf_Jekel_Venter_v2.pdf>`__
 explains how this library works in detail.
 
 This is based on a formulation of a piecewise linear least squares fit,

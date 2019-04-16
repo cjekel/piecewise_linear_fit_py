@@ -1,50 +1,184 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>Examples &#8212; pwlf 0.5.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Examples &mdash; pwlf 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pwlf package contents" href="pwlf.html" />
     <link rel="prev" title="How it works" href="how_it_works.html" />
-
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+ 
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-67542734-2']);
   _gaq.push(['_trackPageview']);
 </script>
 
-  </head><body>
-  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> pwlf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fit-with-known-breakpoint-locations">fit with known breakpoint locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-for-specified-number-of-line-segments">fit for specified number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#force-a-fit-through-data-points">force a fit through data points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-custom-optimization-routine">use custom optimization routine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pass-differential-evolution-keywords">pass differential evolution keywords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-the-best-number-of-line-segments">find the best number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-persistence">model persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-the-linear-regression-matrix">get the linear regression matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pwlf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <p>All of these examples will use the following data and imports.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 
 <span class="c1"># your data</span>
@@ -91,33 +225,33 @@
 </pre></div>
 </div>
 <ol class="arabic simple">
-<li><p><a class="reference external" href="#fit-with-known-breakpoint-locations">fit with known breakpoint
-locations</a></p></li>
-<li><p><a class="reference external" href="#fit-for-specified-number-of-line-segments">fit for specified number of line
-segments</a></p></li>
-<li><p><a class="reference external" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line
-segments</a></p></li>
-<li><p><a class="reference external" href="#force-a-fit-through-data-points">force a fit through data
-points</a></p></li>
-<li><p><a class="reference external" href="#use-custom-optimization-routine">use custom optimization
-routine</a></p></li>
-<li><p><a class="reference external" href="#pass-differential-evolution-keywords">pass differential evolution
-keywords</a></p></li>
-<li><p><a class="reference external" href="#find-the-best-number-of-line-segments">find the best number of line
-segments</a></p></li>
-<li><p><a class="reference external" href="#model-persistence">model persistence</a></p></li>
-<li><p><a class="reference external" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than
-data</a></p></li>
-<li><p><a class="reference external" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></p></li>
-<li><p><a class="reference external" href="#get-the-linear-regression-matrix">get the linear regression
-matrix</a></p></li>
-<li><p><a class="reference external" href="#use-of-TensorFlow">use of TensorFlow</a></p></li>
+<li><a class="reference external" href="#fit-with-known-breakpoint-locations">fit with known breakpoint
+locations</a></li>
+<li><a class="reference external" href="#fit-for-specified-number-of-line-segments">fit for specified number of line
+segments</a></li>
+<li><a class="reference external" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line
+segments</a></li>
+<li><a class="reference external" href="#force-a-fit-through-data-points">force a fit through data
+points</a></li>
+<li><a class="reference external" href="#use-custom-optimization-routine">use custom optimization
+routine</a></li>
+<li><a class="reference external" href="#pass-differential-evolution-keywords">pass differential evolution
+keywords</a></li>
+<li><a class="reference external" href="#find-the-best-number-of-line-segments">find the best number of line
+segments</a></li>
+<li><a class="reference external" href="#model-persistence">model persistence</a></li>
+<li><a class="reference external" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than
+data</a></li>
+<li><a class="reference external" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
+<li><a class="reference external" href="#get-the-linear-regression-matrix">get the linear regression
+matrix</a></li>
+<li><a class="reference external" href="#use-of-TensorFlow">use of TensorFlow</a></li>
 </ol>
 <div class="section" id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
 <p>You can perform a least squares fit if you know the breakpoint
 locations.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.039</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
 
 <span class="c1"># initialize piecewise linear fit with your x and y data</span>
@@ -139,9 +273,9 @@ locations.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id1">
+<div class="figure" id="id1">
 <img alt="fit with known breakpoint locations" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png" />
-<p class="caption"><span class="caption-text">fit with known breakpoint locations</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">fit with known breakpoint locations</span></p>
 </div>
 </div>
 <div class="section" id="fit-for-specified-number-of-line-segments">
@@ -150,7 +284,7 @@ locations.</p>
 the sum of squares error. This uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html">Differential
 Evolution</a>
 from scipy.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="c1"># fit the data for four line segments</span>
@@ -167,9 +301,9 @@ from scipy.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id2">
+<div class="figure" id="id2">
 <img alt="fit for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png" />
-<p class="caption"><span class="caption-text">fit for specified number of line segments</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">fit for specified number of line segments</span></p>
 </div>
 </div>
 <div class="section" id="fitfast-for-specified-number-of-line-segments">
@@ -179,7 +313,7 @@ multi-start gradient based optimization. This should be faster than
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html">Differential
 Evolution</a>
 for a small number of starting points.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="c1"># fit the data for four line segments</span>
@@ -197,9 +331,9 @@ for a small number of starting points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id3">
+<div class="figure" id="id3">
 <img alt="fitfast for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png" />
-<p class="caption"><span class="caption-text">fitfast for specified number of line segments</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">fitfast for specified number of line segments</span></p>
 </div>
 </div>
 <div class="section" id="force-a-fit-through-data-points">
@@ -207,7 +341,7 @@ for a small number of starting points.</p>
 <p>Sometimes it’s necessary to force the piecewise continuous model through
 a particular data point, or a set of data points. The following example
 finds the best 4 line segments that go through two data points.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">myPWLF</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="c1"># fit the function with four line segments</span>
@@ -229,9 +363,9 @@ finds the best 4 line segments that go through two data points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id4">
+<div class="figure" id="id4">
 <img alt="force a fit through data points" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png" />
-<p class="caption"><span class="caption-text">force a fit through data points</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">force a fit through data points</span></p>
 </div>
 </div>
 <div class="section" id="use-custom-optimization-routine">
@@ -240,7 +374,7 @@ finds the best 4 line segments that go through two data points.</p>
 locations. The following example uses scipy’s
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html">minimize</a>
 function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize</span>
 <span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
@@ -283,7 +417,7 @@ function.</p>
 <p>You can pass keyword arguments from the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function into scipy’s
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html">Differential
 Evolution</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="c1"># fit the data for four line segments</span>
@@ -308,7 +442,7 @@ Evolution</a>.</p>
 find the best number of line segments. This will require careful use of
 the penalty parameter <code class="docutils literal notranslate"><span class="pre">l</span></code>. Use this template to automatically find the
 best number of line segments.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">GPyOpt.methods</span> <span class="kn">import</span> <span class="n">BayesianOptimization</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">GPyOpt.methods</span> <span class="k">import</span> <span class="n">BayesianOptimization</span>
 <span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
@@ -337,17 +471,17 @@ best number of line segments.</p>
 <span class="n">myBopt</span> <span class="o">=</span> <span class="n">BayesianOptimization</span><span class="p">(</span><span class="n">my_obj</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;GP&#39;</span><span class="p">,</span>
                               <span class="n">initial_design_numdata</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                               <span class="n">initial_design_type</span><span class="o">=</span><span class="s1">&#39;latin&#39;</span><span class="p">,</span>
-                              <span class="n">exact_feval</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                              <span class="n">verbosity_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                              <span class="n">exact_feval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">verbosity_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="c1"># perform the bayesian optimization to find the optimum number</span>
 <span class="c1"># of line segments</span>
-<span class="n">myBopt</span><span class="o">.</span><span class="n">run_optimization</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">myBopt</span><span class="o">.</span><span class="n">run_optimization</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Opt found </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Optimum number of line segments:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">x_opt</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Function value:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">fx_opt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Opt found </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimum number of line segments:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">x_opt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Function value:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">fx_opt</span><span class="p">)</span>
 <span class="n">myBopt</span><span class="o">.</span><span class="n">plot_acquisition</span><span class="p">()</span>
 <span class="n">myBopt</span><span class="o">.</span><span class="n">plot_convergence</span><span class="p">()</span>
 
@@ -369,7 +503,7 @@ best number of line segments.</p>
 <h2>model persistence<a class="headerlink" href="#model-persistence" title="Permalink to this headline">¶</a></h2>
 <p>You can save fitted models with pickle. Alternatively see
 <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># if you use Python 2.x you should import cPickle</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># if you use Python 2.x you should import cPickle</span>
 <span class="c1"># import cPickle as pickle</span>
 <span class="c1"># if you use Python 3.x you can just use pickle</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
@@ -400,7 +534,7 @@ data points. The following example will fit 99 line segments to the 59
 data points. While this will result in an error of zero, the model will
 have very weird predictions within the data. You should not fit more
 unknowns than you have data with pwlf!</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">break_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">break_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="c1"># initialize piecewise linear fit with your x and y data</span>
 <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">break_locations</span><span class="p">)</span>
@@ -416,9 +550,9 @@ unknowns than you have data with pwlf!</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id5">
+<div class="figure" id="id5">
 <img alt="bad fits when you have more unknowns than data" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png" />
-<p class="caption"><span class="caption-text">bad fits when you have more unknowns than data</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">bad fits when you have more unknowns than data</span></p>
 </div>
 </div>
 <div class="section" id="fit-with-a-breakpoint-guess">
@@ -428,7 +562,7 @@ breakpoint occurs at 6.0. We’ll use the fit_guess() function to find
 the best breakpoint location starting with this guess. These fits should
 be much faster than the <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fitfast</span></code> function when you have a
 reasonable idea where the breakpoints occur.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">11.</span><span class="p">,</span> <span class="mf">13.</span><span class="p">,</span> <span class="mf">16.</span><span class="p">,</span> <span class="mf">28.92</span><span class="p">,</span> <span class="mf">42.81</span><span class="p">])</span>
@@ -438,7 +572,7 @@ reasonable idea where the breakpoints occur.</p>
 </div>
 <p>Note specifying one breakpoint will result in two line segments. If we
 wanted three line segments, we’ll have to specify two breakpoints.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_guess</span><span class="p">([</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_guess</span><span class="p">([</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -450,7 +584,7 @@ matrix <code class="docutils literal notranslate"><span class="pre">A</span></co
 that the breakpoints occur at each of the data points. Please see the
 <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/tree/master/paper">paper</a>
 for details about the regression matrix <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 <span class="c1"># select random seed for reproducibility</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
@@ -471,12 +605,12 @@ for details about the regression matrix <code class="docutils literal notranslat
 <p>We can perform fits that are more complicated than a least squares fit
 when we have the regression matrix. The following uses the Elastic Net
 regularizer to perform an interesting fit with the regression matrix.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">ElasticNetCV</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">ElasticNetCV</span>
 <span class="c1"># set up the elastic net</span>
 <span class="n">en_model</span> <span class="o">=</span> <span class="n">ElasticNetCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                         <span class="n">l1_ratio</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span>
                                   <span class="o">.</span><span class="mi">95</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                        <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># fit the model using the elastic net</span>
 <span class="n">en_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">my_pwlf_en</span><span class="o">.</span><span class="n">y_data</span><span class="p">)</span>
@@ -487,9 +621,9 @@ regularizer to perform an interesting fit with the regression matrix.</p>
                              <span class="n">beta</span><span class="o">=</span><span class="n">en_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id6">
+<div class="figure" id="id6">
 <img alt="interesting elastic net fit" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png" />
-<p class="caption"><span class="caption-text">interesting elastic net fit</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">interesting elastic net fit</span></p>
 </div>
 </div>
 <div class="section" id="use-of-tensorflow">
@@ -502,15 +636,15 @@ performance benchmarks see this blog
 <p>The use of the TF class is nearly identical to the original class,
 however note the following exceptions. <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> does:</p>
 <ul class="simple">
-<li><p>not sort data, so there are no <code class="docutils literal notranslate"><span class="pre">sorted_data</span></code> optional parameters</p></li>
-<li><p>not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option</p></li>
-<li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the
-float64 and float32 data types</p></li>
-<li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">fast</span></code> to switch between Cholesky
+<li>not sort data, so there are no <code class="docutils literal notranslate"><span class="pre">sorted_data</span></code> optional parameters</li>
+<li>not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option</li>
+<li>have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the
+float64 and float32 data types</li>
+<li>have an optional parameter <code class="docutils literal notranslate"><span class="pre">fast</span></code> to switch between Cholesky
 decomposition (default <code class="docutils literal notranslate"><span class="pre">fast=True</span></code>), and orthogonal decomposition
-(<code class="docutils literal notranslate"><span class="pre">fast=False</span></code>)</p></li>
+(<code class="docutils literal notranslate"><span class="pre">fast=False</span></code>)</li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.039</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
 
 <span class="c1"># initialize TF piecewise linear fit with your x and y data</span>
@@ -530,93 +664,53 @@ decomposition (default <code class="docutils literal notranslate"><span class="p
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pwlf</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#fit-with-known-breakpoint-locations">fit with known breakpoint locations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fit-for-specified-number-of-line-segments">fit for specified number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#force-a-fit-through-data-points">force a fit through data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-custom-optimization-routine">use custom optimization routine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pass-differential-evolution-keywords">pass differential evolution keywords</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#find-the-best-number-of-line-segments">find the best number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model-persistence">model persistence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#get-the-linear-regression-matrix">get the linear regression matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="how_it_works.html" title="previous chapter">How it works</a></li>
-      <li>Next: <a href="pwlf.html" title="next chapter">pwlf package contents</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pwlf.html" class="btn btn-neutral float-right" title="pwlf package contents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="how_it_works.html" class="btn btn-neutral float-left" title="How it works" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Charles Jekel
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
 
-    <div class="footer">
-      &copy;2019, Charles Jekel.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/examples.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-
-    
+  
+ 
 <div class="footer">This page uses <a href="https://analytics.google.com/">
 Google Analytics</a> to collect statistics. You can disable it by blocking
 the JavaScript coming from www.google-analytics.com.
@@ -631,5 +725,6 @@ the JavaScript coming from www.google-analytics.com.
 </script>
 </div>
 
-  </body>
+
+</body>
 </html>
