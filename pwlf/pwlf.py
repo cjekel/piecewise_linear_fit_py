@@ -273,9 +273,9 @@ class PiecewiseLinFit(object):
         https://jekel.me/2018/Continous-piecewise-linear-regression/
 
         Other useful resources:
-        http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf
-        https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic
-        http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/
+        https://bit.ly/2IY29ex
+        https://bit.ly/2H26ATo
+        https://bit.ly/2vFs8yB
 
         Parameters
         ----------
@@ -652,7 +652,7 @@ class PiecewiseLinFit(object):
         This was intended for advanced users only.
 
         See the following example
-        https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py
+        https://bit.ly/2JdqgVS
 
         Parameters
         ----------
@@ -733,7 +733,7 @@ class PiecewiseLinFit(object):
 
         This was intended for advanced users only.
         See the following example
-        https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py
+        https://bit.ly/2JdqgVS
 
         Parameters
         ----------
@@ -908,7 +908,7 @@ class PiecewiseLinFit(object):
         If any **kwargs is used, it will override my differential_evolution,
         defaults. This allows advanced users to tweak their own optimization.
         For me information see:
-        https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
+        https://bit.ly/2DIYtsX
 
         Examples
         --------
@@ -1076,7 +1076,7 @@ class PiecewiseLinFit(object):
         All **kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
         **kwargs is used, it will override my defaults. This allows
         advanced users to tweak their own optimization. For me information see:
-        https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
+        https://bit.ly/2DIYtsX
 
         Examples
         --------
@@ -1210,7 +1210,7 @@ class PiecewiseLinFit(object):
         All **kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
         **kwargs is used, it will override my defaults. This allows
         advanced users to tweak their own optimization. For me information see:
-        https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232
+        https://bit.ly/2DIYtsX
 
         You do not need to specify the x.min() or x.max() in geuss_breakpoints!
 
@@ -1283,7 +1283,7 @@ class PiecewiseLinFit(object):
         This was intended for advanced users only.
 
         See the following example
-        https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py
+        https://bit.ly/2JdqgVS
 
         Parameters
         ----------
@@ -1398,7 +1398,7 @@ class PiecewiseLinFit(object):
         center of a 95% confidence region around your parameters. This
         assumes the parmaters follow a normal distribution. For more
         information see:
-        https://en.wikipedia.org/wiki/Standard_error
+        https://bit.ly/2vCFlIL
 
         This calculation follows the derivation provided in [1]_. A taylor-
         series expansion is not needed since this is linear regression.
@@ -1476,7 +1476,7 @@ class PiecewiseLinFit(object):
         done typically as y_hat +- 1.96*np.sqrt(pre_var). The
         prediction_variance needs to be calculated at various x locations.
         For more information see:
-        www2.mae.ufl.edu/haftka/vvuq/lectures/Regression-accuracy.pptx
+        https://bit.ly/2DNtE6h
 
         Parameters
         ----------
@@ -1576,7 +1576,7 @@ class PiecewiseLinFit(object):
         Calculate the coefficient of determination ("R squared", R^2) value
         after a fit has been performed.
         For more information see:
-        https://en.wikipedia.org/wiki/Coefficient_of_determination
+        https://bit.ly/2mRSB9A
 
         Returns
         -------
@@ -1647,7 +1647,8 @@ class PiecewiseLinFit(object):
         This assumes that your breakpoint locations are exact! and does
         not consider the uncertainty with your breakpoint locations.
 
-        See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
+        See
+        https://bit.ly/2GQwZCc
 
         References
         ----------
