@@ -11,3 +11,4 @@ make html
 # copy sphinx build into docs and doctrees
 cp -r build/doctrees/* ../doctrees/
 cp -r build/html/* ../docs/
+grep -rl -e "break-word" | xargs sed -i 's:break-word:break-all:g'
