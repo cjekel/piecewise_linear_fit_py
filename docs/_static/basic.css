@@ -512,7 +512,7 @@ dl.field-list {
 dl.field-list > dt {
     flex-basis: 20%;
     font-weight: bold;
-    word-break: break-word;
+    word-break: break-all;
 }
 
 dl.field-list > dt:after {
