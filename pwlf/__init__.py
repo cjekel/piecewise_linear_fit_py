@@ -1,10 +1,10 @@
-from .pwlf import PiecewiseLinFit
+from .pwlf import PiecewiseLinFit  # noqa F401
 try:
-    import tensorflow as tf
-    from .pwlftf import PiecewiseLinFitTF
+    import tensorflow as tf  # noqa F401
+    from .pwlftf import PiecewiseLinFitTF  # noqa F401
 except ImportError:
     print('Warning: Install tensorflow to have access to PiecewiseLinFitTF.')
-import os
+import os  # noqa F401
 
 # add rudimentary version tracking
 VERSION_FILE = os.path.join(os.path.dirname(__file__), 'VERSION')

@@ -1,0 +1,10 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+install:
+  - pip install .
+  - pip install flake8 nose tensorflow
+script: nosetests
+before_script: flake8 pwlf
