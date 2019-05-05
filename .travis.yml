@@ -6,6 +6,5 @@ python:
 install:
   - pip install .
   - pip install flake8 nose tensorflow
-  - travis_wait mvn install
-script: nosetests
+script: travis_wait nosetests
 before_script: flake8 pwlf
