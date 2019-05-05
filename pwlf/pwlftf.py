@@ -27,8 +27,8 @@ import tensorflow as tf
 import numpy as np
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
+from scipy import stats
 from pyDOE import lhs
-from pwlf import PiecewiseLinFit
 
 # piecewise linear fit library
 
