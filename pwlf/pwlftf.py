@@ -49,8 +49,7 @@ class PiecewiseLinFitTF(object):
         ----------
         x : array_like
             The x or independent data point locations as list or 1 dimensional
-            numpy array. The x and y data should be ordered such that x[i]
-            corresponds to y[i], for an arbitrary index i.
+            numpy array.
         y : array_like
             The y or dependent data point locations as list or 1 dimensional
             numpy array.

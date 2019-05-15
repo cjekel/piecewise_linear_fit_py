@@ -35,8 +35,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, sorted_data=False,
-                 lapack_driver='gelsd'):
+    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd'):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -50,20 +49,13 @@ class PiecewiseLinFit(object):
         ----------
         x : array_like
             The x or independent data point locations as list or 1 dimensional
-            numpy array. The x and y data should be ordered such that x[i]
-            corresponds to y[i], for an arbitrary index i.
+            numpy array.
         y : array_like
             The y or dependent data point locations as list or 1 dimensional
             numpy array.
         disp_res : bool, optional
             Whether the optimization results should be printed. Default is
             False.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implementation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A process that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
         lapack_driver : str, optional
             Which LAPACK driver is used to solve the least-squares problem.
             Default lapack_driver='gelsd'. Options are 'gelsd', 'gelsy',
@@ -106,7 +98,7 @@ class PiecewiseLinFit(object):
             Fit a continuous piecewise linear function where the breakpoint
             locations are known, and force the fit to go through points at x_c
             and y_c.
-        predict(x, sorted_data=False, beta=None, breaks=None)
+        predict(x, beta=None, breaks=None)
             Evaluate the continuous piecewise linear function at new untested
             points.
         fit_with_breaks_opt(var)
@@ -128,7 +120,7 @@ class PiecewiseLinFit(object):
             Calculate the standard error of each model parameter in the fitted
             piecewise linear function. Note, this assumes no uncertainty in
             breakpoint locations.
-        prediction_variance(x, sorted_data=True)
+        prediction_variance(x)
             Calculate the prediction variance at x locations for the fitted
             piecewise linear function. Note, assumes no uncertainty in break
             point locations.
@@ -147,11 +139,6 @@ class PiecewiseLinFit(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, disp_res=True)
 
-        If your data is already sorted such that x[0] <= x[1] <= ... <= x[n-1],
-        use sorted_data=True for a slight performance increase while
-        initializing the object
-
-        >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, sorted_data=True)
         """
 
         self.print = disp_res
@@ -163,27 +150,17 @@ class PiecewiseLinFit(object):
         if isinstance(y, np.ndarray) is False:
             y = np.array(y)
 
-        self.sorted_data = sorted_data
+        self.x_data = x
+        self.y_data = y
 
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if self.sorted_data:
-            self.x_data = x
-            self.y_data = y
-        else:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            self.x_data = x[order_arg]
-            self.y_data = y[order_arg]
         # calculate the number of data points
-        self.n_data = len(x)
+        self.n_data = x.size
 
         # set the first and last break x values to be the min and max of x
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
 
-    def assemble_regression_matrix(self, breaks, x, x_ordered=True):
+    def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
 
@@ -196,10 +173,6 @@ class PiecewiseLinFit(object):
         x : ndarray (1-D)
             The x locations which the linear regression matrix is assembled on.
             This must be a numpy array!
-        x_ordered : bool, optional
-            Whether x is ordered from smallest to largest. Data needs to be
-            sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            Default x_ordered=False.
 
         Attributes
         ----------
@@ -230,10 +203,6 @@ class PiecewiseLinFit(object):
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
             breaks = np.array(breaks)
-        if x_ordered is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
 
         # Sort the breaks, then store them
         breaks_order = np.argsort(breaks)
@@ -247,7 +216,7 @@ class PiecewiseLinFit(object):
         A_list.append(x - self.fit_breaks[0])
         for i in range(self.n_segments - 1):
             A_list.append(np.where(x > self.fit_breaks[i+1],
-                                   x - self.fit_breaks[i+1], 
+                                   x - self.fit_breaks[i+1],
                                    0.0))
         A = np.vstack(A_list).T
         return A
@@ -473,23 +442,30 @@ class PiecewiseLinFit(object):
             breaks = np.array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
-
         # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters))
-        C[:, 0] = 1.0
-        C[:, 1] = self.x_c - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = self.x_c > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_ind = np.argmax(int_locations)
-                # only change the non-zero values of A
-                C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
+        C_list = [np.ones_like(self.x_c)]
+        C_list.append(self.x_c - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                   self.x_c - self.fit_breaks[i+1],
+                                   0.0))
+        C = np.vstack(C_list).T
+        # # Assemble the constraint matrix
+        # C = np.zeros((self.c_n, self.n_parameters))
+        # C[:, 0] = 1.0
+        # C[:, 1] = self.x_c - self.fit_breaks[0]
+        # # Loop through the rest of A to determine the other columns
+        # for i in range(self.n_segments-1):
+        #     # find the locations where x > breakpoint values
+        #     int_locations = self.x_c > self.fit_breaks[i+1]
+        #     if sum(int_locations) > 0:
+        #         # this if statement just ensures that there is at least
+        #         # one data point in x_c > breaks[i+1]
+        #         # find the first index of x where it is greater than thebreak
+        #         # point value
+        #         int_ind = np.argmax(int_locations)
+        #         # only change the non-zero values of A
+        #         C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
@@ -537,7 +513,7 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def predict(self, x, sorted_data=False, beta=None, breaks=None):
+    def predict(self, x, beta=None, breaks=None):
         r"""
         Evaluate the fitted continuous piecewise linear function at untested
         points.
@@ -551,12 +527,6 @@ class PiecewiseLinFit(object):
         x : array_like
             The x locations where you want to predict the output of the fitted
             continuous piecewise linear function.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implentation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A processes that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
         beta : none or ndarray (1-D), optional
             The model parameters for the continuous piecewise linear fit.
             Default is None.
@@ -601,11 +571,6 @@ class PiecewiseLinFit(object):
         >>> x_new = np.linspace(0.0, 1.0, 100)
         >>> yhat = my_pwlf.predict(x_new)
 
-        If the x data is already sorted you can add the sorted_data=True to
-        avoid sorting already sorted data.
-
-        >>> yhat = my_pwlf.predict(x_new, sorted_data=False)
-
         """
         if beta is not None and breaks is not None:
             self.beta = beta
@@ -618,14 +583,6 @@ class PiecewiseLinFit(object):
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if sorted_data is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
 
         A = self.assemble_regression_matrix(self.fit_breaks, x)
 
@@ -765,21 +722,13 @@ class PiecewiseLinFit(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
-        C = np.zeros((self.c_n, self.n_parameters))
-        C[:, 0] = 1.0
-        C[:, 1] = self.x_c - breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = self.x_c > breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                C[int_index:, i+2] = self.x_c[int_index:] - breaks[i+1]
+        C_list = [np.ones_like(self.x_c)]
+        C_list.append(self.x_c - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                   self.x_c - self.fit_breaks[i+1],
+                                   0.0))
+        C = np.vstack(C_list).T
 
         # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
@@ -1458,7 +1407,7 @@ class PiecewiseLinFit(object):
         except linalg.LinAlgError:
             raise linalg.LinAlgError('Singular matrix')
 
-    def prediction_variance(self, x, sorted_data=False):
+    def prediction_variance(self, x):
         r"""
         Calculate the prediction variance for each specified x location. The
         prediction variance is the uncertainty of the model due to the lack of
@@ -1474,12 +1423,6 @@ class PiecewiseLinFit(object):
         x : array_like
             The x locations where you want the prediction variance from the
             fitted continuous piecewise linear function.
-        sorted_data : bool, optional
-            Data needs to be sorted such that x[0] <= x[1] <= ... <= x[n-1].
-            This implentation takes advantage of sorted x data in order to
-            speed up the assembly of the regression matrix. A processes that
-            could be repeated several thousand times. If your data is not
-            sorted, pwlf will use numpy to sort the data. Default is False.
 
         Returns
         -------
@@ -1526,14 +1469,6 @@ class PiecewiseLinFit(object):
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
             x = np.array(x)
-
-        # it is assumed by default that initial arrays are not sorted
-        # i.e. if your data is already ordered
-        # from x[0] <= x[1] <= ... <= x[n-1] use sorted_data=True
-        if sorted_data is False:
-            # sort the data from least x to max x
-            order_arg = np.argsort(x)
-            x = x[order_arg]
 
         # Regression matrix on training data
         Ad = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
