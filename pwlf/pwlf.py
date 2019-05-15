@@ -450,24 +450,7 @@ class PiecewiseLinFit(object):
                                    self.x_c - self.fit_breaks[i+1],
                                    0.0))
         C = np.vstack(C_list).T
-        # # Assemble the constraint matrix
-        # C = np.zeros((self.c_n, self.n_parameters))
-        # C[:, 0] = 1.0
-        # C[:, 1] = self.x_c - self.fit_breaks[0]
-        # # Loop through the rest of A to determine the other columns
-        # for i in range(self.n_segments-1):
-        #     # find the locations where x > breakpoint values
-        #     int_locations = self.x_c > self.fit_breaks[i+1]
-        #     if sum(int_locations) > 0:
-        #         # this if statement just ensures that there is at least
-        #         # one data point in x_c > breaks[i+1]
-        #         # find the first index of x where it is greater than thebreak
-        #         # point value
-        #         int_ind = np.argmax(int_locations)
-        #         # only change the non-zero values of A
-        #         C[int_ind:, i+2] = self.x_c[int_ind:] - self.fit_breaks[i+1]
 
-        # Assemble the square constrained least squares matrix
         K = np.zeros((self.n_parameters + self.c_n,
                       self.n_parameters + self.c_n))
         K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
