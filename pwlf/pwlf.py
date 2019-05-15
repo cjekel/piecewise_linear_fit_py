@@ -242,23 +242,14 @@ class PiecewiseLinFit(object):
         self.n_parameters = len(breaks)
         self.n_segments = self.n_parameters - 1
 
-        # # initialize the regression matrix as zeros
-        A = np.zeros((len(x), self.n_parameters))
-        # The first two columns of the matrix are always defined as
-        A[:, 0] = 1.0
-        A[:, 1] = x - self.fit_breaks[0]
-        # Loop through the rest of A to determine the other columns
-        for i in range(self.n_segments-1):
-            # find the locations where x > breakpoint values
-            int_locations = x > self.fit_breaks[i+1]
-            if sum(int_locations) > 0:
-                # this if statement just ensures that there is at least
-                # one data point in x_c > breaks[i+1]
-                # find the first index of x where it is greater than the break
-                # point value
-                int_index = np.argmax(int_locations)
-                # only change the non-zero values of A
-                A[int_index:, i+2] = x[int_index:] - self.fit_breaks[i+1]
+        # Assemble the regression matrix
+        A_list = [np.ones_like(x)]
+        A_list.append(x - self.fit_breaks[0])
+        for i in range(self.n_segments - 1):
+            A_list.append(np.where(x > self.fit_breaks[i+1],
+                                   x - self.fit_breaks[i+1], 
+                                   0.0))
+        A = np.vstack(A_list).T
         return A
 
     def fit_with_breaks(self, breaks):

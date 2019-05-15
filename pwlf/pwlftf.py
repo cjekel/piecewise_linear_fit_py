@@ -219,8 +219,7 @@ class PiecewiseLinFitTF(object):
         self.n_segments = self.n_parameters - 1
 
         # Assemble the regression matrix
-        A_list = []
-        A_list.append(tf.ones_like(x))
+        A_list = [tf.ones_like(x)]
         A_list.append(x - self.fit_breaks[0])
         zeros = tf.zeros_like(x)
         for i in range(self.n_segments - 1):
