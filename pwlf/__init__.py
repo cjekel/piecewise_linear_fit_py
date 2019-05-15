@@ -3,7 +3,7 @@ try:
     import tensorflow as tf  # noqa F401
     from .pwlftf import PiecewiseLinFitTF  # noqa F401
 except ImportError:
-    print('Warning: Install tensorflow to have access to PiecewiseLinFitTF.')
+    pass
 import os  # noqa F401
 
 # add rudimentary version tracking
