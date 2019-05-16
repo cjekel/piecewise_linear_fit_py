@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2019-05-16
+### Changed
+- Numpy matrix assembly is now ~100x times faster, which will translate to much faster fits! See this [comment](https://github.com/cjekel/piecewise_linear_fit_py/issues/20#issuecomment-492860953) about the speed up. There should no longer be any performance benefits with using the ```PiecewiseLinFitTF``` (TensorFlow) object, so the only reason to use ```PiecewiseLinFitTF``` is if you want access to TensorFlow's optimizers.
+### Removed
+- There are no sort or order optional parameters in ```PiecewiseLinFit```. The new matrix assembly method doesn't need sorted data. This may break backwards compatibility with your code. 
+
 ## [0.5.1] - 2019-05-05
 ### Changed
 - Fixed ```PiecewiseLinFitTF``` for Python 2.
