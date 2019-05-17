@@ -496,6 +496,7 @@ performance benchmarks see this blog
 The use of the TF class is nearly identical to the original class,
 however note the following exceptions. ``PiecewiseLinFitTF`` does:
 
+-  not sort data, so there are no ``sorted_data`` optional parameters
 -  not have a ``lapack_driver`` option
 -  have an optional parameter ``dtype``, so you can choose between the
    float64 and float32 data types
