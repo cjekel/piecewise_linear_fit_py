@@ -52,8 +52,8 @@ div.sphinxsidebar {
     width: 230px;
     margin-left: -100%;
     font-size: 90%;
-    word-wrap: break-word;
-    overflow-wrap : break-word;
+    word-wrap: break-all;
+    overflow-wrap : break-all;
 }
 
 div.sphinxsidebar ul {
@@ -512,7 +512,7 @@ dl.field-list {
 dl.field-list > dt {
     flex-basis: 20%;
     font-weight: bold;
-    word-break: break-word;
+    word-break: break-all;
 }
 
 dl.field-list > dt:after {
