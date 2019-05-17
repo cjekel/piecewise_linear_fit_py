@@ -497,11 +497,11 @@ The use of the TF class is nearly identical to the original class,
 however note the following exceptions. ``PiecewiseLinFitTF`` does:
 
 -- not have a ``lapack_driver`` option
--  have an optional parameter ``dtype``, so you can choose between the
-   float64 and float32 data types
--  have an optional parameter ``fast`` to switch between Cholesky
-   decomposition (default ``fast=True``), and orthogonal decomposition
-   (``fast=False``)
+ -  have an optional parameter ``dtype``, so you can choose between the
+    float64 and float32 data types
+ -  have an optional parameter ``fast`` to switch between Cholesky
+    decomposition (default ``fast=True``), and orthogonal decomposition
+    (``fast=False``)
 
 .. code:: python
 
