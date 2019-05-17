@@ -632,16 +632,16 @@ performance benchmarks see this blog
 <a class="reference external" href="https://jekel.me/2019/Adding-tensorflow-to-pwlf/">post</a>.</p>
 <p>The use of the TF class is nearly identical to the original class,
 however note the following exceptions. <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> does:</p>
-<dl class="simple">
-<dt>– not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option</dt><dd><ul class="simple">
-<li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the
-float64 and float32 data types</p></li>
+<p>– not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option
+-  have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the</p>
+<blockquote>
+<div><p>float64 and float32 data types</p>
+</div></blockquote>
+<ul class="simple">
 <li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">fast</span></code> to switch between Cholesky
 decomposition (default <code class="docutils literal notranslate"><span class="pre">fast=True</span></code>), and orthogonal decomposition
 (<code class="docutils literal notranslate"><span class="pre">fast=False</span></code>)</p></li>
 </ul>
-</dd>
-</dl>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.039</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
 
