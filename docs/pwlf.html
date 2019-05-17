@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pwlf package contents &mdash; pwlf 0.5.1 documentation</title>
+  <title>pwlf package contents &mdash; pwlf 1.0.0 documentation</title>
   
 
   
@@ -178,7 +178,7 @@
 </table>
 <dl class="class">
 <dt id="pwlf.PiecewiseLinFit">
-<em class="property">class </em><code class="descclassname">pwlf.</code><code class="descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>disp_res=False</em>, <em>sorted_data=False</em>, <em>lapack_driver='gelsd'</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pwlf.</code><code class="descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>disp_res=False</em>, <em>lapack_driver='gelsd'</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-center">
@@ -187,7 +187,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="pwlf.PiecewiseLinFit.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(breaks, x[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="pwlf.PiecewiseLinFit.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(breaks, x)</p></td>
 <td><p>Assemble the linear regression matrix A</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.calc_slopes" title="pwlf.PiecewiseLinFit.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>()</p></td>
@@ -217,10 +217,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>()</p></td>
 <td><p>Calculate the p-values for each beta parameter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.predict" title="pwlf.PiecewiseLinFit.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, sorted_data, beta, breaks])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.predict" title="pwlf.PiecewiseLinFit.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, beta, breaks])</p></td>
 <td><p>Evaluate the fitted continuous piecewise linear function at untested points.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.prediction_variance" title="pwlf.PiecewiseLinFit.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(x[, sorted_data])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.prediction_variance" title="pwlf.PiecewiseLinFit.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(x)</p></td>
 <td><p>Calculate the prediction variance for each specified x location.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.r_squared" title="pwlf.PiecewiseLinFit.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>()</p></td>
@@ -236,7 +236,7 @@
 </table>
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.assemble_regression_matrix">
-<code class="descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em>breaks</em>, <em>x</em>, <em>x_ordered=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em>breaks</em>, <em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assemble the linear regression matrix A</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,10 +247,6 @@ structured as a 1-D numpy array.</p>
 </dd>
 <dt><strong>x</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The x locations which the linear regression matrix is assembled on.
 This must be a numpy array!</p>
-</dd>
-<dt><strong>x_ordered</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether x is ordered from smallest to largest. Data needs to be
-sorted such that x[0] &lt;= x[1] &lt;= … &lt;= x[n-1].
-Default x_ordered=False.</p>
 </dd>
 </dl>
 </dd>
@@ -907,7 +903,7 @@ parameter</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>x</em>, <em>sorted_data=False</em>, <em>beta=None</em>, <em>breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.predict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict</code><span class="sig-paren">(</span><em>x</em>, <em>beta=None</em>, <em>breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the fitted continuous piecewise linear function at untested
 points.</p>
 <p>You can manfully specify the breakpoints and calculated
@@ -918,12 +914,6 @@ and the same data set.</p>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where you want to predict the output of the fitted
 continuous piecewise linear function.</p>
-</dd>
-<dt><strong>sorted_data</strong><span class="classifier">bool, optional</span></dt><dd><p>Data needs to be sorted such that x[0] &lt;= x[1] &lt;= … &lt;= x[n-1].
-This implentation takes advantage of sorted x data in order to
-speed up the assembly of the regression matrix. A processes that
-could be repeated several thousand times. If your data is not
-sorted, pwlf will use numpy to sort the data. Default is False.</p>
 </dd>
 <dt><strong>beta</strong><span class="classifier">none or ndarray (1-D), optional</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.
 Default is None.</p>
@@ -956,11 +946,6 @@ linearly spaced.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If the x data is already sorted you can add the sorted_data=True to
-avoid sorting already sorted data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span> <span class="n">sorted_data</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
@@ -980,7 +965,7 @@ len(beta).</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.prediction_variance">
-<code class="descname">prediction_variance</code><span class="sig-paren">(</span><em>x</em>, <em>sorted_data=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.prediction_variance" title="Permalink to this definition">¶</a></dt>
+<code class="descname">prediction_variance</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.prediction_variance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the prediction variance for each specified x location. The
 prediction variance is the uncertainty of the model due to the lack of
 data. This can be used to find a 95% confidence interval of possible
@@ -994,12 +979,6 @@ www2.mae.ufl.edu/haftka/vvuq/lectures/Regression-accuracy.pptx</p>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where you want the prediction variance from the
 fitted continuous piecewise linear function.</p>
-</dd>
-<dt><strong>sorted_data</strong><span class="classifier">bool, optional</span></dt><dd><p>Data needs to be sorted such that x[0] &lt;= x[1] &lt;= … &lt;= x[n-1].
-This implentation takes advantage of sorted x data in order to
-speed up the assembly of the regression matrix. A processes that
-could be repeated several thousand times. If your data is not
-sorted, pwlf will use numpy to sort the data. Default is False.</p>
 </dd>
 </dl>
 </dd>
