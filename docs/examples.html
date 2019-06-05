@@ -270,7 +270,7 @@ locations.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id1">
+<div class="figure align-default" id="id1">
 <img alt="fit with known breakpoint locations" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png" />
 <p class="caption"><span class="caption-text">fit with known breakpoint locations</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
@@ -298,7 +298,7 @@ from scipy.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id2">
+<div class="figure align-default" id="id2">
 <img alt="fit for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png" />
 <p class="caption"><span class="caption-text">fit for specified number of line segments</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
@@ -328,7 +328,7 @@ for a small number of starting points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id3">
+<div class="figure align-default" id="id3">
 <img alt="fitfast for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png" />
 <p class="caption"><span class="caption-text">fitfast for specified number of line segments</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
@@ -360,7 +360,7 @@ finds the best 4 line segments that go through two data points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id4">
+<div class="figure align-default" id="id4">
 <img alt="force a fit through data points" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png" />
 <p class="caption"><span class="caption-text">force a fit through data points</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
@@ -547,7 +547,7 @@ unknowns than you have data with pwlf!</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id5">
+<div class="figure align-default" id="id5">
 <img alt="bad fits when you have more unknowns than data" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png" />
 <p class="caption"><span class="caption-text">bad fits when you have more unknowns than data</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
@@ -618,7 +618,7 @@ regularizer to perform an interesting fit with the regression matrix.</p>
                              <span class="n">beta</span><span class="o">=</span><span class="n">en_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id6">
+<div class="figure align-default" id="id6">
 <img alt="interesting elastic net fit" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png" />
 <p class="caption"><span class="caption-text">interesting elastic net fit</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
@@ -633,6 +633,7 @@ performance benchmarks see this blog
 <p>The use of the TF class is nearly identical to the original class,
 however note the following exceptions. <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> does:</p>
 <ul class="simple">
+<li><p>not sort data, so there are no <code class="docutils literal notranslate"><span class="pre">sorted_data</span></code> optional parameters</p></li>
 <li><p>not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option</p></li>
 <li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the
 float64 and float32 data types</p></li>

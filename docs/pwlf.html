@@ -160,7 +160,7 @@
             
   <div class="section" id="pwlf-package-contents">
 <h1>pwlf package contents<a class="headerlink" href="#pwlf-package-contents" title="Permalink to this headline">¶</a></h1>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -178,65 +178,65 @@
 </table>
 <dl class="class">
 <dt id="pwlf.PiecewiseLinFit">
-<em class="property">class </em><code class="descclassname">pwlf.</code><code class="descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>disp_res=False</em>, <em>lapack_driver='gelsd'</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pwlf.</code><code class="sig-name descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">lapack_driver='gelsd'</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="pwlf.PiecewiseLinFit.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(breaks, x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="pwlf.PiecewiseLinFit.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(self, breaks, x)</p></td>
 <td><p>Assemble the linear regression matrix A</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.calc_slopes" title="pwlf.PiecewiseLinFit.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.calc_slopes" title="pwlf.PiecewiseLinFit.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>(self)</p></td>
 <td><p>Calculate the slopes of the lines after a piecewise linear function has been fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(n_segments[, x_c, y_c])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
 <td><p>Fit a continuous piecewise linear function for a specified number of line segments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(var)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(guess_breakpoints, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints, \*\*kwargs)</p></td>
 <td><p>Uses L-BFGS-B optimization to find the location of breakpoints from a guess of where breakpoint locations should be.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(breaks)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="pwlf.PiecewiseLinFit.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(breaks, x_c, y_c)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="pwlf.PiecewiseLinFit.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(self, breaks, …)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations, where you force the fit to go through the data points at x_c and y_c.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(var)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(n_segments[, pop])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop])</p></td>
 <td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self)</p></td>
 <td><p>Calculate the p-values for each beta parameter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.predict" title="pwlf.PiecewiseLinFit.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, beta, breaks])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.predict" title="pwlf.PiecewiseLinFit.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, x[, beta, breaks])</p></td>
 <td><p>Evaluate the fitted continuous piecewise linear function at untested points.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.prediction_variance" title="pwlf.PiecewiseLinFit.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.prediction_variance" title="pwlf.PiecewiseLinFit.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(self, x)</p></td>
 <td><p>Calculate the prediction variance for each specified x location.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.r_squared" title="pwlf.PiecewiseLinFit.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.r_squared" title="pwlf.PiecewiseLinFit.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>(self)</p></td>
 <td><p>Calculate the coefficient of determination (“R squared”, R^2) value after a fit has been performed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.standard_errors" title="pwlf.PiecewiseLinFit.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.standard_errors" title="pwlf.PiecewiseLinFit.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>(self)</p></td>
 <td><p>Calculate the standard errors for each beta parameter determined from the piecewise linear fit.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.use_custom_opt" title="pwlf.PiecewiseLinFit.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(n_segments[, x_c, y_c])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.use_custom_opt" title="pwlf.PiecewiseLinFit.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
 <td><p>Provide the number of line segments you want to use with your custom optimization routine.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.assemble_regression_matrix">
-<code class="descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em>breaks</em>, <em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assemble the linear regression matrix A</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -283,7 +283,7 @@ len(beta).</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.calc_slopes">
-<code class="descname">calc_slopes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.calc_slopes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calc_slopes</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.calc_slopes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the slopes of the lines after a piecewise linear
 function has been fitted.</p>
 <p>This will also calculate the y-intercept from each line in the form
@@ -324,7 +324,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>n_segments</em>, <em>x_c=None</em>, <em>y_c=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a continuous piecewise linear function for a specified number
 of line segments. Uses differential evolution to finds the optimum
 location of breakpoints for a given number of line segments by
@@ -354,7 +354,7 @@ information.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You probably provided x_c without y_c (or vice versa).
+<dt>ValueError</dt><dd><p>You probably provided x_c without y_c (or vice versa).
 You must provide both x_c and y_c if you plan to force
 the model through data point(s).</p>
 </dd>
@@ -435,7 +435,7 @@ Only created if x_c and y_c provided.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_force_points_opt">
-<code class="descname">fit_force_points_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_force_points_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
 fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
@@ -461,7 +461,7 @@ optimization routine.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -476,7 +476,7 @@ at the min and max values of x.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_guess">
-<code class="descname">fit_guess</code><span class="sig-paren">(</span><em>guess_breakpoints</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_guess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_guess</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">guess_breakpoints</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_guess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses L-BFGS-B optimization to find the location of breakpoints
 from a guess of where breakpoint locations should be.</p>
 <p>In some cases you may have a good idea where the breakpoint locations
@@ -551,7 +551,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks">
-<code class="descname">fit_with_breaks</code><span class="sig-paren">(</span><em>breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
 for specified breakpoint locations.</p>
 <p>The function minimizes the sum of the square of the residuals for the
@@ -579,7 +579,7 @@ structured as a 1-D numpy array.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -624,7 +624,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks_force_points">
-<code class="descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em>breaks</em>, <em>x_c</em>, <em>y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x_c</em>, <em class="sig-param">y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
 for specified breakpoint locations, where you force the
 fit to go through the data points at x_c and y_c.</p>
@@ -656,7 +656,7 @@ of the residuals plus the constraint penalty.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -714,7 +714,7 @@ function will be forced to go through.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_with_breaks_opt">
-<code class="descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
 fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
@@ -738,7 +738,7 @@ optimization routine.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -753,7 +753,7 @@ values of x.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fitfast">
-<code class="descname">fitfast</code><span class="sig-paren">(</span><em>n_segments</em>, <em>pop=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fitfast" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitfast</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">pop=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fitfast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses multi start LBFGSB optimization to find the location of
 breakpoints for a given number of line segments by minimizing the sum
 of the square of the errors.</p>
@@ -850,7 +850,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.p_values">
-<code class="descname">p_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the p-values for each beta parameter.</p>
 <p>This calculates the p-values for the beta parameters under the
 assumption that your breakpoint locations are known. Section 2.4.2 of
@@ -869,7 +869,7 @@ beta[0] and so forth</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 </dl>
 </dd>
@@ -880,7 +880,7 @@ not consider the uncertainty with your breakpoint locations.</p>
 <p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="r665247553e58-2"><span class="brackets">2</span><span class="fn-backref">(<a href="#id13">1</a>,<a href="#id14">2</a>)</span></dt>
+<dt class="label" id="r665247553e58-2"><span class="brackets"><a class="fn-backref" href="#id13">2</a></span></dt>
 <dd><p>Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
 methodology . Hoboken. New Jersey: John Wiley &amp; Sons, Inc.
 2009;20:38-44.</p>
@@ -903,7 +903,7 @@ parameter</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>x</em>, <em>beta=None</em>, <em>breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">beta=None</em>, <em class="sig-param">breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the fitted continuous piecewise linear function at untested
 points.</p>
 <p>You can manfully specify the breakpoints and calculated
@@ -965,7 +965,7 @@ len(beta).</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.prediction_variance">
-<code class="descname">prediction_variance</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.prediction_variance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prediction_variance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.prediction_variance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the prediction variance for each specified x location. The
 prediction variance is the uncertainty of the model due to the lack of
 data. This can be used to find a 95% confidence interval of possible
@@ -990,9 +990,9 @@ fitted continuous piecewise linear function.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1017,7 +1017,7 @@ fit.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.r_squared">
-<code class="descname">r_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.r_squared" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">r_squared</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.r_squared" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the coefficient of determination (“R squared”, R^2) value
 after a fit has been performed.
 For more information see:
@@ -1031,9 +1031,9 @@ For more information see:
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1052,7 +1052,7 @@ For more information see:
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.standard_errors">
-<code class="descname">standard_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.standard_errors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">standard_errors</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.standard_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the standard errors for each beta parameter determined
 from the piecewise linear fit. Typically +- 1.96*se will yield the
 center of a 95% confidence region around your parameters. This
@@ -1071,9 +1071,9 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1082,7 +1082,7 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 <p>Note, this assumes no uncertainty in breakpoint locations.</p>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="rb5b41547ab31-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id15">1</a>,<a href="#id16">2</a>)</span></dt>
+<dt class="label" id="rb5b41547ab31-1"><span class="brackets"><a class="fn-backref" href="#id15">1</a></span></dt>
 <dd><p>Coppe, A., Haftka, R. T., and Kim, N. H., “Uncertainty
 Identification of Damage Growth Parameters Using Nonlinear
 Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp.
@@ -1103,7 +1103,7 @@ Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp.
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.use_custom_opt">
-<code class="descname">use_custom_opt</code><span class="sig-paren">(</span><em>n_segments</em>, <em>x_c=None</em>, <em>y_c=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.use_custom_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">use_custom_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.use_custom_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide the number of line segments you want to use with your
 custom optimization routine.</p>
 <p>Run this function first to initialize necessary attributes!!!</p>
@@ -1161,65 +1161,65 @@ function will be forced to go through.</p>
 
 <dl class="class">
 <dt id="pwlftf.PiecewiseLinFitTF">
-<em class="property">class </em><code class="descclassname">pwlftf.</code><code class="descname">PiecewiseLinFitTF</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>disp_res=False</em>, <em>dtype='float64'</em>, <em>fast=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pwlftf.</code><code class="sig-name descname">PiecewiseLinFitTF</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">dtype='float64'</em>, <em class="sig-param">fast=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="pwlftf.PiecewiseLinFitTF.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(breaks, x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="pwlftf.PiecewiseLinFitTF.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(self, breaks, x)</p></td>
 <td><p>Assemble the linear regression matrix A</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="pwlftf.PiecewiseLinFitTF.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="pwlftf.PiecewiseLinFitTF.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>(self)</p></td>
 <td><p>Calculate the slopes of the lines after a piecewise linear function has been fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit" title="pwlftf.PiecewiseLinFitTF.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(n_segments[, x_c, y_c])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit" title="pwlftf.PiecewiseLinFitTF.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
 <td><p>Fit a continuous piecewise linear function for a specified number of line segments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="pwlftf.PiecewiseLinFitTF.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(var)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="pwlftf.PiecewiseLinFitTF.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="pwlftf.PiecewiseLinFitTF.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(guess_breakpoints, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="pwlftf.PiecewiseLinFitTF.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints, \*\*kwargs)</p></td>
 <td><p>Uses L-BFGS-B optimization to find the location of breakpoints from a guess of where breakpoint locations should be.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(breaks)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(breaks, x_c, y_c)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(self, breaks, …)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations, where you force the fit to go through the data points at x_c and y_c.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(var)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="pwlftf.PiecewiseLinFitTF.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(n_segments[, pop])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="pwlftf.PiecewiseLinFitTF.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop])</p></td>
 <td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.p_values" title="pwlftf.PiecewiseLinFitTF.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.p_values" title="pwlftf.PiecewiseLinFitTF.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self)</p></td>
 <td><p>Calculate the p-values for each beta parameter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.predict" title="pwlftf.PiecewiseLinFitTF.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, beta, breaks])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.predict" title="pwlftf.PiecewiseLinFitTF.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, x[, beta, breaks])</p></td>
 <td><p>Evaluate the fitted continuous piecewise linear function at untested points.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="pwlftf.PiecewiseLinFitTF.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="pwlftf.PiecewiseLinFitTF.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(self, x)</p></td>
 <td><p>Calculate the prediction variance for each specified x location.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="pwlftf.PiecewiseLinFitTF.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="pwlftf.PiecewiseLinFitTF.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>(self)</p></td>
 <td><p>Calculate the coefficient of determination (“R squared”, R^2) value after a fit has been performed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="pwlftf.PiecewiseLinFitTF.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="pwlftf.PiecewiseLinFitTF.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>(self)</p></td>
 <td><p>Calculate the standard errors for each beta parameter determined from the piecewise linear fit.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="pwlftf.PiecewiseLinFitTF.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(n_segments[, x_c, y_c])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="pwlftf.PiecewiseLinFitTF.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
 <td><p>Provide the number of line segments you want to use with your custom optimization routine.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.assemble_regression_matrix">
-<code class="descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em>breaks</em>, <em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assemble the linear regression matrix A</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1266,7 +1266,7 @@ len(beta).</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.calc_slopes">
-<code class="descname">calc_slopes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calc_slopes</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the slopes of the lines after a piecewise linear
 function has been fitted.</p>
 <p>This will also calculate the y-intercept from each line in the form
@@ -1307,7 +1307,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>n_segments</em>, <em>x_c=None</em>, <em>y_c=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a continuous piecewise linear function for a specified number
 of line segments. Uses differential evolution to finds the optimum
 location of breakpoints for a given number of line segments by
@@ -1337,7 +1337,7 @@ information.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You probably provided x_c without y_c (or vice versa).
+<dt>ValueError</dt><dd><p>You probably provided x_c without y_c (or vice versa).
 You must provide both x_c and y_c if you plan to force
 the model through data point(s).</p>
 </dd>
@@ -1423,7 +1423,7 @@ Only created if x_c and y_c provided.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit_force_points_opt">
-<code class="descname">fit_force_points_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_force_points_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
 fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
@@ -1449,7 +1449,7 @@ optimization routine.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1464,7 +1464,7 @@ at the min and max values of x.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit_guess">
-<code class="descname">fit_guess</code><span class="sig-paren">(</span><em>guess_breakpoints</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_guess</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">guess_breakpoints</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses L-BFGS-B optimization to find the location of breakpoints
 from a guess of where breakpoint locations should be.</p>
 <p>In some cases you may have a good idea where the breakpoint locations
@@ -1541,7 +1541,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks">
-<code class="descname">fit_with_breaks</code><span class="sig-paren">(</span><em>breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
 for specified breakpoint locations.</p>
 <p>The function minimizes the sum of the square of the residuals for the
@@ -1610,7 +1610,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points">
-<code class="descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em>breaks</em>, <em>x_c</em>, <em>y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x_c</em>, <em class="sig-param">y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function which fits a continuous piecewise linear function
 for specified breakpoint locations, where you force the
 fit to go through the data points at x_c and y_c.</p>
@@ -1642,7 +1642,7 @@ of the residuals plus the constraint penalty.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1704,7 +1704,7 @@ function will be forced to go through.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt">
-<code class="descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>The objective function to perform a continuous piecewise linear
 fit for a specified number of breakpoints. This is to be used
 with a custom optimization routine, and after use_custom_opt has
@@ -1728,7 +1728,7 @@ optimization routine.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -1743,7 +1743,7 @@ values of x.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.fitfast">
-<code class="descname">fitfast</code><span class="sig-paren">(</span><em>n_segments</em>, <em>pop=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitfast</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">pop=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses multi start LBFGSB optimization to find the location of
 breakpoints for a given number of line segments by minimizing the sum
 of the square of the errors.</p>
@@ -1842,7 +1842,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.p_values">
-<code class="descname">p_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.p_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.p_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the p-values for each beta parameter.</p>
 <p>This calculates the p-values for the beta parameters under the
 assumption that your breakpoint locations are known. Section 2.4.2 of
@@ -1861,7 +1861,7 @@ beta[0] and so forth</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 </dl>
 </dd>
@@ -1872,7 +1872,7 @@ not consider the uncertainty with your breakpoint locations.</p>
 <p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="r4f377d2f3873-2"><span class="brackets">2</span><span class="fn-backref">(<a href="#id29">1</a>,<a href="#id30">2</a>)</span></dt>
+<dt class="label" id="r4f377d2f3873-2"><span class="brackets"><a class="fn-backref" href="#id29">2</a></span></dt>
 <dd><p>Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
 methodology . Hoboken. New Jersey: John Wiley &amp; Sons, Inc.
 2009;20:38-44.</p>
@@ -1895,7 +1895,7 @@ parameter</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>x</em>, <em>beta=None</em>, <em>breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">beta=None</em>, <em class="sig-param">breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the fitted continuous piecewise linear function at untested
 points.</p>
 <p>You can manfully specify the breakpoints and calculated
@@ -1959,7 +1959,7 @@ len(beta).</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.prediction_variance">
-<code class="descname">prediction_variance</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prediction_variance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the prediction variance for each specified x location. The
 prediction variance is the uncertainty of the model due to the lack of
 data. This can be used to find a 95% confidence interval of possible
@@ -1984,9 +1984,9 @@ fitted continuous piecewise linear function.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -2011,7 +2011,7 @@ fit.</p>
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.r_squared">
-<code class="descname">r_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">r_squared</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the coefficient of determination (“R squared”, R^2) value
 after a fit has been performed.
 For more information see:
@@ -2025,9 +2025,9 @@ For more information see:
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -2046,7 +2046,7 @@ For more information see:
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.standard_errors">
-<code class="descname">standard_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">standard_errors</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the standard errors for each beta parameter determined
 from the piecewise linear fit. Typically +- 1.96*se will yield the
 center of a 95% confidence region around your parameters. This
@@ -2065,9 +2065,9 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ValueError</strong></dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
-<dt><strong>LinAlgError</strong></dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
+<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
 </dl>
 </dd>
@@ -2076,7 +2076,7 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 <p>Note, this assumes no uncertainty in breakpoint locations.</p>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="r7676cca87ba3-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id31">1</a>,<a href="#id32">2</a>)</span></dt>
+<dt class="label" id="r7676cca87ba3-1"><span class="brackets"><a class="fn-backref" href="#id31">1</a></span></dt>
 <dd><p>Coppe, A., Haftka, R. T., and Kim, N. H., “Uncertainty
 Identification of Damage Growth Parameters Using Nonlinear
 Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp.
@@ -2097,7 +2097,7 @@ Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp.
 
 <dl class="method">
 <dt id="pwlftf.PiecewiseLinFitTF.use_custom_opt">
-<code class="descname">use_custom_opt</code><span class="sig-paren">(</span><em>n_segments</em>, <em>x_c=None</em>, <em>y_c=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">use_custom_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide the number of line segments you want to use with your
 custom optimization routine.</p>
 <p>Run this function first to initialize necessary attributes!!!</p>
