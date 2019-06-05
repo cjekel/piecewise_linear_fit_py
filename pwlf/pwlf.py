@@ -468,7 +468,7 @@ class PiecewiseLinFit(object):
             for i in range(self.n_segments - 1):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
                                        1.0,
-                                       0.0))            
+                                       0.0))
         C = np.vstack(C_list).T
 
         K = np.zeros((self.n_parameters + self.c_n,
