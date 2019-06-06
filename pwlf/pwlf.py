@@ -163,7 +163,8 @@ class PiecewiseLinFit(object):
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
 
-        if degree < 2 and degree >= 0:
+        if degree < 12 and degree >= 0:
+            # I actually don't know what the upper degree limit should
             self.degree = int(degree)
         else:
             not_suported = "degree = " + str(degree) + " is not supported."
@@ -220,14 +221,21 @@ class PiecewiseLinFit(object):
         self.n_parameters = len(breaks)
         self.n_segments = self.n_parameters - 1
 
+        # Assemble the regression matrix
         A_list = [np.ones_like(x)]
-        if self.degree == 1:
-            # Assemble the regression matrix
+        if self.degree >= 1:
             A_list.append(x - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
                 A_list.append(np.where(x > self.fit_breaks[i+1],
                                        x - self.fit_breaks[i+1],
                                        0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    A_list.append((x - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        A_list.append(np.where(x > self.fit_breaks[i+1],
+                                               (x - self.fit_breaks[i+1])**k,
+                                               0.0))
         else:
             A_list = [np.ones_like(x)]
             for i in range(self.n_segments - 1):
@@ -458,12 +466,20 @@ class PiecewiseLinFit(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
-        if self.degree == 1:
+        if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
                                        self.x_c - self.fit_breaks[i+1],
                                        0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                               (self.x_c
+                                               - self.fit_breaks[i+1])**k,
+                                               0.0))
         else:
             for i in range(self.n_segments - 1):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
@@ -732,6 +748,14 @@ class PiecewiseLinFit(object):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
                                        self.x_c - self.fit_breaks[i+1],
                                        0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                               (self.x_c -
+                                                self.fit_breaks[i+1])**k,
+                                               0.0))
         else:
             for i in range(self.n_segments - 1):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
