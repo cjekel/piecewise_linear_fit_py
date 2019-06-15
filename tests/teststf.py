@@ -103,7 +103,8 @@ class TestEverything(unittest.TestCase):
 
     def test_diff_evo(self):
         my_pwlf = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
-        my_pwlf.fit(4)
+        np.random.seed(12)
+        my_pwlf.fit(3, atol=1e-6)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
     def test_predict(self):
@@ -145,9 +146,10 @@ class TestEverything(unittest.TestCase):
         x = np.linspace(0.0, 1.0, num=100)
         y = np.sin(6.0*x)
         my_fit = pwlf.PiecewiseLinFitTF(x, y, disp_res=True)
+        np.random.seed(1231)
         x_c = [0.0]
         y_c = [0.0]
-        my_fit.fit(3, x_c, y_c, popsize=5, maxiter=2, disp=False)
+        my_fit.fit(3, x_c, y_c, popsize=2, maxiter=2, disp=False, polish=False)
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
@@ -201,7 +203,6 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(breaks[1],  5.99819559))
 
     def test_multi_start_fitfast(self):
-        print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
         my_pwlf.fitfast(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))

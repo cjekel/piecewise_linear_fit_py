@@ -49,8 +49,7 @@ class PiecewiseLinFitTF(object):
         ----------
         x : array_like
             The x or independent data point locations as list or 1 dimensional
-            numpy array. The x and y data should be ordered such that x[i]
-            corresponds to y[i], for an arbitrary index i.
+            numpy array.
         y : array_like
             The y or dependent data point locations as list or 1 dimensional
             numpy array.
@@ -219,8 +218,7 @@ class PiecewiseLinFitTF(object):
         self.n_segments = self.n_parameters - 1
 
         # Assemble the regression matrix
-        A_list = []
-        A_list.append(tf.ones_like(x))
+        A_list = [tf.ones_like(x)]
         A_list.append(x - self.fit_breaks[0])
         zeros = tf.zeros_like(x)
         for i in range(self.n_segments - 1):
