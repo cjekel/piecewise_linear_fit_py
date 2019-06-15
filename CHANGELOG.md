@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n_parameters is now calculated based on the shape of the regression matrix
 - assembly of the regression matrix now considers which degree polynomial
 - n_segments calculated from break points...
+- Greatly reduce teststf.py run time
 
 ## [1.0.0] - 2019-05-16
 ### Changed
