@@ -4,6 +4,7 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install . flake8 pytest tensorflow
+  - pip install flake8 pytest tensorflow
+  - pip install .
 script: travis_wait pytest tests/tests.py tests/teststf.py
 before_script: flake8 pwlf
