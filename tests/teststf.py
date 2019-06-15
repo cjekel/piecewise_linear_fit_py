@@ -201,7 +201,6 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(breaks[1],  5.99819559))
 
     def test_multi_start_fitfast(self):
-        print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFitTF(self.xk, self.yk)
         my_pwlf.fitfast(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))

@@ -19,18 +19,9 @@ my_pwlf_1 = pwlf.PiecewiseLinFit(x, y, degree=1)  # default
 my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
 
 # fit the data for four line segments
-res0 = my_pwlf_0.fitfast(4, pop=10)
-res1 = my_pwlf_1.fitfast(4, pop=10)
-res2 = my_pwlf_2.fitfast(4, pop=10)
-
-# assembly
-A0 = my_pwlf_0.assemble_regression_matrix(my_pwlf_0.fit_breaks, x)
-A1 = my_pwlf_1.assemble_regression_matrix(my_pwlf_1.fit_breaks, x)
-A2 = my_pwlf_2.assemble_regression_matrix(my_pwlf_2.fit_breaks, x)
-
-print(A0.shape, my_pwlf_0.n_parameters, my_pwlf_0.n_segments)
-print(A1.shape, my_pwlf_1.n_parameters, my_pwlf_1.n_segments)
-print(A2.shape, my_pwlf_2.n_parameters, my_pwlf_2.n_segments)
+res0 = my_pwlf_0.fitfast(5, pop=10)
+res1 = my_pwlf_1.fitfast(5, pop=10)
+res2 = my_pwlf_2.fitfast(5, pop=10)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
@@ -41,8 +32,8 @@ yHat2 = my_pwlf_2.predict(xHat)
 # plot the results
 plt.figure()
 plt.plot(x, y, 'o', label='Data')
-plt.plot(xHat, yHat0, '-', label='Degree 0')
-plt.plot(xHat, yHat1, '--', label='Degree 1')
-plt.plot(xHat, yHat2, ':', label='Degree 2')
+plt.plot(xHat, yHat0, '-', label='degree=0')
+plt.plot(xHat, yHat1, '--', label='degree=1')
+plt.plot(xHat, yHat2, ':', label='degree=2')
 plt.legend()
 plt.show()
