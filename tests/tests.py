@@ -90,6 +90,28 @@ class TestEverything(unittest.TestCase):
         my_pwlf.fit(4, disp=False)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
+    def test_custom_bounds1(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        n_segments = 3
+        bounds = np.zeros((n_segments-1, 2))
+        bounds[0, 0] = self.x_small[0]
+        bounds[0, 1] = self.x_small[2]
+        bounds[1, 0] = self.x_small[1]
+        bounds[1, 1] = self.x_small[-1]
+        my_pwlf.fit(n_segments, bounds=bounds)
+        self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+
+    def test_custom_bounds2(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        n_segments = 3
+        bounds = np.zeros((n_segments-1, 2))
+        bounds[0, 0] = self.x_small[0]
+        bounds[0, 1] = self.x_small[2]
+        bounds[1, 0] = self.x_small[1]
+        bounds[1, 1] = self.x_small[-1]
+        my_pwlf.fitfast(n_segments, pop=20, bounds=bounds)
+        self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+
     def test_predict(self):
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         xmax = np.max(self.x_small)

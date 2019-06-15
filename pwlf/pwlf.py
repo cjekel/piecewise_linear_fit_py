@@ -805,7 +805,7 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def fit(self, n_segments, x_c=None, y_c=None, **kwargs):
+    def fit(self, n_segments, x_c=None, y_c=None, bounds=None, **kwargs):
         r"""
         Fit a continuous piecewise linear function for a specified number
         of line segments. Uses differential evolution to finds the optimum
@@ -822,6 +822,9 @@ class PiecewiseLinFit(object):
         y_c : array_like, optional
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
+        bounds : array_like, optional
+            Bounds for each breakpoint location within the optimization. This
+            should have the shape of (n_segments, 2).
         **kwargs : optional
             Directly passed into scipy.optimize.differential_evolution(). This
             will override any pwlf defaults when provided. See Note for more
@@ -945,9 +948,10 @@ class PiecewiseLinFit(object):
         self.nVar = self.n_segments - 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2])
-        bounds[:, 0] = self.break_0
-        bounds[:, 1] = self.break_n
+        if bounds is None:
+            bounds = np.zeros([self.nVar, 2])
+            bounds[:, 0] = self.break_0
+            bounds[:, 1] = self.break_n
 
         # run the optimization
         if len(kwargs) == 0:
@@ -981,7 +985,7 @@ class PiecewiseLinFit(object):
 
         return self.fit_breaks
 
-    def fitfast(self, n_segments, pop=2, **kwargs):
+    def fitfast(self, n_segments, pop=2, bounds=None, **kwargs):
         r"""
         Uses multi start LBFGSB optimization to find the location of
         breakpoints for a given number of line segments by minimizing the sum
@@ -1005,6 +1009,9 @@ class PiecewiseLinFit(object):
             The desired number of line segments.
         pop : int, optional
             The number of latin hypercube samples to generate. Default pop=2.
+        bounds : array_like, optional
+            Bounds for each breakpoint location within the optimization. This
+            should have the shape of (n_segments, 2).
         **kwargs : optional
             Directly passed into scipy.optimize.differential_evolution(). This
             will override any pwlf defaults when provided. See Note for more
@@ -1079,9 +1086,10 @@ class PiecewiseLinFit(object):
         self.nVar = self.n_segments - 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2])
-        bounds[:, 0] = self.break_0
-        bounds[:, 1] = self.break_n
+        if bounds is None:
+            bounds = np.zeros([self.nVar, 2])
+            bounds[:, 0] = self.break_0
+            bounds[:, 1] = self.break_n
 
         # perform latin hypercube sampling
         mypop = lhs(self.nVar, samples=pop, criterion='maximin')
@@ -1134,7 +1142,7 @@ class PiecewiseLinFit(object):
 
         return self.fit_breaks
 
-    def fit_guess(self, guess_breakpoints, **kwargs):
+    def fit_guess(self, guess_breakpoints, bounds=None, **kwargs):
         r"""
         Uses L-BFGS-B optimization to find the location of breakpoints
         from a guess of where breakpoint locations should be.
@@ -1150,6 +1158,13 @@ class PiecewiseLinFit(object):
         guess_breakpoints : array_like
             Guess where the breakpoints occur. This should be a list or numpy
             array containing the locations where it appears breakpoints occur.
+        bounds : array_like, optional
+            Bounds for each breakpoint location within the optimization. This
+            should have the shape of (n_segments, 2).
+        **kwargs : optional
+            Directly passed into scipy.optimize.differential_evolution(). This
+            will override any pwlf defaults when provided. See Note for more
+            information.
 
         Attributes
         ----------
@@ -1212,9 +1227,10 @@ class PiecewiseLinFit(object):
         self.n_parameters = self.n_segments + 1
 
         # initiate the bounds of the optimization
-        bounds = np.zeros([self.nVar, 2])
-        bounds[:, 0] = self.break_0
-        bounds[:, 1] = self.break_n
+        if bounds is None:
+            bounds = np.zeros([self.nVar, 2])
+            bounds[:, 0] = self.break_0
+            bounds[:, 1] = self.break_n
 
         if len(kwargs) == 0:
             resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
