@@ -4,7 +4,6 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install .
-  - pip install flake8 nose tensorflow
-script: travis_wait nosetests
+  - pip install . flake8 pytest tensorflow
+script: travis_wait pytest
 before_script: flake8 pwlf
