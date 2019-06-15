@@ -60,6 +60,8 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 10. [fit with a breakpoint guess](#fit-with-a-breakpoint-guess)
 11. [get the linear regression matrix](#get-the-linear-regression-matrix)
 12. [use of TensorFlow](#use-of-TensorFlow)
+13. [fit constants or polynomials](#fit-constants-or-polynomials)
+14. [specify breakpoint bounds](#specify-breakpoint-bounds)
 
 ## fit with known breakpoint locations
 
@@ -441,4 +443,76 @@ my_pwlf.fit_with_breaks(x0)
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
 yHat = my_pwlf.predict(xHat)
+```
+
+## fit constants or polynomials
+
+You can use pwlf to fit segmented constant models, or piecewise polynomials. The following example fits a segmented constant model, piecewise linear, and a piecewise quadratic model to a sine wave.
+
+```python
+# generate sin wave data
+x = np.linspace(0, 10, num=100)
+y = np.sin(x * np.pi / 2)
+# add noise to the data
+y = np.random.normal(0, 0.05, 100) + y
+
+# initialize piecewise linear fit with your x and y data
+# pwlf lets you fit continuous model for many degree polynomials
+# degree=0 constant
+# degree=1 linear (default)
+# degree=2 quadratic
+my_pwlf_0 = pwlf.PiecewiseLinFit(x, y, degree=0)
+my_pwlf_1 = pwlf.PiecewiseLinFit(x, y, degree=1)  # default
+my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
+
+# fit the data for four line segments
+res0 = my_pwlf_0.fitfast(5, pop=50)
+res1 = my_pwlf_1.fitfast(5, pop=50)
+res2 = my_pwlf_2.fitfast(5, pop=50)
+
+# predict for the determined points
+xHat = np.linspace(min(x), max(x), num=10000)
+yHat0 = my_pwlf_0.predict(xHat)
+yHat1 = my_pwlf_1.predict(xHat)
+yHat2 = my_pwlf_2.predict(xHat)
+
+# plot the results
+plt.figure()
+plt.plot(x, y, 'o', label='Data')
+plt.plot(xHat, yHat0, '-', label='degree=0')
+plt.plot(xHat, yHat1, '--', label='degree=1')
+plt.plot(xHat, yHat2, ':', label='degree=2')
+plt.legend()
+plt.show()
+```
+
+![Example of multiple degree fits to a sine wave.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png)
+
+## specify breakpoint bounds
+
+You may want extra control over the search space for feasible breakpoints. One way to do this is to specify the bounds for each breakpoint location.
+
+```python
+# generate sin wave data
+x = np.linspace(0, 10, num=100)
+y = np.sin(x * np.pi / 2)
+# add noise to the data
+y = np.random.normal(0, 0.05, 100) + y
+
+# initialize piecewise linear fit with your x and y data
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
+
+# define custom bounds for the interior break points
+n_segments = 4
+bounds = np.zeros((n_segments-1, 2))
+# first breakpoint
+bounds[0, 0] = 0.0  # lower bound
+bounds[0, 1] = 3.5  # upper bound
+# second breakpoint
+bounds[1, 0] = 3.0  # lower bound
+bounds[1, 1] = 7.0  # upper bound
+# third breakpoint
+bounds[2, 0] = 6.0  # lower bound
+bounds[2, 1] = 10.0  # upper bound
+res = my_pwlf.fit(n_segments, bounds=bounds)
 ```

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2019-06-15
 ### Added
 - Now you can fit constants and continuous polynomials with pwlf! Just specify the keyword ```degree=``` when initializing the ```PiecewiseLinFit``` object. Note that ```degree=0``` for constants, ```degree==1``` for linear (default), ```degree==2``` for quadratics, etc.
+- You can manually specify the optimization bounds for each breakpoint when calling the ```fit``` functions by using the ```bounds=``` keyword. Check out the related example.
 ### Changed
 - n_parameters is now calculated based on the shape of the regression matrix
 - assembly of the regression matrix now considers which degree polynomial
