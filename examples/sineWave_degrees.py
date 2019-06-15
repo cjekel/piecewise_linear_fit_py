@@ -19,9 +19,9 @@ my_pwlf_1 = pwlf.PiecewiseLinFit(x, y, degree=1)  # default
 my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
 
 # fit the data for four line segments
-res0 = my_pwlf_0.fitfast(5, pop=10)
-res1 = my_pwlf_1.fitfast(5, pop=10)
-res2 = my_pwlf_2.fitfast(5, pop=10)
+res0 = my_pwlf_0.fitfast(5, pop=50)
+res1 = my_pwlf_1.fitfast(5, pop=50)
+res2 = my_pwlf_2.fitfast(5, pop=50)
 
 # predict for the determined points
 xHat = np.linspace(min(x), max(x), num=10000)
