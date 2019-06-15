@@ -13,7 +13,7 @@ y = np.random.normal(0, 0.05, 100) + y
 # pwlf lets you fit continuous model for many degree polynomials
 # degree=0 constant
 # degree=1 linear (default)
-# degree=2 quadratic 
+# degree=2 quadratic
 my_pwlf_0 = pwlf.PiecewiseLinFit(x, y, degree=0)
 my_pwlf_1 = pwlf.PiecewiseLinFit(x, y, degree=1)  # default
 my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
