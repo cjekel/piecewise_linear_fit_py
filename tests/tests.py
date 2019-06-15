@@ -4,14 +4,11 @@ import pwlf
 
 
 class TestEverything(unittest.TestCase):
-    # let's just test all of my use cases...
-    # def __init__(self):
+
     x_small = np.array((0.0, 1.0, 1.5, 2.0))
     y_small = np.array((0.0, 1.0, 1.1, 1.5))
-
-    # def test_is_five_prime(self):
-    #     """Is five successfully determined to be prime?"""
-    #     self.assertTrue(is_prime(5))
+    x_sin = np.linspace(0, 10, num=100)
+    y_sin = np.sin(x_sin * np.pi / 2)
 
     def test_break_point_spot_on(self):
         # check that I can fit when break points spot on a
@@ -186,10 +183,86 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
 
     def test_multi_start_fitfast(self):
-        print('Last test! - multi start (fitfast) test')
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         my_pwlf.fitfast(4, 50)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+
+    # =================================================
+    # Start of degree tests
+    def test_n_parameters_correct(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_1 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=1)
+        my_pwlf_2 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+        breaks = np.array([0.,  1.03913513,  3.04676334,  4.18647526, 10.])
+
+        A0 = my_pwlf_0.assemble_regression_matrix(breaks, self.x_sin)
+        A1 = my_pwlf_1.assemble_regression_matrix(breaks, self.x_sin)
+        A2 = my_pwlf_2.assemble_regression_matrix(breaks, self.x_sin)
+        self.assertTrue(A0.shape[1] == my_pwlf_0.n_parameters)
+        self.assertTrue(A1.shape[1] == my_pwlf_1.n_parameters)
+        self.assertTrue(A2.shape[1] == my_pwlf_2.n_parameters)
+        # Also check n_segments correct
+        self.assertTrue(4 == my_pwlf_0.n_segments)
+        self.assertTrue(4 == my_pwlf_1.n_segments)
+        self.assertTrue(4 == my_pwlf_2.n_segments)
+
+    def test_fitfast(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_1 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=1)
+        my_pwlf_2 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+
+        # fit the data for four line segments
+        np.random.seed(123123123)
+        my_pwlf_0.fitfast(4, pop=10)
+        my_pwlf_1.fitfast(4, pop=10)
+        my_pwlf_2.fitfast(4, pop=10)
+
+        self.assertTrue(my_pwlf_0.ssr <= 30.)
+        self.assertTrue(my_pwlf_1.ssr <= 12.5)
+        self.assertTrue(my_pwlf_2.ssr <= 1.5)
+
+    def test_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_1 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=1)
+        my_pwlf_2 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+
+        # fit the data for four line segments
+        np.random.seed(123123)
+        my_pwlf_0.fit(5)
+        my_pwlf_1.fit(5)
+        my_pwlf_2.fit(5)
+
+        self.assertTrue(my_pwlf_0.ssr <= 10.)
+        self.assertTrue(my_pwlf_1.ssr <= 7.0)
+        self.assertTrue(my_pwlf_2.ssr <= 0.5)
+
+    def test_all_stats(self):
+        np.random.seed(121)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_0.fitfast(3)
+        my_pwlf_0.standard_errors()
+        my_pwlf_0.prediction_variance(np.random.random(20))
+        my_pwlf_0.p_values()
+        my_pwlf_0.r_squared()
+        my_pwlf_0.calc_slopes()
+
+        my_pwlf_2 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+        my_pwlf_2.fitfast(3)
+        my_pwlf_2.standard_errors()
+        my_pwlf_2.prediction_variance(np.random.random(20))
+        my_pwlf_2.p_values()
+        my_pwlf_2.r_squared()
+        my_pwlf_2.calc_slopes()
+
+        my_pwlf_3 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=3)
+        my_pwlf_3.fitfast(3)
+        my_pwlf_3.standard_errors()
+        my_pwlf_3.prediction_variance(np.random.random(20))
+        my_pwlf_3.p_values()
+        my_pwlf_3.r_squared()
+        my_pwlf_3.calc_slopes()
+    # End of degree tests
+    # =================================================
 
 
 if __name__ == '__main__':

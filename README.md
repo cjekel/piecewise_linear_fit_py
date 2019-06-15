@@ -9,6 +9,8 @@ Read the [blog post](http://jekel.me/2017/Fit-a-piecewise-linear-function-to-dat
 
 ![Example of a continuous piecewise linear fit to a sine wave.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/sinWaveFit.png)
 
+![Example of multiple degree fits to a sine wave.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png)
+
 # Features
 For a specified number of line segments, you can determine (and predict from) the optimal continuous piecewise linear function f(x). See [this example](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/fitForSpecifiedNumberOfLineSegments.py).
 

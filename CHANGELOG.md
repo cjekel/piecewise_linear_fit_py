@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2019-06-15
+### Added
+- Now you can fit constants and continuous polynomials with pwlf! Just specify the keyword ```degree=``` when initializing the ```PiecewiseLinFit``` object. Note that ```degree=0``` for constants, ```degree==1``` for linear (default), ```degree==2``` for quadratics, etc.
+### Changed
+- n_parameters is now calculated based on the shape of the regression matrix
+- assembly of the regression matrix now considers which degree polynomial
+- n_segments calculated from break points...
+- Greatly reduce teststf.py run time
+
 ## [1.0.0] - 2019-05-16
 ### Changed
 - Numpy matrix assembly is now ~100x times faster, which will translate to much faster fits! See this [comment](https://github.com/cjekel/piecewise_linear_fit_py/issues/20#issuecomment-492860953) about the speed up. There should no longer be any performance benefits with using the ```PiecewiseLinFitTF``` (TensorFlow) object, so the only reason to use ```PiecewiseLinFitTF``` is if you want access to TensorFlow's optimizers.

@@ -35,7 +35,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd'):
+    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -62,6 +62,9 @@ class PiecewiseLinFit(object):
             'gelss'. For more see
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
             http://www.netlib.org/lapack/lug/node27.html
+        degree : int, optional
+            The degree of polynomial to use. The default is degree=1 for
+            linear models. Use degree=0 for constant models.
 
         Attributes
         ----------
@@ -160,6 +163,13 @@ class PiecewiseLinFit(object):
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
 
+        if degree < 12 and degree >= 0:
+            # I actually don't know what the upper degree limit should
+            self.degree = int(degree)
+        else:
+            not_suported = "degree = " + str(degree) + " is not supported."
+            raise ValueError(not_suported)
+
     def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
@@ -208,17 +218,29 @@ class PiecewiseLinFit(object):
         breaks_order = np.argsort(breaks)
         self.fit_breaks = breaks[breaks_order]
         # store the number of parameters and line segments
-        self.n_parameters = len(breaks)
-        self.n_segments = self.n_parameters - 1
+        self.n_segments = len(breaks) - 1
 
         # Assemble the regression matrix
         A_list = [np.ones_like(x)]
-        A_list.append(x - self.fit_breaks[0])
-        for i in range(self.n_segments - 1):
-            A_list.append(np.where(x > self.fit_breaks[i+1],
-                                   x - self.fit_breaks[i+1],
-                                   0.0))
+        if self.degree >= 1:
+            A_list.append(x - self.fit_breaks[0])
+            for i in range(self.n_segments - 1):
+                A_list.append(np.where(x > self.fit_breaks[i+1],
+                                       x - self.fit_breaks[i+1],
+                                       0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    A_list.append((x - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        A_list.append(np.where(x > self.fit_breaks[i+1],
+                                               (x - self.fit_breaks[i+1])**k,
+                                               0.0))
+        else:
+            A_list = [np.ones_like(x)]
+            for i in range(self.n_segments - 1):
+                A_list.append(np.where(x > self.fit_breaks[i+1], 1.0, 0.0))
         A = np.vstack(A_list).T
+        self.n_parameters = A.shape[1]
         return A
 
     def fit_with_breaks(self, breaks):
@@ -444,11 +466,25 @@ class PiecewiseLinFit(object):
         A = self.assemble_regression_matrix(breaks, self.x_data)
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
-        C_list.append(self.x_c - self.fit_breaks[0])
-        for i in range(self.n_segments - 1):
-            C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                   self.x_c - self.fit_breaks[i+1],
-                                   0.0))
+        if self.degree >= 1:
+            C_list.append(self.x_c - self.fit_breaks[0])
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       self.x_c - self.fit_breaks[i+1],
+                                       0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                               (self.x_c
+                                               - self.fit_breaks[i+1])**k,
+                                               0.0))
+        else:
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       1.0,
+                                       0.0))
         C = np.vstack(C_list).T
 
         K = np.zeros((self.n_parameters + self.c_n,
@@ -706,11 +742,25 @@ class PiecewiseLinFit(object):
 
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
-        C_list.append(self.x_c - self.fit_breaks[0])
-        for i in range(self.n_segments - 1):
-            C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                   self.x_c - self.fit_breaks[i+1],
-                                   0.0))
+        if self.degree == 1:
+            C_list.append(self.x_c - self.fit_breaks[0])
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       self.x_c - self.fit_breaks[i+1],
+                                       0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                               (self.x_c -
+                                                self.fit_breaks[i+1])**k,
+                                               0.0))
+        else:
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       1.0,
+                                       0.0))
         C = np.vstack(C_list).T
 
         # Assemble the square constrained least squares matrix
