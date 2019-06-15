@@ -218,8 +218,7 @@ class PiecewiseLinFit(object):
         breaks_order = np.argsort(breaks)
         self.fit_breaks = breaks[breaks_order]
         # store the number of parameters and line segments
-        self.n_parameters = len(breaks)
-        self.n_segments = self.n_parameters - 1
+        self.n_segments = len(breaks) - 1
 
         # Assemble the regression matrix
         A_list = [np.ones_like(x)]
@@ -241,6 +240,7 @@ class PiecewiseLinFit(object):
             for i in range(self.n_segments - 1):
                 A_list.append(np.where(x > self.fit_breaks[i+1], 1.0, 0.0))
         A = np.vstack(A_list).T
+        self.n_parameters = A.shape[1]
         return A
 
     def fit_with_breaks(self, breaks):
