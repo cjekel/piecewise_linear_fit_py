@@ -7,9 +7,9 @@ Read the [blog post](http://jekel.me/2017/Fit-a-piecewise-linear-function-to-dat
 
 ![Example of a continuous piecewise linear fit to data.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/examplePiecewiseFit.png)
 
-Now you can perform segmented constant fitting and piecewise polynomials!
 ![Example of a continuous piecewise linear fit to a sine wave.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/sinWaveFit.png)
 
+Now you can perform segmented constant fitting and piecewise polynomials!
 ![Example of multiple degree fits to a sine wave.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png)
 
 # Features
