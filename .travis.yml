@@ -6,7 +6,7 @@ python:
 install:
   - pip install flake8 pytest tensorflow pyDOE
   - pip install . --no-cache-dir
-script: travis_wait pytest tests.py teststf.py
+script: travis_wait pytest -p no:warnings tests.py teststf.py
 before_script:
   - flake8 pwlf
   - pytest --version

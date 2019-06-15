@@ -237,6 +237,7 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(my_pwlf_2.ssr <= 0.5)
 
     def test_all_stats(self):
+        np.random.seed(121)
         my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
         my_pwlf_0.fitfast(3)
         my_pwlf_0.standard_errors()
