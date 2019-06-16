@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pwlf package contents &mdash; pwlf 1.0.1 documentation</title>
+  <title>pwlf package contents &mdash; pwlf 1.1.0 documentation</title>
   
 
   
@@ -214,7 +214,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop, bounds])</p></td>
 <td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self[, method, step_size])</p></td>
 <td><p>Calculate the p-values for each beta parameter.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.predict" title="pwlf.PiecewiseLinFit.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, x[, beta, breaks])</p></td>
@@ -226,7 +226,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.r_squared" title="pwlf.PiecewiseLinFit.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>(self)</p></td>
 <td><p>Calculate the coefficient of determination (“R squared”, R^2) value after a fit has been performed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.standard_errors" title="pwlf.PiecewiseLinFit.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.standard_errors" title="pwlf.PiecewiseLinFit.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>(self[, method, step_size])</p></td>
 <td><p>Calculate the standard errors for each beta parameter determined from the piecewise linear fit.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.use_custom_opt" title="pwlf.PiecewiseLinFit.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
@@ -863,7 +863,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.p_values">
-<code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">method='linear'</em>, <em class="sig-param">step_size=0.0001</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the p-values for each beta parameter.</p>
 <p>This calculates the p-values for the beta parameters under the
 assumption that your breakpoint locations are known. Section 2.4.2 of
@@ -873,23 +873,39 @@ the other parameters.</p>
 <p>These values are typically compared to some confidence level alpha for
 significance. A 95% confidence level would have alpha = 0.05.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>method</strong><span class="classifier">string, optional</span></dt><dd><p>Calculate the standard errors for a linear or non-linear
+regression problem. The default is method=’linear’. A taylor-
+series expansion is performed when method=’non-linear’ (which is
+commonly referred to as the Delta method).</p>
+</dd>
+<dt><strong>step_size</strong><span class="classifier">float, optional</span></dt><dd><p>The step size to perform forward differences for the taylor-
+series expansion when method=’non-linear’. Default is
+step_size=1e-4.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
 <dt><strong>p</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>p-values for each beta parameter where p-value[0] corresponds to
 beta[0] and so forth</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
 <dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This assumes that your breakpoint locations are exact! and does
-not consider the uncertainty with your breakpoint locations.</p>
+<p>The linear regression problem is when you know the breakpoint
+locations (e.g. when using the fit_with_breaks function).</p>
+<p>The non-linear regression problem is when you don’t know the
+breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+functions).</p>
 <p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
 <p class="rubric">References</p>
 <dl class="citation">
@@ -1065,25 +1081,37 @@ For more information see:
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.standard_errors">
-<code class="sig-name descname">standard_errors</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.standard_errors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">standard_errors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">method='linear'</em>, <em class="sig-param">step_size=0.0001</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.standard_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the standard errors for each beta parameter determined
 from the piecewise linear fit. Typically +- 1.96*se will yield the
 center of a 95% confidence region around your parameters. This
 assumes the parmaters follow a normal distribution. For more
 information see:
 <a class="reference external" href="https://en.wikipedia.org/wiki/Standard_error">https://en.wikipedia.org/wiki/Standard_error</a></p>
-<p>This calculation follows the derivation provided in <a class="reference internal" href="#rb5b41547ab31-1" id="id15">[1]</a>. A taylor-
-series expansion is not needed since this is linear regression.</p>
+<p>This calculation follows the derivation provided in <a class="reference internal" href="#rb5b41547ab31-1" id="id15">[1]</a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>method</strong><span class="classifier">string, optional</span></dt><dd><p>Calculate the standard errors for a linear or non-linear
+regression problem. The default is method=’linear’. A taylor-
+series expansion is performed when method=’non-linear’ (which is
+commonly referred to as the Delta method).</p>
+</dd>
+<dt><strong>step_size</strong><span class="classifier">float, optional</span></dt><dd><p>The step size to perform forward differences for the taylor-
+series expansion when method=’non-linear’. Default is
+step_size=1e-4.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
 <dt><strong>se</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>Standard errors associated with each beta parameter. Specifically
 se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
 <dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
@@ -1092,7 +1120,11 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Note, this assumes no uncertainty in breakpoint locations.</p>
+<p>The linear regression problem is when you know the breakpoint
+locations (e.g. when using the fit_with_breaks function).</p>
+<p>The non-linear regression problem is when you don’t know the
+breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+functions).</p>
 <p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="rb5b41547ab31-1"><span class="brackets"><a class="fn-backref" href="#id15">1</a></span></dt>

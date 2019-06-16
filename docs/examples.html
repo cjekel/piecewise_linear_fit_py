@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Examples &mdash; pwlf 1.0.1 documentation</title>
+  <title>Examples &mdash; pwlf 1.1.0 documentation</title>
   
 
   
@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fit-constants-or-polynomials">fit constants or polynomials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and p-values</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
@@ -247,6 +248,8 @@ matrix</a></p></li>
 <li><p><a class="reference external" href="#use-of-TensorFlow">use of TensorFlow</a></p></li>
 <li><p><a class="reference external" href="#fit-constants-or-polynomials">fit constants or polynomials</a></p></li>
 <li><p><a class="reference external" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></p></li>
+<li><p><a class="reference external" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and
+p-values</a></p></li>
 </ol>
 <div class="section" id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
@@ -736,6 +739,138 @@ breakpoint location.</p>
 <span class="n">res</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_segments</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="non-linear-standard-errors-and-p-values">
+<h2>non-linear standard errors and p-values<a class="headerlink" href="#non-linear-standard-errors-and-p-values" title="Permalink to this headline">¶</a></h2>
+<p>You can calculate non-linear standard errors using the Delta method.
+This will calculate the standard errors of the piecewise linear
+parameters (intercept + slopes) and the breakpoint locations!</p>
+<p>First let us generate true piecewise linear data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="c1"># generate a true piecewise linear data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">n_data</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">n_data</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_data</span><span class="p">)</span>
+<span class="n">my_pwlf_gen</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">true_beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">true_breaks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">my_pwlf_gen</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">true_beta</span><span class="p">,</span> <span class="n">breaks</span><span class="o">=</span><span class="n">true_breaks</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;True piecewise linear data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id8">
+<img alt="True piecewise linear data." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/true_pwlf.png" />
+<p class="caption"><span class="caption-text">True piecewise linear data.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<p>Now we can perform a fit, calculate the standard errors, and p-values.
+The non-linear method uses a first order taylor series expansion to
+linearize the non-linear regression problem. A positive step_size
+performs a forward difference, and a negative step_size would perform a
+backwards difference.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">p_values</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;non-linear&#39;</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">se</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">se</span>  <span class="c1"># standard errors</span>
+</pre></div>
+</div>
+<p>The standard errors and p-values correspond to each model parameter.
+First the beta parameters (intercept + slopes) and then the breakpoints.
+We can assemble the parameters, and print a table of the result with the
+following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">my_pwlf</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+                             <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_breaks</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parmater type&#39;</span><span class="p">,</span> <span class="s1">&#39;Parameter value&#39;</span><span class="p">,</span> <span class="s1">&#39;Standard error&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;P &gt; np.abs(t) (p-value)&#39;</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">header</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">parameters</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">)</span>
+<span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">values</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">se</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">values</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">parameters</span> <span class="o">/</span> <span class="n">se</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">values</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Beta&#39;</span>
+        <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Breakpoint&#39;</span>
+        <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 19%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 29%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parmater type</p></th>
+<th class="head"><p>Parameter value</p></th>
+<th class="head"><p>Standard error</p></th>
+<th class="head"><p>t</p></th>
+<th class="head"><p>P &gt; np.abs(t) (p-value)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Beta</p></td>
+<td><p>1.821</p></td>
+<td><p>0.0</p></td>
+<td><p>456398510.154</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Beta</p></td>
+<td><p>-0.427</p></td>
+<td><p>0.0</p></td>
+<td><p>-45889818.041</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Beta</p></td>
+<td><p>-1.165</p></td>
+<td><p>0.0</p></td>
+<td><p>-129081071.588</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Beta</p></td>
+<td><p>-1.397</p></td>
+<td><p>0.0</p></td>
+<td><p>-150932144.626</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Beta</p></td>
+<td><p>0.873</p></td>
+<td><p>0.0</p></td>
+<td><p>102386735.293</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Breakpoint</p></td>
+<td><p>0.2</p></td>
+<td><p>0.0</p></td>
+<td><p>173071119.993</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Breakpoint</p></td>
+<td><p>0.5</p></td>
+<td><p>0.0</p></td>
+<td><p>464907146.981</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Breakpoint</p></td>
+<td><p>0.75</p></td>
+<td><p>0.0</p></td>
+<td><p>492077534.636</p></td>
+<td><p>0.0</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

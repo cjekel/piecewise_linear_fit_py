@@ -106,7 +106,8 @@ All changes now stored in
 `CHANGELOG.md <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/CHANGELOG.md>`__
 
 New ``degree=`` keyword allows you to fit segmented constants or
-piecewise polynomials!
+piecewise polynomials! Now you can calculate standard error and p-values
+for the non-linear regression problem!
 
 Requirements
 ============
