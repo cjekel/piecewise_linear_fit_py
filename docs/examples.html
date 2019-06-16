@@ -1,178 +1,38 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Examples &mdash; pwlf 1.1.0 documentation</title>
-  
 
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Examples &#8212; pwlf 1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-  
-  
-  
-
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pwlf package contents" href="pwlf.html" />
-    <link rel="prev" title="How it works" href="how_it_works.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="prev" title="How it works" href="how_it_works.html" />
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> pwlf
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#fit-with-known-breakpoint-locations">fit with known breakpoint locations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fit-for-specified-number-of-line-segments">fit for specified number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#force-a-fit-through-data-points">force a fit through data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-custom-optimization-routine">use custom optimization routine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pass-differential-evolution-keywords">pass differential evolution keywords</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#find-the-best-number-of-line-segments">find the best number of line segments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model-persistence">model persistence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#get-the-linear-regression-matrix">get the linear regression matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fit-constants-or-polynomials">fit constants or polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and p-values</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pwlf</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
-      <li>Examples</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
@@ -875,64 +735,110 @@ following code.</p>
 </div>
 
 
-           </div>
-           
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="pwlf.html" class="btn btn-neutral float-right" title="pwlf package contents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="how_it_works.html" class="btn btn-neutral float-left" title="How it works" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pwlf</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fit-with-known-breakpoint-locations">fit with known breakpoint locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-for-specified-number-of-line-segments">fit for specified number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fitfast-for-specified-number-of-line-segments">fitfast for specified number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#force-a-fit-through-data-points">force a fit through data points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-custom-optimization-routine">use custom optimization routine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pass-differential-evolution-keywords">pass differential evolution keywords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-the-best-number-of-line-segments">find the best number of line segments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-persistence">model persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bad-fits-when-you-have-more-unknowns-than-data">bad fits when you have more unknowns than data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-the-linear-regression-matrix">get the linear regression matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-constants-or-polynomials">fit constants or polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and p-values</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="how_it_works.html" title="previous chapter">How it works</a></li>
+      <li>Next: <a href="pwlf.html" title="next chapter">pwlf package contents</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
     </div>
-  
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
 
-  <hr/>
 
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Charles Jekel
 
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-</footer>
+
+
+
 
         </div>
       </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Charles Jekel.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0+/199906e</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/examples.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
 
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
     
-    <!-- Theme Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-67542734-2', 'auto');
-    ga('send', 'pageview');
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-67542734-2']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
     </script>
-
     
-   
-
-</body>
+  </body>
 </html>
