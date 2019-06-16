@@ -173,18 +173,19 @@ class TestEverything(unittest.TestCase):
 
     def test_nonlinear_p_and_se(self):
         # generate a true piecewise linear data
-        np.random.seed(5)
-        n_data = 50
+        np.random.seed(1)
+        n_data = 20
         x = np.linspace(0, 1, num=n_data)
         y = np.random.random(n_data)
         my_pwlf = pwlf.PiecewiseLinFit(x, y)
-        true_beta = np.random.normal(size=3)
-        true_breaks = np.array([0.0, 0.5, 1.0])
+        true_beta = np.array((1.0, 0.2, 0.2))
+        true_breaks = np.array((0.0, 0.5, 1.0))
         y = my_pwlf.predict(x, beta=true_beta, breaks=true_breaks)
-        my_pwlf.fitfast(2, pop=10)
+        my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        my_pwlf.fitfast(2)
         # calculate p-values
         p = my_pwlf.p_values(method='non-linear', step_size=1e-4)
-        self.assertTrue(np.isclose(p.max(), 0.0))
+        self.assertTrue(p.max() <= 0.05)
 
     def test_pv(self):
         # check to see if it will let me calculate prediction variance for

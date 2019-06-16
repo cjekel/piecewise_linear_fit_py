@@ -18,7 +18,7 @@ my_pwlf = pwlf.PiecewiseLinFit(x, y)
 res = my_pwlf.fitfast(4, pop=100)
 
 # calculate the non-linear standard errors
-se, A = my_pwlf.standard_errors(method='non-linear', step_size=1e-4)
+se = my_pwlf.standard_errors(method='non-linear', step_size=1e-4)
 
 # calculate p-values
 p = my_pwlf.p_values(method='non-linear', step_size=1e-4)

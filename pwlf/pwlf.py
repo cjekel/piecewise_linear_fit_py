@@ -1465,7 +1465,6 @@ class PiecewiseLinFit(object):
             for i in range(self.beta.size):
                 temp_beta = orig_beta.copy()
                 temp_beta[i] += step_size
-                print('Temp beta:', temp_beta)
                 f = self.predict(self.y_data, beta=temp_beta,
                                  breaks=orig_breaks)
                 A[:, i] = (f-f0) / step_size
@@ -1473,7 +1472,6 @@ class PiecewiseLinFit(object):
                 ind = i - self.beta.size + 1
                 temp_breaks = orig_breaks.copy()
                 temp_breaks[ind] += step_size
-                print('Temp breaks:', temp_breaks)
                 f = self.predict(self.y_data, beta=orig_beta,
                                  breaks=temp_breaks)
                 A[:, i] = (f-f0) / step_size
@@ -1489,11 +1487,9 @@ class PiecewiseLinFit(object):
         try:
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
-            print(variance)
-            self.se = np.sqrt(variance * (linalg.inv(np.dot(A.T,
-                                                            A)).diagonal()))
-
-            return self.se, A
+            A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
+            self.se = np.sqrt(variance * A2inv)
+            return self.se
 
         except linalg.LinAlgError:
             raise linalg.LinAlgError('Singular matrix')
