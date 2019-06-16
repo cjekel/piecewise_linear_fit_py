@@ -50,7 +50,7 @@ Global optimization is used to find the best location for the user defined numbe
 # Changelog
 All changes now stored in [CHANGELOG.md](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/CHANGELOG.md)
 
-New ```degree=``` keyword allows you to fit segmented constants or piecewise polynomials!
+New ```degree=``` keyword allows you to fit segmented constants or piecewise polynomials! Now you can calculate standard error and p-values for the non-linear regression problem!
 
 # Requirements
 Python 2.7+

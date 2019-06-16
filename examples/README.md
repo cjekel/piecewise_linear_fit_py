@@ -561,7 +561,7 @@ parameters = np.concatenate((my_pwlf.beta,
                              my_pwlf.fit_breaks[1:-1]))
 
 header = ['Parmater type', 'Parameter value', 'Standard error', 't',
-          'P > |t| (p-value)']
+          'P > np.abs(t) (p-value)']
 print(*header, sep=' | ')
 values = np.zeros((parameters.size, 5), dtype=np.object_)
 values[:, 1] = np.around(parameters, decimals=3)
