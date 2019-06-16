@@ -21,6 +21,9 @@ post <http://jekel.me/2017/Fit-a-piecewise-linear-function-to-data/>`__.
 
    Example of a continuous piecewise linear fit to a sine wave.
 
+Now you can perform segmented constant fitting and piecewise
+polynomials! |Example of multiple degree fits to a sine wave.|
+
 Features
 ========
 
@@ -58,19 +61,19 @@ You can now install with pip.
 
 ::
 
-    [sudo] pip install pwlf
+   [sudo] pip install pwlf
 
 Or clone the repo
 
 ::
 
-    git clone https://github.com/cjekel/piecewise_linear_fit_py.git
+   git clone https://github.com/cjekel/piecewise_linear_fit_py.git
 
 then install with pip
 
 ::
 
-    [sudo] pip install ./piecewise_linear_fit_py
+   [sudo] pip install ./piecewise_linear_fit_py
 
 How it works
 ============
@@ -102,7 +105,8 @@ Changelog
 All changes now stored in
 `CHANGELOG.md <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/CHANGELOG.md>`__
 
-New ``PiecewiseLinFitTF`` class to accelerate pwlf with TensorFlow!
+New ``degree=`` keyword allows you to fit segmented constants or
+piecewise polynomials!
 
 Requirements
 ============
@@ -129,9 +133,12 @@ Citation
 
 .. code:: bibtex
 
-    @Manual{pwlf,
-        author = {Jekel, Charles F. and Venter, Gerhard},
-        title = {{pwlf:} A Python Library for Fitting 1D Continuous Piecewise Linear Functions},
-        year = {2019},
-        url = {https://github.com/cjekel/piecewise_linear_fit_py}
-    }
+   @Manual{pwlf,
+       author = {Jekel, Charles F. and Venter, Gerhard},
+       title = {{pwlf:} A Python Library for Fitting 1D Continuous Piecewise Linear Functions},
+       year = {2019},
+       url = {https://github.com/cjekel/piecewise_linear_fit_py}
+   }
+
+.. |Example of multiple degree fits to a sine wave.| image:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png
+
