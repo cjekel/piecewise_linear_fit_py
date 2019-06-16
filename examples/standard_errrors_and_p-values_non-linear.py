@@ -1,7 +1,6 @@
 from __future__ import print_function
 import numpy as np
 import pwlf
-import matplotlib.pyplot as plt
 
 # generate a true piecewise linear data
 np.random.seed(5)

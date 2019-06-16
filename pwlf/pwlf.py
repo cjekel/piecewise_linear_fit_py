@@ -1470,7 +1470,7 @@ class PiecewiseLinFit(object):
                                  breaks=orig_breaks)
                 A[:, i] = (f-f0) / step_size
             for i in range(self.beta.size, nb):
-                ind = i - self.beta.size + 1 
+                ind = i - self.beta.size + 1
                 temp_breaks = orig_breaks.copy()
                 temp_breaks[ind] += step_size
                 print('Temp breaks:', temp_breaks)
