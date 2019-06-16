@@ -12,5 +12,5 @@ make html
 cp -r build/doctrees/* ../doctrees/
 cp -r build/html/* ../docs/
 # grep -rl -e "word-break: break-word" --exclude=sphinx_build_script.sh | xargs sed -i 's/word-break: break-word/word-break: break-all/g'
-cd ..
-sed -i 's/break-word/break-all/g' docs/_static/basic.css 
+#cd ..
+#sed -i 's/break-word/break-all/g' docs/_static/basic.css 
