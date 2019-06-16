@@ -62,6 +62,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 12. [use of TensorFlow](#use-of-TensorFlow)
 13. [fit constants or polynomials](#fit-constants-or-polynomials)
 14. [specify breakpoint bounds](#specify-breakpoint-bounds)
+15. [non-linear standard errors and p-values](#non-linear-standard-errors-and-p-values)
 
 ## fit with known breakpoint locations
 
@@ -516,3 +517,74 @@ bounds[2, 0] = 6.0  # lower bound
 bounds[2, 1] = 10.0  # upper bound
 res = my_pwlf.fit(n_segments, bounds=bounds)
 ```
+
+## non-linear standard errors and p-values
+
+You can calculate non-linear standard errors using the Delta method. This will calculate the standard errors of the piecewise linear parameters (intercept + slopes) and the breakpoint locations!
+
+First let us generate true piecewise linear data.
+
+```python
+from __future__ import print_function
+# generate a true piecewise linear data
+np.random.seed(5)
+n_data = 100
+x = np.linspace(0, 1, num=n_data)
+y = np.random.random(n_data)
+my_pwlf_gen = pwlf.PiecewiseLinFit(x, y)
+true_beta = np.random.normal(size=5)
+true_breaks = np.array([0.0, 0.2, 0.5, 0.75, 1.0])
+y = my_pwlf_gen.predict(x, beta=true_beta, breaks=true_breaks)
+
+plt.figure()
+plt.title('True piecewise linear data')
+plt.plot(x, y)
+plt.show()
+```
+
+![True piecewise linear data.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/true_pwlf.png)
+
+Now we can perform a fit, calculate the standard errors, and p-values. The non-linear method uses a first order taylor series expansion to linearize the non-linear regression problem. A positive step_size performs a forward difference, and a negative step_size would perform a backwards difference.
+
+```python
+my_pwlf = pwlf.PiecewiseLinFit(x, y)
+res = my_pwlf.fitfast(4, pop=100)
+
+p = my_pwlf.p_values(method='non-linear', step_size=1e-4)
+se = my_pwlf.se  # standard errors
+```
+
+The standard errors and p-values correspond to each model parameter. First the beta parameters (intercept + slopes) and then the breakpoints. We can assemble the parameters, and print a table of the result with the following code. 
+
+```python
+parameters = np.concatenate((my_pwlf.beta,
+                             my_pwlf.fit_breaks[1:-1]))
+
+header = ['Parmater type', 'Parameter value', 'Standard error', 't',
+          'P > |t| (p-value)']
+print(*header, sep=' | ')
+values = np.zeros((parameters.size, 5), dtype=np.object_)
+values[:, 1] = np.around(parameters, decimals=3)
+values[:, 2] = np.around(se, decimals=3)
+values[:, 3] = np.around(parameters / se, decimals=3)
+values[:, 4] = np.around(p, decimals=3)
+
+for i, row in enumerate(values):
+    if i < my_pwlf.beta.size:
+        row[0] = 'Beta'
+        print(*row, sep=' | ')
+    else:
+        row[0] = 'Breakpoint'
+        print(*row, sep=' | ')
+```
+
+| Parmater type | Parameter value | Standard error | t | P > np.abs(t) (p-value) |
+| ------------- | --------------- | -------------- |---| ----------------------- |
+| Beta | 1.821 | 0.0 | 456398510.154 | 0.0 |
+| Beta | -0.427 | 0.0 | -45889818.041 | 0.0 |
+| Beta | -1.165 | 0.0 | -129081071.588 | 0.0 |
+| Beta | -1.397 | 0.0 | -150932144.626 | 0.0 |
+| Beta | 0.873 | 0.0 | 102386735.293 | 0.0 |
+| Breakpoint | 0.2 | 0.0 | 173071119.993 | 0.0 |
+| Breakpoint | 0.5 | 0.0 | 464907146.981 | 0.0 |
+| Breakpoint | 0.75 | 0.0 | 492077534.636 | 0.0 |

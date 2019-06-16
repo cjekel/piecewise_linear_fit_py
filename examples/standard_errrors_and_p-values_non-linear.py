@@ -1,6 +1,7 @@
 from __future__ import print_function
 import numpy as np
 import pwlf
+# import matplotlib.pyplot as plt
 
 # generate a true piecewise linear data
 np.random.seed(5)
@@ -11,6 +12,11 @@ my_pwlf = pwlf.PiecewiseLinFit(x, y)
 true_beta = np.random.normal(size=5)
 true_breaks = np.array([0.0, 0.2, 0.5, 0.75, 1.0])
 y = my_pwlf.predict(x, beta=true_beta, breaks=true_breaks)
+
+# plt.figure()
+# plt.title('True piecewise linear data')
+# plt.plot(x, y)
+# plt.show()
 
 # initialize piecewise linear fit with your x and y data
 my_pwlf = pwlf.PiecewiseLinFit(x, y)
