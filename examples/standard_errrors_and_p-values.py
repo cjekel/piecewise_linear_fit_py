@@ -70,7 +70,7 @@ se = my_pwlf.standard_errors()
 # calculate my t-value
 t = beta / se
 
-k = len(beta)
+k = len(beta) - 1
 
 # calculate the p-values
 pvalues = my_pwlf.p_values()

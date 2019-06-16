@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2019-06-16
+### Added
+- Now you can calculate standard errors for non-linear regression using the Delta method! Check out this [example](https://github.com/cjekel/piecewise_linear_fit_py/tree/master/examples#non-linear-standard-errors-and-p-values). 
+
 ## [1.0.1] - 2019-06-15
 ### Added
 - Now you can fit constants and continuous polynomials with pwlf! Just specify the keyword ```degree=``` when initializing the ```PiecewiseLinFit``` object. Note that ```degree=0``` for constants, ```degree==1``` for linear (default), ```degree==2``` for quadratics, etc.
