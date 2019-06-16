@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pwlf package contents &mdash; pwlf 1.0.0 documentation</title>
+  <title>pwlf package contents &mdash; pwlf 1.0.1 documentation</title>
   
 
   
@@ -178,7 +178,7 @@
 </table>
 <dl class="class">
 <dt id="pwlf.PiecewiseLinFit">
-<em class="property">class </em><code class="sig-prename descclassname">pwlf.</code><code class="sig-name descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">lapack_driver='gelsd'</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pwlf.</code><code class="sig-name descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">lapack_driver='gelsd'</em>, <em class="sig-param">degree=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
@@ -193,13 +193,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.calc_slopes" title="pwlf.PiecewiseLinFit.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>(self)</p></td>
 <td><p>Calculate the slopes of the lines after a piecewise linear function has been fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c, bounds])</p></td>
 <td><p>Fit a continuous piecewise linear function for a specified number of line segments.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints, \*\*kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints[, bounds])</p></td>
 <td><p>Uses L-BFGS-B optimization to find the location of breakpoints from a guess of where breakpoint locations should be.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
@@ -211,7 +211,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop, bounds])</p></td>
 <td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self)</p></td>
@@ -324,7 +324,7 @@ of the first line segment.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">bounds=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a continuous piecewise linear function for a specified number
 of line segments. Uses differential evolution to finds the optimum
 location of breakpoints for a given number of line segments by
@@ -339,6 +339,9 @@ function will be forced to go through.</p>
 </dd>
 <dt><strong>y_c</strong><span class="classifier">array_like, optional</span></dt><dd><p>The x locations of the data points that the piecewise linear
 function will be forced to go through.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">array_like, optional</span></dt><dd><p>Bounds for each breakpoint location within the optimization. This
+should have the shape of (n_segments, 2).</p>
 </dd>
 <dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
 will override any pwlf defaults when provided. See Note for more
@@ -476,7 +479,7 @@ at the min and max values of x.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit_guess">
-<code class="sig-name descname">fit_guess</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">guess_breakpoints</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_guess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_guess</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">guess_breakpoints</em>, <em class="sig-param">bounds=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit_guess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses L-BFGS-B optimization to find the location of breakpoints
 from a guess of where breakpoint locations should be.</p>
 <p>In some cases you may have a good idea where the breakpoint locations
@@ -489,6 +492,13 @@ is run from a guess of the breakpoint locations.</p>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>guess_breakpoints</strong><span class="classifier">array_like</span></dt><dd><p>Guess where the breakpoints occur. This should be a list or numpy
 array containing the locations where it appears breakpoints occur.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">array_like, optional</span></dt><dd><p>Bounds for each breakpoint location within the optimization. This
+should have the shape of (n_segments, 2).</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
+will override any pwlf defaults when provided. See Note for more
+information.</p>
 </dd>
 </dl>
 </dd>
@@ -753,7 +763,7 @@ values of x.</p>
 
 <dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fitfast">
-<code class="sig-name descname">fitfast</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">pop=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fitfast" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitfast</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">pop=2</em>, <em class="sig-param">bounds=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fitfast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses multi start LBFGSB optimization to find the location of
 breakpoints for a given number of line segments by minimizing the sum
 of the square of the errors.</p>
@@ -772,6 +782,9 @@ you may find it much faster sometimes.</p>
 <dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The desired number of line segments.</p>
 </dd>
 <dt><strong>pop</strong><span class="classifier">int, optional</span></dt><dd><p>The number of latin hypercube samples to generate. Default pop=2.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">array_like, optional</span></dt><dd><p>Bounds for each breakpoint location within the optimization. This
+should have the shape of (n_segments, 2).</p>
 </dd>
 <dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
 will override any pwlf defaults when provided. See Note for more

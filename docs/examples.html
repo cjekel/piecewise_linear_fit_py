@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Examples &mdash; pwlf 1.0.0 documentation</title>
+  <title>Examples &mdash; pwlf 1.0.1 documentation</title>
   
 
   
@@ -100,6 +100,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#fit-with-a-breakpoint-guess">fit with a breakpoint guess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-the-linear-regression-matrix">get the linear regression matrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#use-of-tensorflow">use of TensorFlow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-constants-or-polynomials">fit constants or polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
@@ -243,6 +245,8 @@ data</a></p></li>
 <li><p><a class="reference external" href="#get-the-linear-regression-matrix">get the linear regression
 matrix</a></p></li>
 <li><p><a class="reference external" href="#use-of-TensorFlow">use of TensorFlow</a></p></li>
+<li><p><a class="reference external" href="#fit-constants-or-polynomials">fit constants or polynomials</a></p></li>
+<li><p><a class="reference external" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></p></li>
 </ol>
 <div class="section" id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
@@ -555,9 +559,9 @@ unknowns than you have data with pwlf!</p>
 <div class="section" id="fit-with-a-breakpoint-guess">
 <h2>fit with a breakpoint guess<a class="headerlink" href="#fit-with-a-breakpoint-guess" title="Permalink to this headline">¶</a></h2>
 <p>In this example we see two distinct linear regions, and we believe a
-breakpoint occurs at 6.0. We’ll use the fit_guess() function to find
-the best breakpoint location starting with this guess. These fits should
-be much faster than the <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fitfast</span></code> function when you have a
+breakpoint occurs at 6.0. We’ll use the fit_guess() function to find the
+best breakpoint location starting with this guess. These fits should be
+much faster than the <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fitfast</span></code> function when you have a
 reasonable idea where the breakpoints occur.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
@@ -633,7 +637,6 @@ performance benchmarks see this blog
 <p>The use of the TF class is nearly identical to the original class,
 however note the following exceptions. <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> does:</p>
 <ul class="simple">
-<li><p>not sort data, so there are no <code class="docutils literal notranslate"><span class="pre">sorted_data</span></code> optional parameters</p></li>
 <li><p>not have a <code class="docutils literal notranslate"><span class="pre">lapack_driver</span></code> option</p></li>
 <li><p>have an optional parameter <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, so you can choose between the
 float64 and float32 data types</p></li>
@@ -655,6 +658,82 @@ decomposition (default <code class="docutils literal notranslate"><span class="p
 <span class="c1"># predict for the determined points</span>
 <span class="n">xHat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">yHat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fit-constants-or-polynomials">
+<h2>fit constants or polynomials<a class="headerlink" href="#fit-constants-or-polynomials" title="Permalink to this headline">¶</a></h2>
+<p>You can use pwlf to fit segmented constant models, or piecewise
+polynomials. The following example fits a segmented constant model,
+piecewise linear, and a piecewise quadratic model to a sine wave.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate sin wave data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># add noise to the data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<span class="c1"># pwlf lets you fit continuous model for many degree polynomials</span>
+<span class="c1"># degree=0 constant</span>
+<span class="c1"># degree=1 linear (default)</span>
+<span class="c1"># degree=2 quadratic</span>
+<span class="n">my_pwlf_0</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">my_pwlf_1</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># default</span>
+<span class="n">my_pwlf_2</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># fit the data for four line segments</span>
+<span class="n">res0</span> <span class="o">=</span> <span class="n">my_pwlf_0</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">res1</span> <span class="o">=</span> <span class="n">my_pwlf_1</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">my_pwlf_2</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># predict for the determined points</span>
+<span class="n">xHat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">yHat0</span> <span class="o">=</span> <span class="n">my_pwlf_0</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
+<span class="n">yHat1</span> <span class="o">=</span> <span class="n">my_pwlf_1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
+<span class="n">yHat2</span> <span class="o">=</span> <span class="n">my_pwlf_2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
+
+<span class="c1"># plot the results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat0</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;degree=0&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat1</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;degree=1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xHat</span><span class="p">,</span> <span class="n">yHat2</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;degree=2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id7">
+<img alt="Example of multiple degree fits to a sine wave." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png" />
+<p class="caption"><span class="caption-text">Example of multiple degree fits to a sine wave.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="specify-breakpoint-bounds">
+<h2>specify breakpoint bounds<a class="headerlink" href="#specify-breakpoint-bounds" title="Permalink to this headline">¶</a></h2>
+<p>You may want extra control over the search space for feasible
+breakpoints. One way to do this is to specify the bounds for each
+breakpoint location.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate sin wave data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># add noise to the data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="c1"># initialize piecewise linear fit with your x and y data</span>
+<span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># define custom bounds for the interior break points</span>
+<span class="n">n_segments</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_segments</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1"># first breakpoint</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># lower bound</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.5</span>  <span class="c1"># upper bound</span>
+<span class="c1"># second breakpoint</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># lower bound</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.0</span>  <span class="c1"># upper bound</span>
+<span class="c1"># third breakpoint</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">6.0</span>  <span class="c1"># lower bound</span>
+<span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># upper bound</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_segments</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
