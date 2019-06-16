@@ -1380,7 +1380,7 @@ class PiecewiseLinFit(object):
         self.intercepts = y_hat[0:-1] - self.slopes*self.fit_breaks[0:-1]
         return self.slopes
 
-    def standard_errors(self):
+    def standard_errors(self, method='linear', step_size=1e-4):
         r"""
         Calculate the standard errors for each beta parameter determined
         from the piecewise linear fit. Typically +- 1.96*se will yield the
@@ -1389,8 +1389,19 @@ class PiecewiseLinFit(object):
         information see:
         https://en.wikipedia.org/wiki/Standard_error
 
-        This calculation follows the derivation provided in [1]_. A taylor-
-        series expansion is not needed since this is linear regression.
+        This calculation follows the derivation provided in [1]_.
+
+        Parameters
+        ----------
+        method : string, optional
+            Calculate the standard errors for a linear or non-linear
+            regression problem. The default is method='linear'. A taylor-
+            series expansion is performed when method='non-linear' (which is
+            commonly referred to as the Delta method).
+        step_size : float, optional
+            The step size to perform forward differences for the taylor-
+            series expansion when method='non-linear'. Default is
+            step_size=1e-4.
 
         Returns
         -------
@@ -1407,7 +1418,12 @@ class PiecewiseLinFit(object):
 
         Notes
         -----
-        Note, this assumes no uncertainty in breakpoint locations.
+        The linear regression problem is when you know the breakpoint
+        locations (e.g. when using the fit_with_breaks function).
+
+        The non-linear regression problem is when you don't know the
+        breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+        functions).
 
         References
         ----------
@@ -1429,29 +1445,55 @@ class PiecewiseLinFit(object):
 
         """
         try:
-            nb = len(self.beta)
+            nb = self.beta.size
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
-
-        ny = len(self.y_data)
-
-        A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
-
-        # try to solve for the standard errors
-        try:
-
+        ny = self.n_data
+        if method == 'linear':
+            A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
             y_hat = np.dot(A, self.beta)
             e = y_hat - self.y_data
 
+        elif method == 'non-linear':
+            nb = self.beta.size + self.fit_breaks.size - 2
+            f0 = self.predict(self.x_data)
+            A = np.zeros((ny, nb))
+            orig_beta = self.beta.copy()
+            orig_breaks = self.fit_breaks.copy()
+            for i in range(self.beta.size):
+                temp_beta = orig_beta.copy()
+                temp_beta[i] += step_size
+                print('Temp beta:', temp_beta)
+                f = self.predict(self.y_data, beta=temp_beta,
+                                 breaks=orig_breaks)
+                A[:, i] = (f-f0) / step_size
+            for i in range(self.beta.size, nb):
+                ind = i - self.beta.size + 1 
+                temp_breaks = orig_breaks.copy()
+                temp_breaks[ind] += step_size
+                print('Temp breaks:', temp_breaks)
+                f = self.predict(self.y_data, beta=orig_beta,
+                                 breaks=temp_breaks)
+                A[:, i] = (f-f0) / step_size
+            e = f0 - self.y_data
+            # reset beta and breaks back to original values
+            self.beta = orig_beta
+            self.fit_breaks = orig_breaks
+
+        else:
+            errmsg = "Error: method='" + method + "' is not supported!"
+            raise ValueError(errmsg)
+        # try to solve for the standard errors
+        try:
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
-
+            print(variance)
             self.se = np.sqrt(variance * (linalg.inv(np.dot(A.T,
                                                             A)).diagonal()))
 
-            return self.se
+            return self.se, A
 
         except linalg.LinAlgError:
             raise linalg.LinAlgError('Singular matrix')
@@ -1507,13 +1549,13 @@ class PiecewiseLinFit(object):
 
         """
         try:
-            nb = len(self.beta)
+            nb = self.beta.size
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise ValueError(errmsg)
 
-        ny = len(self.y_data)
+        ny = self.n_data
 
         # check if x is numpy array, if not convert to numpy array
         if isinstance(x, np.ndarray) is False:
@@ -1593,7 +1635,7 @@ class PiecewiseLinFit(object):
         except linalg.LinAlgError:
             raise linalg.LinAlgError('Singular matrix')
 
-    def p_values(self):
+    def p_values(self, method='linear', step_size=1e-4):
         r"""
         Calculate the p-values for each beta parameter.
 
@@ -1605,6 +1647,18 @@ class PiecewiseLinFit(object):
 
         These values are typically compared to some confidence level alpha for
         significance. A 95% confidence level would have alpha = 0.05.
+
+        Parameters
+        ----------
+        method : string, optional
+            Calculate the standard errors for a linear or non-linear
+            regression problem. The default is method='linear'. A taylor-
+            series expansion is performed when method='non-linear' (which is
+            commonly referred to as the Delta method).
+        step_size : float, optional
+            The step size to perform forward differences for the taylor-
+            series expansion when method='non-linear'. Default is
+            step_size=1e-4.
 
         Returns
         -------
@@ -1619,8 +1673,12 @@ class PiecewiseLinFit(object):
 
         Notes
         -----
-        This assumes that your breakpoint locations are exact! and does
-        not consider the uncertainty with your breakpoint locations.
+        The linear regression problem is when you know the breakpoint
+        locations (e.g. when using the fit_with_breaks function).
+
+        The non-linear regression problem is when you don't know the
+        breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+        functions).
 
         See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
 
@@ -1646,22 +1704,28 @@ class PiecewiseLinFit(object):
         see also examples/standard_errrors_and_p-values.py
 
         """
-        # calculate the standard errors associated with each beta parameter
-        # not that these standard errors and p-values are only meaningful if
-        # you have specified the specific line segment end locations
-        # at least for now...
-        self.standard_errors()
-
-        # calculate my t-value
-        t = self.beta / self.se
-
-        # degrees of freedom for t-distribution
         n = self.n_data
+        # degrees of freedom for t-distribution
         try:
-            k = len(self.beta) - 1
+            k = self.beta.size - 1
         except ValueError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
+            raise ValueError(errmsg)
+        if method == 'linear':
+            self.standard_errors()
+            # calculate my t-value
+            t = self.beta / self.se
+        elif method == 'non-linear':
+            nb = self.beta.size + self.fit_breaks.size - 2
+            k = nb - 1
+            self.standard_errors(method=method, step_size=step_size)
+            # the parameters for a non-linear model include interior breaks
+            parameters = np.concatenate((self.beta, self.fit_breaks[1:-1]))
+            # calculate my t-value
+            t = parameters / self.se
+        else:
+            errmsg = "Error: method='" + method + "' is not supported!"
             raise ValueError(errmsg)
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
