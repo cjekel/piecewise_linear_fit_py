@@ -1013,7 +1013,7 @@ class PiecewiseLinFit(object):
             Bounds for each breakpoint location within the optimization. This
             should have the shape of (n_segments, 2).
         **kwargs : optional
-            Directly passed into scipy.optimize.differential_evolution(). This
+            Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
             will override any pwlf defaults when provided. See Note for more
             information.
 
@@ -1162,7 +1162,7 @@ class PiecewiseLinFit(object):
             Bounds for each breakpoint location within the optimization. This
             should have the shape of (n_segments, 2).
         **kwargs : optional
-            Directly passed into scipy.optimize.differential_evolution(). This
+            Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
             will override any pwlf defaults when provided. See Note for more
             information.
 
