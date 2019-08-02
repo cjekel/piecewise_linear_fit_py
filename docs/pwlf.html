@@ -371,7 +371,7 @@ array containing the locations where it appears breakpoints occur.</p>
 <dt><strong>bounds</strong><span class="classifier">array_like, optional</span></dt><dd><p>Bounds for each breakpoint location within the optimization. This
 should have the shape of (n_segments, 2).</p>
 </dd>
-<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
+<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
 will override any pwlf defaults when provided. See Note for more
 information.</p>
 </dd>
@@ -661,7 +661,7 @@ you may find it much faster sometimes.</p>
 <dt><strong>bounds</strong><span class="classifier">array_like, optional</span></dt><dd><p>Bounds for each breakpoint location within the optimization. This
 should have the shape of (n_segments, 2).</p>
 </dd>
-<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
+<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
 will override any pwlf defaults when provided. See Note for more
 information.</p>
 </dd>
@@ -1683,7 +1683,7 @@ you may find it much faster sometimes.</p>
 </dd>
 <dt><strong>pop</strong><span class="classifier">int, optional</span></dt><dd><p>The number of latin hypercube samples to generate. Default pop=2.</p>
 </dd>
-<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
+<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
 will override any pwlf defaults when provided. See Note for more
 information.</p>
 </dd>
@@ -2138,7 +2138,7 @@ function will be forced to go through.</p>
       &copy;2019, Charles Jekel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0+/199906e</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0+/7437dbd</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
