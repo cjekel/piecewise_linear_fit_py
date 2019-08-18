@@ -12,5 +12,5 @@ before_script:
   - pytest --version
   - cd tests
 after_success:
-  - pip install coveralls
+  - pip install python-coveralls
   - coveralls
