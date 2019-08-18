@@ -5,6 +5,8 @@ A library for fitting continuous piecewise linear functions to data.
 Just specify the number of line segments you desire and provide the
 data.
 
+|Downloads a month| |Build Status| |Coverage Status|
+
 Check out the
 `documentation <https://jekel.me/piecewise_linear_fit_py>`__!
 
@@ -141,5 +143,10 @@ Citation
        url = {https://github.com/cjekel/piecewise_linear_fit_py}
    }
 
+.. |Downloads a month| image:: https://img.shields.io/pypi/dm/pwlf.svg
+.. |Build Status| image:: https://travis-ci.org/cjekel/piecewise_linear_fit_py.svg?branch=master
+   :target: https://travis-ci.org/cjekel/piecewise_linear_fit_py
+.. |Coverage Status| image:: https://coveralls.io/repos/github/cjekel/piecewise_linear_fit_py/badge.svg?branch=master
+   :target: https://coveralls.io/github/cjekel/piecewise_linear_fit_py?branch=master
 .. |Example of multiple degree fits to a sine wave.| image:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png
 
