@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pwlf package contents &#8212; pwlf 1.1.0 documentation</title>
+    <title>pwlf package contents &#8212; pwlf 1.1.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,6 +16,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About" href="about.html" />
     <link rel="prev" title="Examples" href="examples.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -770,7 +771,9 @@ beta[0] and so forth</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>You supplied an unsupported method.</p>
 </dd>
 </dl>
 </dd>
@@ -894,7 +897,7 @@ fitted continuous piecewise linear function.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -935,7 +938,7 @@ For more information see:
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -987,7 +990,9 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>You supplied an unsupported method.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -1781,7 +1786,7 @@ beta[0] and so forth</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 </dl>
 </dd>
@@ -1904,7 +1909,7 @@ fitted continuous piecewise linear function.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -1945,7 +1950,7 @@ For more information see:
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -1985,7 +1990,7 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ValueError</dt><dd><p>You have probably not performed a fit yet.</p>
+<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
 </dd>
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
@@ -2096,9 +2101,7 @@ function will be forced to go through.</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_it_works.html">How it works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">pwlf package contents</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pwlf package contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -2109,6 +2112,7 @@ function will be forced to go through.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="examples.html" title="previous chapter">Examples</a></li>
+      <li>Next: <a href="about.html" title="next chapter">About</a></li>
   </ul></li>
 </ul>
 </div>
@@ -2138,7 +2142,7 @@ function will be forced to go through.</p>
       &copy;2019, Charles Jekel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0+/7437dbd</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
