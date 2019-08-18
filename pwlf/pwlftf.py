@@ -1269,7 +1269,7 @@ class PiecewiseLinFitTF(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
@@ -1299,10 +1299,10 @@ class PiecewiseLinFitTF(object):
         """
         try:
             nb = self.beta.size
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
 
         ny = self.n_data
 
@@ -1340,7 +1340,7 @@ class PiecewiseLinFitTF(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
@@ -1368,10 +1368,10 @@ class PiecewiseLinFitTF(object):
         """
         try:
             nb = self.beta.size
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
 
         ny = self.n_data
 
@@ -1411,7 +1411,7 @@ class PiecewiseLinFitTF(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
@@ -1430,10 +1430,10 @@ class PiecewiseLinFitTF(object):
         """
         try:
             fit_breaks = self.fit_breaks
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
         ssr = self.fit_with_breaks(fit_breaks)
         ybar = tf.ones_like(self.y_data) * tf.reduce_mean(self.y_data)
         # tf.reduce_mean defaults to flattening the entire tensor
@@ -1508,7 +1508,7 @@ class PiecewiseLinFitTF(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
 
         Notes
@@ -1553,10 +1553,10 @@ class PiecewiseLinFitTF(object):
         n = self.n_data
         try:
             k = len(self.beta) - 1
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p

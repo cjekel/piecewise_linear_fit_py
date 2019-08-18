@@ -1411,8 +1411,10 @@ class PiecewiseLinFit(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
+        ValueError
+            You supplied an unsupported method.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
 
@@ -1518,7 +1520,7 @@ class PiecewiseLinFit(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
@@ -1598,7 +1600,7 @@ class PiecewiseLinFit(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
         LinAlgError
             This typically means your regression problem is ill-conditioned.
@@ -1664,8 +1666,10 @@ class PiecewiseLinFit(object):
 
         Raises
         ------
-        ValueError
+        AttributeError
             You have probably not performed a fit yet.
+        ValueError
+            You supplied an unsupported method.
 
         Notes
         -----
