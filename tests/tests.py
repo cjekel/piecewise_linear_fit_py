@@ -17,6 +17,39 @@ class TestEverything(unittest.TestCase):
         ssr = my_fit1.fit_with_breaks(x0)
         self.assertTrue(np.isclose(ssr, 0.0))
 
+    def test_break_point_spot_on_list(self):
+        # check that I can fit when break points spot on a
+        my_fit1 = pwlf.PiecewiseLinFit(list(self.x_small), list(self.y_small))
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        self.assertTrue(np.isclose(ssr, 0.0))
+
+    def test_degree_not_supported(self):
+        try:
+            _ = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                     degree=100)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def test_x_c_not_supplied(self):
+        try:
+            mf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                      degree=100)
+            my.fit(2, x_c=[1.0])
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def test_y_c_not_supplied(self):
+        try:
+            mf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                      degree=100)
+            my.fit(2, y_c=[1.0])
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
     def test_lapack_driver(self):
         # check that I can fit when break points spot on a
         my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
@@ -30,6 +63,17 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x0 = self.x_small.copy()
         A = my_fit.assemble_regression_matrix(x0, my_fit.x_data)
+        Asb = np.array([[1.,  0.,  0.,  0.],
+                        [1.,  x0[1]-x0[0],  0.,  0.],
+                        [1.,  x0[2]-x0[0], x0[2]-x0[1], 0.],
+                        [1.,  x0[3]-x0[0], x0[3]-x0[1], x0[3]-x0[2]]])
+        self.assertTrue(np.allclose(A, Asb))
+
+    def test_assembly_list(self):
+        # check that I can fit when break points spot on a
+        my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        A = my_fit.assemble_regression_matrix(x0, list(my_fit.x_data))
         Asb = np.array([[1.,  0.,  0.,  0.],
                         [1.,  x0[1]-x0[0],  0.,  0.],
                         [1.,  x0[2]-x0[0], x0[2]-x0[1], 0.],
@@ -139,6 +183,22 @@ class TestEverything(unittest.TestCase):
 
     def test_single_force_break_point2(self):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x_c = [2.0]
+        y_c = [1.5]
+        my_fit.fit_with_breaks_force_points([0.2, 0.7], x_c, y_c)
+        yhat = my_fit.predict(x_c)
+        self.assertTrue(np.isclose(y_c, yhat))
+
+    def test_single_force_break_point_degree(self):
+        my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small, degree=2)
+        x_c = [2.0]
+        y_c = [1.5]
+        my_fit.fit_with_breaks_force_points([0.2, 0.7], x_c, y_c)
+        yhat = my_fit.predict(x_c)
+        self.assertTrue(np.isclose(y_c, yhat))
+
+    def test_single_force_break_point_degree_zero(self):
+        my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small, degree=0)
         x_c = [2.0]
         y_c = [1.5]
         my_fit.fit_with_breaks_force_points([0.2, 0.7], x_c, y_c)
@@ -273,6 +333,64 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(my_pwlf_0.ssr <= 10.)
         self.assertTrue(my_pwlf_1.ssr <= 7.0)
         self.assertTrue(my_pwlf_2.ssr <= 0.5)
+
+    def test_se_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        try:
+            my_pwlf_0.standard_errors()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_se_no_method(self):
+        my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        try:
+            my_fit1.standard_errors(method='blah')
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def test_pv_list(self):
+        my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        my_fit1.prediction_variance(list(self.x_small))
+
+    def test_pv_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        try:
+            my_pwlf_0.prediction_variance(self.x_sin)
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_r2_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        try:
+            my_pwlf_0.r_squared()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_pvalue_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        try:
+            my_pwlf_0.p_values()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_pvalues_wrong_method(self):
+        my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        ssr = my_fit1.fit_with_breaks(x0)
+        try:
+            my_fit1.p_values(method='blah')
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
 
     def test_all_stats(self):
         np.random.seed(121)

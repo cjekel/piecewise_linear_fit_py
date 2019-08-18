@@ -1446,10 +1446,10 @@ class PiecewiseLinFit(object):
         """
         try:
             nb = self.beta.size
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
         ny = self.n_data
         if method == 'linear':
             A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
@@ -1546,10 +1546,10 @@ class PiecewiseLinFit(object):
         """
         try:
             nb = self.beta.size
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
 
         ny = self.n_data
 
@@ -1617,10 +1617,10 @@ class PiecewiseLinFit(object):
         """
         try:
             fit_breaks = self.fit_breaks
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
         ssr = self.fit_with_breaks(fit_breaks)
         ybar = np.ones(self.n_data) * np.mean(self.y_data)
         ydiff = self.y_data - ybar
@@ -1704,10 +1704,10 @@ class PiecewiseLinFit(object):
         # degrees of freedom for t-distribution
         try:
             k = self.beta.size - 1
-        except ValueError:
+        except AttributeError:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
-            raise ValueError(errmsg)
+            raise AttributeError(errmsg)
         if method == 'linear':
             self.standard_errors()
             # calculate my t-value
