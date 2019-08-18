@@ -52,6 +52,19 @@ class TestEverything(unittest.TestCase):
             A = A.eval()
         self.assertTrue(np.allclose(A, Asb))
 
+    def test_assembly_list(self):
+        # check that I can fit when break points spot on a
+        my_fit = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        A = my_fit.assemble_regression_matrix(list(x0), my_fit.x_data)
+        Asb = np.array([[1.,  0.,  0.,  0.],
+                        [1.,  x0[1]-x0[0],  0.,  0.],
+                        [1.,  x0[2]-x0[0], x0[2]-x0[1], 0.],
+                        [1.,  x0[3]-x0[0], x0[3]-x0[1], x0[3]-x0[2]]])
+        with tf.Session():
+            A = A.eval()
+        self.assertTrue(np.allclose(A, Asb))
+
     def test_break_point_spot_on_r2(self):
         # test r squared value with known solution
         my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)

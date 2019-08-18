@@ -1545,18 +1545,14 @@ class PiecewiseLinFitTF(object):
         # you have specified the specific line segment end locations
         # at least for now...
         self.standard_errors()
+        # the above line will raise Attribute error if not yet fit
 
         # calculate my t-value
         t = self.beta / self.se
 
         # degrees of freedom for t-distribution
         n = self.n_data
-        try:
-            k = len(self.beta) - 1
-        except AttributeError:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
-            raise AttributeError(errmsg)
+        k = len(self.beta) - 1
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p
