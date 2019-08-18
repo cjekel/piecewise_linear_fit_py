@@ -11,3 +11,6 @@ before_script:
   - flake8 pwlf
   - pytest --version
   - cd tests
+after_success:
+  - pip install coveralls
+  - coveralls
