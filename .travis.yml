@@ -6,11 +6,10 @@ python:
 install:
   - pip install flake8 pytest pytest-cov tensorflow pyDOE
   - pip install . --no-cache-dir
-script: travis_wait pytest --cov=pwlf -p no:warnings tests.py teststf.py
+script: travis_wait pytest --cov=pwlf -p no:warnings tests/tests.py tests/teststf.py
 before_script:
   - flake8 pwlf
   - pytest --version
-  - cd tests
 after_success:
   - pip install python-coveralls
   - coveralls
