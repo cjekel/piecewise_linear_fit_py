@@ -13,7 +13,6 @@ script:
   - pytest --cov=pwlf --cov-append -p no:warnings tests/teststf.py
 before_script:
   - flake8 pwlf
-  - cd tests
   - pytest --version
 after_success:
   - pip install python-coveralls
