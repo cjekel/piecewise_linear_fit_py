@@ -4,9 +4,12 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install flake8 pytest pytest-cov tensorflow pyDOE
+  - pip install flake8 pytest pytest-cov pyDOE
   - pip install . --no-cache-dir
-script: travis_wait pytest --cov=pwlf -p no:warnings tests/tests.py tests/teststf.py
+script:
+  - pytest --cov=pwlf -p no:warnings tests/tests.py
+  - pip install tensorflow
+  - pytest --cov=pwlf --cov-append -p no:warnings tests/teststf.py
 before_script:
   - flake8 pwlf
   - pytest --version
