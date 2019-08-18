@@ -1,4 +1,5 @@
 *.pyc
+.coverage
 MANIFEST
 /build/
 setup.cfg
