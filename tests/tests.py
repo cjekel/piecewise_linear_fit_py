@@ -35,8 +35,8 @@ class TestEverything(unittest.TestCase):
     def test_x_c_not_supplied(self):
         try:
             mf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
-                                      degree=100)
-            my.fit(2, x_c=[1.0])
+                                      degree=1)
+            mf.fit(2, x_c=[1.0])
             self.assertTrue(False)
         except ValueError:
             self.assertTrue(True)
@@ -44,8 +44,8 @@ class TestEverything(unittest.TestCase):
     def test_y_c_not_supplied(self):
         try:
             mf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
-                                      degree=100)
-            my.fit(2, y_c=[1.0])
+                                      degree=1)
+            mf.fit(2, y_c=[1.0])
             self.assertTrue(False)
         except ValueError:
             self.assertTrue(True)
@@ -335,7 +335,7 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(my_pwlf_2.ssr <= 0.5)
 
     def test_se_no_fit(self):
-        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin)
         try:
             my_pwlf_0.standard_errors()
             self.assertTrue(False)
@@ -345,7 +345,7 @@ class TestEverything(unittest.TestCase):
     def test_se_no_method(self):
         my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x0 = self.x_small.copy()
-        ssr = my_fit1.fit_with_breaks(x0)
+        _ = my_fit1.fit_with_breaks(x0)
         try:
             my_fit1.standard_errors(method='blah')
             self.assertTrue(False)
@@ -355,11 +355,11 @@ class TestEverything(unittest.TestCase):
     def test_pv_list(self):
         my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x0 = self.x_small.copy()
-        ssr = my_fit1.fit_with_breaks(x0)
+        _ = my_fit1.fit_with_breaks(x0)
         my_fit1.prediction_variance(list(self.x_small))
 
     def test_pv_no_fit(self):
-        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin)
         try:
             my_pwlf_0.prediction_variance(self.x_sin)
             self.assertTrue(False)
@@ -367,7 +367,7 @@ class TestEverything(unittest.TestCase):
             self.assertTrue(True)
 
     def test_r2_no_fit(self):
-        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin)
         try:
             my_pwlf_0.r_squared()
             self.assertTrue(False)
@@ -375,7 +375,7 @@ class TestEverything(unittest.TestCase):
             self.assertTrue(True)
 
     def test_pvalue_no_fit(self):
-        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin)
         try:
             my_pwlf_0.p_values()
             self.assertTrue(False)
@@ -385,7 +385,7 @@ class TestEverything(unittest.TestCase):
     def test_pvalues_wrong_method(self):
         my_fit1 = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x0 = self.x_small.copy()
-        ssr = my_fit1.fit_with_breaks(x0)
+        _ = my_fit1.fit_with_breaks(x0)
         try:
             my_fit1.p_values(method='blah')
             self.assertTrue(False)

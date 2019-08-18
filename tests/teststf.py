@@ -207,6 +207,44 @@ class TestEverything(unittest.TestCase):
         my_pwlf.fitfast(2)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
 
+    def test_se_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        try:
+            my_pwlf_0.standard_errors()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_pv_list(self):
+        my_fit1 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        x0 = self.x_small.copy()
+        _ = my_fit1.fit_with_breaks(x0)
+        my_fit1.prediction_variance(list(self.x_small))
+
+    def test_pv_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        try:
+            my_pwlf_0.prediction_variance(self.x_small)
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_r2_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        try:
+            my_pwlf_0.r_squared()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
+    def test_pvalue_no_fit(self):
+        my_pwlf_0 = pwlf.PiecewiseLinFitTF(self.x_small, self.y_small)
+        try:
+            my_pwlf_0.p_values()
+            self.assertTrue(False)
+        except AttributeError:
+            self.assertTrue(True)
+
 
 if __name__ == '__main__':
     # force TF to use CPU
