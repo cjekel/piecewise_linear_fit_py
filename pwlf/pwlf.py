@@ -1464,17 +1464,23 @@ class PiecewiseLinFit(object):
             A = np.zeros((ny, nb))
             orig_beta = self.beta.copy()
             orig_breaks = self.fit_breaks.copy()
+            # calculate differentials due to betas
             for i in range(self.beta.size):
                 temp_beta = orig_beta.copy()
                 temp_beta[i] += step_size
-                f = self.predict(self.y_data, beta=temp_beta,
+                # vary beta and keep breaks constant
+                f = self.predict(self.x_data, beta=temp_beta,
                                  breaks=orig_breaks)
                 A[:, i] = (f-f0) / step_size
+            # append differentials due to break points
             for i in range(self.beta.size, nb):
+                # 'ind' ignores first and last entry in self.fit_breaks since
+                # these are simply the min/max of self.x_data.
                 ind = i - self.beta.size + 1
                 temp_breaks = orig_breaks.copy()
                 temp_breaks[ind] += step_size
-                f = self.predict(self.y_data, beta=orig_beta,
+                # vary break and keep betas constant
+                f = self.predict(self.x_data, beta=orig_beta,
                                  breaks=temp_breaks)
                 A[:, i] = (f-f0) / step_size
             e = f0 - self.y_data
