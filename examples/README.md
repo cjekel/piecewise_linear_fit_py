@@ -560,7 +560,7 @@ The standard errors and p-values correspond to each model parameter. First the b
 parameters = np.concatenate((my_pwlf.beta,
                              my_pwlf.fit_breaks[1:-1]))
 
-header = ['Parmater type', 'Parameter value', 'Standard error', 't',
+header = ['Parameter type', 'Parameter value', 'Standard error', 't',
           'P > np.abs(t) (p-value)']
 print(*header, sep=' | ')
 values = np.zeros((parameters.size, 5), dtype=np.object_)
@@ -578,13 +578,13 @@ for i, row in enumerate(values):
         print(*row, sep=' | ')
 ```
 
-| Parmater type | Parameter value | Standard error | t | P > np.abs(t) (p-value) |
+| Parameter type | Parameter value | Standard error | t | P > np.abs(t) (p-value) |
 | ------------- | --------------- | -------------- |---| ----------------------- |
-| Beta | 1.821 | 0.0 | 456398510.154 | 0.0 |
-| Beta | -0.427 | 0.0 | -45889818.041 | 0.0 |
-| Beta | -1.165 | 0.0 | -129081071.588 | 0.0 |
-| Beta | -1.397 | 0.0 | -150932144.626 | 0.0 |
-| Beta | 0.873 | 0.0 | 102386735.293 | 0.0 |
-| Breakpoint | 0.2 | 0.0 | 173071119.993 | 0.0 |
-| Breakpoint | 0.5 | 0.0 | 464907146.981 | 0.0 |
-| Breakpoint | 0.75 | 0.0 | 492077534.636 | 0.0 |
+| Beta | 1.821 | 0.0 | 1763191476.046 | 0.0 |
+| Beta | -0.427 | 0.0 | -46404554.493 | 0.0 |
+| Beta | -1.165 | 0.0 | -111181494.162 | 0.0 |
+| Beta | -1.397 | 0.0 | -168954500.421 | 0.0 |
+| Beta | 0.873 | 0.0 | 93753841.242 | 0.0 |
+| Breakpoint | 0.2 | 0.0 | 166901856.885 | 0.0 |
+| Breakpoint | 0.5 | 0.0 | 537785803.646 | 0.0 |
+| Breakpoint | 0.75 | 0.0 | 482311769.159 | 0.0 |
