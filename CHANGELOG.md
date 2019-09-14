@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2019-09-14
+### Changed
+- Make .ssr stored with fit_with_break* functions
+
 ## [1.1.2] - 2019-08-19
 ### Changed 
 - Bug fix in non-linear standard error, predict was calling y instead of x. https://github.com/cjekel/piecewise_linear_fit_py/pull/46 Thanks to @tcanders
