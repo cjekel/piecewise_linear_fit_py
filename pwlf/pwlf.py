@@ -357,6 +357,7 @@ class PiecewiseLinFit(object):
         if ssr is None:
             ssr = np.inf
             # something went wrong...
+        self.ssr = ssr
         return ssr
 
     def fit_with_breaks_force_points(self, breaks, x_c, y_c):
@@ -530,6 +531,7 @@ class PiecewiseLinFit(object):
         if L is None:
             L = np.inf
             # something went wrong...
+        self.ssr = ssr
         return L
 
     def predict(self, x, beta=None, breaks=None):
