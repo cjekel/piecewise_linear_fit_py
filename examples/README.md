@@ -59,7 +59,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 9. [bad fits when you have more unknowns than data](#bad-fits-when-you-have-more-unknowns-than-data)
 10. [fit with a breakpoint guess](#fit-with-a-breakpoint-guess)
 11. [get the linear regression matrix](#get-the-linear-regression-matrix)
-12. [use of TensorFlow](#use-of-TensorFlow)
+12. [use of TensorFlow](#use-of-tensorflow)
 13. [fit constants or polynomials](#fit-constants-or-polynomials)
 14. [specify breakpoint bounds](#specify-breakpoint-bounds)
 15. [non-linear standard errors and p-values](#non-linear-standard-errors-and-p-values)
@@ -416,7 +416,7 @@ yhat_en = my_pwlf_en.predict(xhat, breaks=breaks,
 
 ![interesting elastic net fit](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png)
 
-## use of TensorFlow
+## use of tensorflow
 
 You'll be able to use the ```PiecewiseLinFitTF``` class if you have TensorFlow installed, which may offer performance improvements for larger data sets over the original ```PiecewiseLinFit``` class. For performance benchmarks see this blog [post](https://jekel.me/2019/Adding-tensorflow-to-pwlf/).
 

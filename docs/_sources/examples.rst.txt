@@ -71,7 +71,7 @@ All of these examples will use the following data and imports.
 10. `fit with a breakpoint guess <#fit-with-a-breakpoint-guess>`__
 11. `get the linear regression
     matrix <#get-the-linear-regression-matrix>`__
-12. `use of TensorFlow <#use-of-TensorFlow>`__
+12. `use of TensorFlow <#use-of-tensorflow>`__
 13. `fit constants or polynomials <#fit-constants-or-polynomials>`__
 14. `specify breakpoint bounds <#specify-breakpoint-bounds>`__
 15. `non-linear standard errors and
@@ -488,7 +488,7 @@ regularizer to perform an interesting fit with the regression matrix.
 
    interesting elastic net fit
 
-use of TensorFlow
+use of tensorflow
 -----------------
 
 You’ll be able to use the ``PiecewiseLinFitTF`` class if you have
