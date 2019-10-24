@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2019-10-24
+### Changed
+- TensorFlow 2.0.0 is not (and most probably will not) be supported. Setup.py checks for this optional requirement. Tests are run on Tensorflow<2.0.0.
+- TravisCi now checks Python version 3.7 in addition to 3.6, 3.5, 2.7.
+- TravisCi tests should now be run daily.
+
 ## [1.1.3] - 2019-09-14
 ### Changed
 - Make .ssr stored with fit_with_break* functions
