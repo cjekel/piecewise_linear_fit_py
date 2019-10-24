@@ -34,8 +34,16 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1,
-                 weights=None, seed=None):
+    def __init__(
+        self,
+        x,
+        y,
+        disp_res=False,
+        lapack_driver="gelsd",
+        degree=1,
+        weights=None,
+        seed=None,
+    ):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -62,9 +70,13 @@ class PiecewiseLinFit(object):
             'gelss'. For more see
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
             http://www.netlib.org/lapack/lug/node27.html
-        degree : int, optional
+        degree : int, list, optional
             The degree of polynomial to use. The default is degree=1 for
-            linear models. Use degree=0 for constant models.
+            linear models. Use degree=0 for constant models. Use a list for
+            mixed degrees (only supports degrees 1 or 0). List should be read
+            from left to right, degree=[1,0,1] corresponds to a mixed degree
+            model, where the left most segment has degree 1, the middle
+            segment degree 0, and the right most segment degree 1.
         weights : None, or array_like
             The individual weights are typically the reciprocal of the
             standard deviation for each data point, where weights[i]
@@ -204,8 +216,19 @@ class PiecewiseLinFit(object):
 
         # set the first and last break x values to be the min and max of x
         self.break_0, self.break_n = np.min(self.x_data), np.max(self.x_data)
-
-        if 12 > degree >= 0:
+        self.mixed_degree = False
+        if type(degree) == list:
+            # make sure the min and max are withing the limit
+            max_degree = max(degree)
+            min_degree = min(degree)
+            if min_degree >= 0 and max_degree <= 1:
+                self.mixed_degree = True
+                self.degree = degree
+            else:
+                not_suported = "Not supported mixed degree. Max mixed degree=1"
+                ", and min mixed degree=0"
+                raise ValueError(not_suported)
+        elif degree < 12 and degree >= 0:
             # I actually don't know what the upper degree limit should
             self.degree = int(degree)
         else:
@@ -323,23 +346,51 @@ class PiecewiseLinFit(object):
 
         # Assemble the regression matrix
         A_list = [np.ones_like(x)]
-        if self.degree >= 1:
+        if self.mixed_degree is True:
+            for i in range(self.n_segments):
+                degree = self.degree[i]
+                if i == 0:
+                    A_list = [np.ones_like(x)]
+                    if degree == 1:
+                        A_list.append(x - self.fit_breaks[0])
+                if i > 0:
+                    if degree == 0:
+                        # all previous slopes must be written to 0
+                        inds = np.argwhere(x > self.fit_breaks[i])
+                        a_size = len(A_list)
+                        for j in range(1, a_size):
+                            A_list[j][inds] = 0.0
+                        # add the new zero slopes
+                        A_list.append(np.where(x > self.fit_breaks[i], 1.0, 0.0))
+                    elif degree == 1:
+                        A_list.append(
+                            np.where(
+                                x > self.fit_breaks[i], x - self.fit_breaks[i], 0.0
+                            )
+                        )
+        elif self.degree >= 1:
             A_list.append(x - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1],
-                                       x - self.fit_breaks[i+1],
-                                       0.0))
+                A_list.append(
+                    np.where(
+                        x > self.fit_breaks[i + 1], x - self.fit_breaks[i + 1], 0.0
+                    )
+                )
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
-                    A_list.append((x - self.fit_breaks[0])**k)
+                    A_list.append((x - self.fit_breaks[0]) ** k)
                     for i in range(self.n_segments - 1):
-                        A_list.append(np.where(x > self.fit_breaks[i+1],
-                                               (x - self.fit_breaks[i+1])**k,
-                                               0.0))
+                        A_list.append(
+                            np.where(
+                                x > self.fit_breaks[i + 1],
+                                (x - self.fit_breaks[i + 1]) ** k,
+                                0.0,
+                            )
+                        )
         else:
             A_list = [np.ones_like(x)]
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1], 1.0, 0.0))
+                A_list.append(np.where(x > self.fit_breaks[i + 1], 1.0, 0.0))
         A = np.vstack(A_list).T
         self.n_parameters = A.shape[1]
         return A
@@ -475,9 +526,11 @@ class PiecewiseLinFit(object):
         self.c_n = len(self.x_c)
 
         if self.weights is not None:
-            raise ValueError('Constrained least squares with weights are'
-                             ' not supported since these have a tendency '
-                             'of being numerically instable.')
+            raise ValueError(
+                "Constrained least squares with weights are"
+                " not supported since these have a tendency "
+                "of being numerically instable."
+            )
 
         breaks = self._switch_to_np_array(breaks)
 
@@ -727,7 +780,7 @@ class PiecewiseLinFit(object):
         logic1 = x_c is not None and y_c is None
         logic2 = y_c is not None and x_c is None
         if logic1 or logic2:
-            raise ValueError('You must provide both x_c and y_c!')
+            raise ValueError("You must provide both x_c and y_c!")
 
         # set the function to minimize
         min_function = self.fit_with_breaks_opt
@@ -744,9 +797,11 @@ class PiecewiseLinFit(object):
             # Use a different function to minimize
             min_function = self.fit_force_points_opt
             if self.weights is not None:
-                raise ValueError('Constrained least squares with weights are'
-                                 ' not supported since these have a tendency '
-                                 'of being numerically instable.')
+                raise ValueError(
+                    "Constrained least squares with weights are"
+                    " not supported since these have a tendency "
+                    "of being numerically instable."
+                )
 
         # store the number of line segments and number of parameters
         self.n_segments = int(n_segments)
@@ -768,16 +823,24 @@ class PiecewiseLinFit(object):
 
         # run the optimization
         if len(kwargs) == 0:
-            res = differential_evolution(min_function, bounds,
-                                         strategy='best1bin', maxiter=1000,
-                                         popsize=50, tol=1e-3,
-                                         mutation=(0.5, 1), recombination=0.7,
-                                         seed=None, callback=None, disp=False,
-                                         polish=True, init='latinhypercube',
-                                         atol=1e-4)
+            res = differential_evolution(
+                min_function,
+                bounds,
+                strategy="best1bin",
+                maxiter=1000,
+                popsize=50,
+                tol=1e-3,
+                mutation=(0.5, 1),
+                recombination=0.7,
+                seed=None,
+                callback=None,
+                disp=False,
+                polish=True,
+                init="latinhypercube",
+                atol=1e-4,
+            )
         else:
-            res = differential_evolution(min_function,
-                                         bounds, **kwargs)
+            res = differential_evolution(min_function, bounds, **kwargs)
         if self.print is True:
             print(res)
 
@@ -883,7 +946,7 @@ class PiecewiseLinFit(object):
             bounds[:, 1] = self.break_n
 
         # perform latin hypercube sampling
-        mypop = lhs(self.nVar, samples=pop, criterion='maximin')
+        mypop = lhs(self.nVar, samples=pop, criterion="maximin")
         # scale the sampling to my variable range
         mypop = mypop * (self.break_n - self.break_0) + self.break_0
 
@@ -893,18 +956,32 @@ class PiecewiseLinFit(object):
 
         for i, x0 in enumerate(mypop):
             if len(kwargs) == 0:
-                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                 fprime=None, args=(),
-                                                 approx_grad=True,
-                                                 bounds=bounds, m=10,
-                                                 factr=1e2, pgtol=1e-05,
-                                                 epsilon=1e-08, iprint=-1,
-                                                 maxfun=15000, maxiter=15000,
-                                                 disp=None, callback=None)
+                resx, resf, resd = fmin_l_bfgs_b(
+                    self.fit_with_breaks_opt,
+                    x0,
+                    fprime=None,
+                    args=(),
+                    approx_grad=True,
+                    bounds=bounds,
+                    m=10,
+                    factr=1e2,
+                    pgtol=1e-05,
+                    epsilon=1e-08,
+                    iprint=-1,
+                    maxfun=15000,
+                    maxiter=15000,
+                    disp=None,
+                    callback=None,
+                )
             else:
-                resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt, x0,
-                                                 fprime=None, approx_grad=True,
-                                                 bounds=bounds, **kwargs)
+                resx, resf, resd = fmin_l_bfgs_b(
+                    self.fit_with_breaks_opt,
+                    x0,
+                    fprime=None,
+                    approx_grad=True,
+                    bounds=bounds,
+                    **kwargs,
+                )
             x[i, :] = resx
             f[i] = resf
             d.append(resd)
@@ -997,20 +1074,32 @@ class PiecewiseLinFit(object):
             bounds[:, 1] = self.break_n
 
         if len(kwargs) == 0:
-            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                          guess_breakpoints,
-                                          fprime=None, args=(),
-                                          approx_grad=True,
-                                          bounds=bounds, m=10,
-                                          factr=1e2, pgtol=1e-05,
-                                          epsilon=1e-08, iprint=-1,
-                                          maxfun=15000, maxiter=15000,
-                                          disp=None, callback=None)
+            resx, resf, _ = fmin_l_bfgs_b(
+                self.fit_with_breaks_opt,
+                guess_breakpoints,
+                fprime=None,
+                args=(),
+                approx_grad=True,
+                bounds=bounds,
+                m=10,
+                factr=1e2,
+                pgtol=1e-05,
+                epsilon=1e-08,
+                iprint=-1,
+                maxfun=15000,
+                maxiter=15000,
+                disp=None,
+                callback=None,
+            )
         else:
-            resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
-                                          guess_breakpoints,
-                                          fprime=None, approx_grad=True,
-                                          bounds=bounds, **kwargs)
+            resx, resf, _ = fmin_l_bfgs_b(
+                self.fit_with_breaks_opt,
+                guess_breakpoints,
+                fprime=None,
+                approx_grad=True,
+                bounds=bounds,
+                **kwargs,
+            )
 
         self.ssr = resf
 
@@ -1078,9 +1167,11 @@ class PiecewiseLinFit(object):
             # store the number of constraints
             self.c_n = len(self.x_c)
             if self.weights is not None:
-                raise ValueError('Constrained least squares with weights are'
-                                 ' not supported since these have a tendency '
-                                 'of being numerically instable.')
+                raise ValueError(
+                    "Constrained least squares with weights are"
+                    " not supported since these have a tendency "
+                    "of being numerically instable."
+                )
 
     def calc_slopes(self):
         r"""
@@ -1111,14 +1202,16 @@ class PiecewiseLinFit(object):
         """
         y_hat = self.predict(self.fit_breaks)
         self.slopes = np.divide(
-                    (y_hat[1:self.n_segments + 1] -
-                     y_hat[:self.n_segments]),
-                    (self.fit_breaks[1:self.n_segments + 1] -
-                     self.fit_breaks[:self.n_segments]))
+            (y_hat[1 : self.n_segments + 1] - y_hat[: self.n_segments]),
+            (
+                self.fit_breaks[1 : self.n_segments + 1]
+                - self.fit_breaks[: self.n_segments]
+            ),
+        )
         self.intercepts = y_hat[0:-1] - self.slopes * self.fit_breaks[0:-1]
         return self.slopes
 
-    def standard_errors(self, method='linear', step_size=1e-4):
+    def standard_errors(self, method="linear", step_size=1e-4):
         r"""
         Calculate the standard errors for each beta parameter determined
         from the piecewise linear fit. Typically +- 1.96*se will yield the
@@ -1187,16 +1280,18 @@ class PiecewiseLinFit(object):
         try:
             nb = self.beta.size
         except AttributeError:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
+            errmsg = (
+                "You do not have any beta parameters. You must perform"
+                " a fit before using standard_errors()."
+            )
             raise AttributeError(errmsg)
         ny = self.n_data
-        if method == 'linear':
+        if method == "linear":
             A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
             y_hat = np.dot(A, self.beta)
             e = y_hat - self.y_data
 
-        elif method == 'non-linear':
+        elif method == "non-linear":
             nb = self.beta.size + self.fit_breaks.size - 2
             f0 = self.predict(self.x_data)
             A = np.zeros((ny, nb))
@@ -1207,8 +1302,7 @@ class PiecewiseLinFit(object):
                 temp_beta = orig_beta.copy()
                 temp_beta[i] += step_size
                 # vary beta and keep breaks constant
-                f = self.predict(self.x_data, beta=temp_beta,
-                                 breaks=orig_breaks)
+                f = self.predict(self.x_data, beta=temp_beta, breaks=orig_breaks)
                 A[:, i] = (f - f0) / step_size
             # append differentials due to break points
             for i in range(self.beta.size, nb):
@@ -1218,8 +1312,7 @@ class PiecewiseLinFit(object):
                 temp_breaks = orig_breaks.copy()
                 temp_breaks[ind] += step_size
                 # vary break and keep betas constant
-                f = self.predict(self.x_data, beta=orig_beta,
-                                 breaks=temp_breaks)
+                f = self.predict(self.x_data, beta=orig_beta, breaks=temp_breaks)
                 A[:, i] = (f - f0) / step_size
             e = f0 - self.y_data
             # reset beta and breaks back to original values
@@ -1237,13 +1330,13 @@ class PiecewiseLinFit(object):
                 A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
                 self.se = np.sqrt(variance * A2inv)
             else:
-                A = (A.T*self.weights).T
+                A = (A.T * self.weights).T
                 A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
                 self.se = np.sqrt(variance * A2inv)
             return self.se
 
         except linalg.LinAlgError:
-            raise linalg.LinAlgError('Singular matrix')
+            raise linalg.LinAlgError("Singular matrix")
 
     def prediction_variance(self, x):
         r"""
@@ -1298,8 +1391,10 @@ class PiecewiseLinFit(object):
         try:
             nb = self.beta.size
         except AttributeError:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
+            errmsg = (
+                "You do not have any beta parameters. You must perform"
+                " a fit before using standard_errors()."
+            )
             raise AttributeError(errmsg)
 
         ny = self.n_data
@@ -1316,19 +1411,18 @@ class PiecewiseLinFit(object):
             variance = np.dot(e, e) / (ny - nb)
 
         except linalg.LinAlgError:
-            raise linalg.LinAlgError('Singular matrix')
+            raise linalg.LinAlgError("Singular matrix")
 
         # Regression matrix on prediction data
         A = self.assemble_regression_matrix(self.fit_breaks, x)
 
         # try to solve for the prediction variance at the x locations
         try:
-            pre_var = variance * \
-                np.dot(np.dot(A, linalg.pinv(np.dot(Ad.T, Ad))), A.T)
+            pre_var = variance * np.dot(np.dot(A, linalg.pinv(np.dot(Ad.T, Ad))), A.T)
             return pre_var.diagonal()
 
         except linalg.LinAlgError:
-            raise linalg.LinAlgError('Singular matrix')
+            raise linalg.LinAlgError("Singular matrix")
 
     def r_squared(self):
         r"""
@@ -1362,20 +1456,22 @@ class PiecewiseLinFit(object):
 
         """
         if self.fit_breaks is None:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
+            errmsg = (
+                "You do not have any beta parameters. You must perform"
+                " a fit before using standard_errors()."
+            )
             raise AttributeError(errmsg)
         ssr = self.fit_with_breaks(self.fit_breaks)
         ybar = np.ones(self.n_data) * np.mean(self.y_data)
         ydiff = self.y_data - ybar
         try:
             sst = np.dot(ydiff, ydiff)
-            rsq = 1.0 - (ssr/sst)
+            rsq = 1.0 - (ssr / sst)
             return rsq
         except linalg.LinAlgError:
-            raise linalg.LinAlgError('Singular matrix')
+            raise linalg.LinAlgError("Singular matrix")
 
-    def p_values(self, method='linear', step_size=1e-4):
+    def p_values(self, method="linear", step_size=1e-4):
         r"""
         Calculate the p-values for each beta parameter.
 
@@ -1449,17 +1545,19 @@ class PiecewiseLinFit(object):
         n = self.n_data
         # degrees of freedom for t-distribution
         if self.beta is None:
-            errmsg = 'You do not have any beta parameters. You must perform' \
-                     ' a fit before using standard_errors().'
+            errmsg = (
+                "You do not have any beta parameters. You must perform"
+                " a fit before using standard_errors()."
+            )
             raise AttributeError(errmsg)
         k = self.beta.size - 1
 
-        if method == 'linear':
+        if method == "linear":
             self.standard_errors()
             # calculate my t-value
             t = self.beta / self.se
 
-        elif method == 'non-linear':
+        elif method == "non-linear":
             nb = self.beta.size + self.fit_breaks.size - 2
             k = nb - 1
             self.standard_errors(method=method, step_size=step_size)
@@ -1488,8 +1586,9 @@ class PiecewiseLinFit(object):
             calc_slopes=True.
         """
         if self.weights is None:
-            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
-                                           lapack_driver=self.lapack_driver)
+            beta, ssr, _, _ = linalg.lstsq(
+                A, self.y_data, lapack_driver=self.lapack_driver
+            )
             # ssr is only calculated if self.n_data > self.n_parameters
             # in this case I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
@@ -1498,8 +1597,9 @@ class PiecewiseLinFit(object):
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
         else:
-            beta, _, _, _ = linalg.lstsq((A.T*self.weights).T, self.y_w,
-                                         lapack_driver=self.lapack_driver)
+            beta, _, _, _ = linalg.lstsq(
+                (A.T * self.weights).T, self.y_w, lapack_driver=self.lapack_driver
+            )
             # calculate the weighted sum of square of residuals
             y_hat = np.dot(A, beta)
             e = y_hat - self.y_data
@@ -1540,22 +1640,27 @@ class PiecewiseLinFit(object):
         if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       self.x_c - self.fit_breaks[i+1],
-                                       0.0))
+                C_list.append(
+                    np.where(
+                        self.x_c > self.fit_breaks[i + 1],
+                        self.x_c - self.fit_breaks[i + 1],
+                        0.0,
+                    )
+                )
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
-                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    C_list.append((self.x_c - self.fit_breaks[0]) ** k)
                     for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                               (self.x_c
-                                                - self.fit_breaks[i+1])**k,
-                                               0.0))
+                        C_list.append(
+                            np.where(
+                                self.x_c > self.fit_breaks[i + 1],
+                                (self.x_c - self.fit_breaks[i + 1]) ** k,
+                                0.0,
+                            )
+                        )
         else:
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       1.0,
-                                       0.0))
+                C_list.append(np.where(self.x_c > self.fit_breaks[i + 1], 1.0, 0.0))
         C = np.vstack(C_list).T
 
         _, m = A.shape
@@ -1567,11 +1672,11 @@ class PiecewiseLinFit(object):
         K[:m, m:] = C.T
         K[m:, :m] = C
         # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
+        yt = np.dot(2.0 * A.T, self.y_data)
 
         z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
+        z[: self.n_parameters] = yt
+        z[self.n_parameters :] = self.y_c
 
         # try to solve the regression problem
         try:
@@ -1579,9 +1684,9 @@ class PiecewiseLinFit(object):
             beta_prime = linalg.solve(K, z)
 
             # save the beta parameters
-            self.beta = beta_prime[0:self.n_parameters]
+            self.beta = beta_prime[0 : self.n_parameters]
             # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters:]
+            self.zeta = beta_prime[self.n_parameters :]
 
             # save the slopes
             if calc_slopes:
