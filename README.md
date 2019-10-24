@@ -65,7 +65,7 @@ pyDOE (Tested on version >= 0.3.8)
 
 Optional:
 
-TensorFlow (Tested on version == 1.13.1)
+TensorFlow (Versions < 2.0.0)
 
 # License
 MIT License
