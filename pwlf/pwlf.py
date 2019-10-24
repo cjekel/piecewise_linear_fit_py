@@ -62,9 +62,13 @@ class PiecewiseLinFit(object):
             'gelss'. For more see
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html
             http://www.netlib.org/lapack/lug/node27.html
-        degree : int, optional
+        degree : int, list, optional
             The degree of polynomial to use. The default is degree=1 for
-            linear models. Use degree=0 for constant models.
+            linear models. Use degree=0 for constant models. Use a list for
+            mixed degrees (only supports degrees 1 or 0). List should be read
+            from left to right, degree=[1,0,1] corresponds to a mixed degree
+            model, where the left most segment has degree 1, the middle
+            segment degree 0, and the right most segment degree 1.
 
         Attributes
         ----------
@@ -163,7 +167,19 @@ class PiecewiseLinFit(object):
         self.break_0 = np.min(self.x_data)
         self.break_n = np.max(self.x_data)
 
-        if degree < 12 and degree >= 0:
+        self.mixed_degree = False
+        if type(degree) == list:
+            # make sure the min and max are withing the limit
+            max_degree = max(degree)
+            min_degree = min(degree)
+            if min_degree >= 0 and max_degree <= 1:
+                self.mixed_degree = True
+                self.degree = degree
+            else:
+                not_suported = "Not supported mixed degree. Max mixed degree=1"
+                ", and min mixed degree=0"
+                raise ValueError(not_suported)
+        elif degree < 12 and degree >= 0:
             # I actually don't know what the upper degree limit should
             self.degree = int(degree)
         else:
@@ -222,7 +238,29 @@ class PiecewiseLinFit(object):
 
         # Assemble the regression matrix
         A_list = [np.ones_like(x)]
-        if self.degree >= 1:
+        if self.mixed_degree is True:
+            for i in range(self.n_segments):
+                degree = self.degree[i]
+                if i == 0:
+                    A_list = [np.ones_like(x)]
+                    if degree == 1:
+                        A_list.append(x - self.fit_breaks[0])
+                if i > 0:
+                    if degree == 0:
+                        # all previous slopes must be written to 0
+                        inds = np.argwhere(x > self.fit_breaks[i])
+                        a_size = len(A_list)
+                        for j in range(1, a_size):
+                            A_list[j][inds] = 0.
+                        # add the new zero slopes
+                        A_list.append(np.where(x > self.fit_breaks[i],
+                                               1.0,
+                                               0.0))
+                    elif degree == 1:
+                        A_list.append(np.where(x > self.fit_breaks[i],
+                                               x - self.fit_breaks[i],
+                                               0.0))
+        elif self.degree >= 1:
             A_list.append(x - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
                 A_list.append(np.where(x > self.fit_breaks[i+1],
