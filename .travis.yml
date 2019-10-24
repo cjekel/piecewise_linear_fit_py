@@ -1,0 +1,19 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+install:
+  - pip install flake8 pytest-cov pyDOE
+  - pip install pytest --upgrade
+  - pip install . --no-cache-dir
+script:
+  - pytest --cov=pwlf -p no:warnings tests/tests.py
+  - pip install tensorflow --upgrade
+  - pytest --cov=pwlf --cov-append -p no:warnings tests/teststf.py
+before_script:
+  - flake8 pwlf
+  - pytest --version
+after_success:
+  - pip install python-coveralls
+  - coveralls
