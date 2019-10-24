@@ -29,6 +29,7 @@ from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
 from scipy import stats
 from pyDOE import lhs
+from warnings import warn
 
 # piecewise linear fit library
 
@@ -150,6 +151,9 @@ class PiecewiseLinFitTF(object):
 
         >>> my_pWLF = pwlf.PiecewiseLinFitTF(x, y, sorted_data=True)
         """
+        warning = """"PiecewiseLinFitTF has not been receiving updates, and
+                  may be depreciated in a future version."""
+        warn(warning, DeprecationWarning)
         self.fast = fast
         if dtype == 'float64':
             self.dtype = tf.float64

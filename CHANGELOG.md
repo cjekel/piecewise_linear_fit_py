@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.4] - 2019-10-24
 ### Changed
-- TensorFlow 2.0.0 is not (and most probably will not) be supported. Setup.py checks for this optional requirement. Tests are run on Tensorflow<2.0.0.
+- TensorFlow 2.0.0 is not (and most probably will not) be supported. DepreciationWarning is displayed when using the ```PiecewiseLinFitTF``` object. Setup.py checks for this optional requirement. Tests are run on Tensorflow<2.0.0.
 - TravisCi now checks Python version 3.7 in addition to 3.6, 3.5, 2.7.
 - TravisCi tests should now be run daily.
 
