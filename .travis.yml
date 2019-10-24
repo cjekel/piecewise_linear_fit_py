@@ -4,7 +4,7 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip uninstall setuptools
+  - pip uninstall setuptools -y
   - pip install setuptools
   - pip install flake8 pytest-cov pyDOE
   - pip install pytest --upgrade
