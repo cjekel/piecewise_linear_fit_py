@@ -27,11 +27,11 @@ def my_fun(beta):
 
 bounds = np.zeros((3, 2))
 # first line offset
-bounds[0, 0] = -10.0  # lower bound
-bounds[0, 1] = 10.0  # upper bound
+bounds[0, 0] = -100.0  # lower bound
+bounds[0, 1] = 100.0  # upper bound
 # first line slope
-bounds[1, 0] = -10.0  # lower bound
-bounds[1, 1] = 10.0  # upper bound
+bounds[1, 0] = -100.0  # lower bound
+bounds[1, 1] = 100.0  # upper bound
 # breakpont
 bounds[2, 0] = 2.  # lower bound
 bounds[2, 1] = 6.  # upper bound
