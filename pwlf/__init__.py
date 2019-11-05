@@ -1,4 +1,5 @@
 from .pwlf import PiecewiseLinFit  # noqa F401
+from .multivariate import PiecewiseMultivariate  # noqa F401
 try:
     import tensorflow as tf  # noqa F401
     if tf.__version__ < '2.0.0':
