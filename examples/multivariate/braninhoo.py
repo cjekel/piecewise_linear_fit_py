@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 import pwlf
 from pyDOE import lhs
 
@@ -27,7 +28,7 @@ y = braninhoo(x)
 
 n_segments = 2
 my_mv_model = pwlf.PiecewiseMultivariate(x, y, n_segments, degree=1,
-                                         multivariate_degree=3)
+                                         multivariate_degree=1)
 my_mv_model.fit()
 print('SSR', my_mv_model.ssr)
 
@@ -56,14 +57,21 @@ plt.ylabel(r'$x_2$')
 plt.xlabel(r'$x_1$')
 plt.legend()
 
+
+
+
+
 # qq plot
 plt.figure()
 plt.plot(y_true, y_hat, '.')
-plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], '-k', label='best possible')
+plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], '-k',
+         label='best possible')
 plt.legend()
 plt.xlabel('True response')
 plt.ylabel('Multivariate pwlf model')
 plt.show()
+
+
 
 # plot individual models
 for i in range(2):
