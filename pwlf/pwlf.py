@@ -68,169 +68,56 @@ class PiecewiseLinFit(object):
 
         Attributes
         ----------
-        x_data : ndarray (1-D)
-            The inputted parameter x from the 1-D data set.
-        y_data : ndarray (1-D)
-            The inputted parameter y from the 1-D data set.
-        n_data : int
-            The number of data points.
+        beta : ndarray (1-D)
+            The model parameters for the continuous piecewise linear fit.
         break_0 : float
             The smallest x value.
         break_n : float
             The largest x value.
+        c_n : int
+            The number of constraint points. This is the same as len(x_c).
+        degree: int
+            The degree of polynomial to use. The default is degree=1 for
+            linear models. Use degree=0 for constant models.
+        fit_breaks : ndarray (1-D)
+            breakpoint locations stored as a 1-D numpy array.
+        intercepts : ndarray (1-D)
+            The y-intercept of each line segment as a 1-D numpy array.
+        lapack_driver : str
+            Which LAPACK driver is used to solve the least-squares problem.
         print : bool
             Whether the optimization results should be printed. Default is
             False.
-        lapack_driver : str
-            Which LAPACK driver is used to solve the least-squares problem.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
+        n_data : int
+            The number of data points.
         n_parameters : int
             The number of model parameters. This is equivalent to the
             len(beta).
         n_segments : int
             The number of line segments.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
+        nVar : int
+            The number of variables in the global optimization problem.
+        se : ndarray (1-D)
+            Standard errors associated with each beta parameter. Specifically
+            se[0] correspounds to the standard error for beta[0], and so forth.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
+        ssr : float
+            Optimal sum of square error.
+        x_c : ndarray (1-D)
+            The x locations of the data points that the piecewise linear
+            function will be forced to go through.
+        y_c : ndarray (1-D)
+            The x locations of the data points that the piecewise linear
+            function will be forced to go through.
+        x_data : ndarray (1-D)
+            The inputted parameter x from the 1-D data set.
+        y_data : ndarray (1-D)
+            The inputted parameter y from the 1-D data set.
         zeta : ndarray (1-D)
             The model parameters associated with the constraint function.
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-        x_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through.
-        y_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through.
-        c_n : int
-            The number of constraint points. This is the same as len(x_c).
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
-        ssr : float
-            Optimal sum of square error.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        nVar : int
-            The number of variables in the global optimization problem.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
-        zeta : ndarray (1-D)
-            The model parameters associated with the constraint function,
-            if x_c and y_c is provided. Only created if x_c and y_c provided.
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-        x_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through. Only created if x_c
-            and y_c provided.
-        y_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through. Only created if x_c
-            and y_c provided.
-        c_n : int
-            The number of constraint points. This is the same as len(x_c).
-            Only created if x_c and y_c provided.
-        ssr : float
-            Optimal sum of square error.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        nVar : int
-            The number of variables in the global optimization problem.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-            ssr : float
-            Optimal sum of square error.
-        fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        n_segments : int
-            The number of line segments.
-        nVar : int
-            The number of variables in the global optimization problem.
-        beta : ndarray (1-D)
-            The model parameters for the continuous piecewise linear fit.
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
-        n_parameters : int
-            The number of model parameters. This is equivalent to the
-            len(beta).
-        nVar : int
-            The number of variables in the global optimization problem.
-        n_segments : int
-            The number of line segments.
-        x_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through.
-        y_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
-            function will be forced to go through.
-        c_n : int
-            The number of constraint points. This is the same as len(x_c).
-        slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
-            that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
-            of the first line segment.
-        intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
 
         Methods
         -------
@@ -1599,13 +1486,11 @@ class PiecewiseLinFit(object):
         >>> rsq = my_pwlf.r_squared()
 
         """
-        try:
-            fit_breaks = self.fit_breaks
-        except AttributeError:
+        if self.fit_breaks is None:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise AttributeError(errmsg)
-        ssr = self.fit_with_breaks(fit_breaks)
+        ssr = self.fit_with_breaks(self.fit_breaks)
         ybar = np.ones(self.n_data) * np.mean(self.y_data)
         ydiff = self.y_data - ybar
         try:
@@ -1688,12 +1573,12 @@ class PiecewiseLinFit(object):
         """
         n = self.n_data
         # degrees of freedom for t-distribution
-        try:
-            k = self.beta.size - 1
-        except AttributeError:
+        if self.beta is None:
             errmsg = 'You do not have any beta parameters. You must perform' \
                      ' a fit before using standard_errors().'
             raise AttributeError(errmsg)
+        k = self.beta.size - 1
+
         if method == 'linear':
             self.standard_errors()
             # calculate my t-value
