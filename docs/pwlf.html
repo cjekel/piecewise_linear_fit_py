@@ -403,10 +403,9 @@ random.</p>
 for specified breakpoint locations, where you force the
 fit to go through the data points at x_c and y_c.</p>
 <p>The function minimizes the sum of the square of the residuals for the
-pair of x, y data points.</p>
-<p>If you want to understand the math behind this read
-<a class="reference external" href="https://jekel.me/2018/Force-piecwise-linear-fit-through-data/">https://jekel.me/2018/Force-piecwise-linear-fit-through-data/</a></p>
-<dl class="field-list">
+pair of x, y data points. If you want to understand the math behind
+this read <a class="reference external" href="https://jekel.me/2018/Force-piecwise-linear-fit-through-data/">https://jekel.me/2018/Force-piecwise-linear-fit-through-data/</a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>breaks</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where each line segment terminates. These are
@@ -432,51 +431,25 @@ of the residuals plus the constraint penalty.</p>
 <dd class="field-odd"><dl class="simple">
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
-<dt>Examples</dt><dd></dd>
 </dl>
-<blockquote>
-<div></div></blockquote>
-<dl class="simple">
-<dt>If your x data exists from 0 &lt;= x &lt;= 1 and you want three</dt><dd></dd>
-<dt>piecewise linear lines where the lines terminate at x = 0.0, 0.3, 0.6,</dt><dd></dd>
-<dt>and 1.0. This assumes that x is linearly spaced from [0, 1), and y is</dt><dd></dd>
-<dt>random. Additionally you desired that the piecewise linear function go</dt><dd></dd>
-<dt>through the point (0.0, 0.0)</dt><dd></dd>
-</dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks_force_points</span><span class="p">(</span><span class="n">breaks</span><span class="p">,</span> <span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>If your x data exists from 0 &lt;= x &lt;= 1 and you want three
+piecewise linear lines where the lines terminate at x = 0.0, 0.3, 0.6,
+and 1.0. This assumes that x is linearly spaced from [0, 1), and y is
+random. Additionally you desired that the piecewise linear function go
+through the point (0.0, 0.0)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks_force_points</span><span class="p">(</span><span class="n">breaks</span><span class="p">,</span> <span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -672,7 +645,7 @@ points.</p>
 <p>You can manfully specify the breakpoints and calculated
 values for beta if you want to quickly predict from different models
 and the same data set.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where you want to predict the output of the fitted
@@ -691,48 +664,22 @@ structured as a 1-D numpy array. Default is None.</p>
 <dd class="field-even"><dl class="simple">
 <dt><strong>y_hat</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The predicted values at x.</p>
 </dd>
-<dt>Examples</dt><dd></dd>
 </dl>
-<blockquote>
-<div></div></blockquote>
-<dl class="simple">
-<dt>Fits a simple model, then predict at x_new locations which are</dt><dd></dd>
-<dt>linearly spaced.</dt><dd></dd>
-</dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ssr</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Fits a simple model, then predict at x_new locations which are
+linearly spaced.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssr</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
