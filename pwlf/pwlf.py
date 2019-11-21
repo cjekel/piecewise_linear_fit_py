@@ -385,10 +385,8 @@ class PiecewiseLinFit(object):
         fit to go through the data points at x_c and y_c.
 
         The function minimizes the sum of the square of the residuals for the
-        pair of x, y data points.
-
-        If you want to understand the math behind this read
-        https://jekel.me/2018/Force-piecwise-linear-fit-through-data/
+        pair of x, y data points. If you want to understand the math behind
+        this read https://jekel.me/2018/Force-piecwise-linear-fit-through-data/
 
         Parameters
         ----------
@@ -415,7 +413,7 @@ class PiecewiseLinFit(object):
             This typically means your regression problem is ill-conditioned.
 
         Examples
-        -------
+        --------
         If your x data exists from 0 <= x <= 1 and you want three
         piecewise linear lines where the lines terminate at x = 0.0, 0.3, 0.6,
         and 1.0. This assumes that x is linearly spaced from [0, 1), and y is
@@ -547,7 +545,7 @@ class PiecewiseLinFit(object):
             The predicted values at x.
 
         Examples
-        -------
+        --------
         Fits a simple model, then predict at x_new locations which are
         linearly spaced.
 
