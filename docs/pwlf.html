@@ -181,7 +181,7 @@ of the first line segment.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">slopes</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">slopes</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slopes</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">calc_slopes</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -1213,7 +1213,7 @@ of the first line segment.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">slopes</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">slopes</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slopes</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">calc_slopes</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -2142,7 +2142,7 @@ function will be forced to go through.</p>
       &copy;2019, Charles Jekel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

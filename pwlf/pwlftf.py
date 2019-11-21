@@ -1480,7 +1480,7 @@ class PiecewiseLinFitTF(object):
         >>> y = np.random.random(10)
         >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
         >>> breaks = my_pwlf.fit(3)
-        >>> slopes = my_pwlf.slopes()
+        >>> slopes = my_pwlf.calc_slopes()
 
         """
         y_hat = self.predict(self.fit_breaks)
