@@ -304,6 +304,25 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(4 == my_pwlf_1.n_segments)
         self.assertTrue(4 == my_pwlf_2.n_segments)
 
+    def test_force_fits_through_points_other_degrees(self):
+        # generate sin wave data
+        x = np.linspace(0, 10, num=100)
+        y = np.sin(x * np.pi / 2)
+        # add noise to the data
+        y = np.random.normal(0, 0.15, 100) + y
+
+        # linear fit
+        my_pwlf_1 = pwlf.PiecewiseLinFit(x, y, degree=1)
+        my_pwlf_1.fit(n_segments=6, x_c=[0], y_c=[0])
+        y_predict_1 = my_pwlf_1.predict(x)
+
+        # quadratic fit
+        my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
+        my_pwlf_2.fit(n_segments=5, x_c=[0], y_c=[0])
+        y_predict_2 = my_pwlf_2.predict(x)
+        self.assertTrue(np.isclose(0, y_predict_1[0]))
+        self.assertTrue(np.isclose(0, y_predict_2[0]))
+
     def test_fitfast(self):
         my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
         my_pwlf_1 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=1)
