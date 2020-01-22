@@ -471,11 +471,14 @@ class PiecewiseLinFit(object):
                                        0.0))
         C = np.vstack(C_list).T
 
-        K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n))
-        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
-        K[:self.n_parameters, self.n_parameters:] = C.T
-        K[self.n_parameters:, :self.n_parameters] = C
+        _, m = A.shape
+        o, _ = C.shape
+
+        K = np.zeros((m + o, m + o))
+
+        K[:m, :m] = 2.0 * np.dot(A.T, A)
+        K[:m, m:] = C.T
+        K[m:, :m] = C
         # Assemble right hand side vector
         yt = np.dot(2.0*A.T, self.y_data)
         z = np.zeros(self.n_parameters + self.c_n)
@@ -710,7 +713,7 @@ class PiecewiseLinFit(object):
 
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
-        if self.degree == 1:
+        if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
                 C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
@@ -730,13 +733,14 @@ class PiecewiseLinFit(object):
                                        1.0,
                                        0.0))
         C = np.vstack(C_list).T
-
+        _, m = A.shape
+        o, _ = C.shape
         # Assemble the square constrained least squares matrix
-        K = np.zeros((self.n_parameters + self.c_n,
-                      self.n_parameters + self.c_n))
-        K[0:self.n_parameters, 0:self.n_parameters] = 2.0 * np.dot(A.T, A)
-        K[:self.n_parameters, self.n_parameters:] = C.T
-        K[self.n_parameters:, :self.n_parameters] = C
+        K = np.zeros((m + o, m + o))
+
+        K[:m, :m] = 2.0 * np.dot(A.T, A)
+        K[:m, m:] = C.T
+        K[m:, :m] = C
         # Assemble right hand side vector
         yt = np.dot(2.0*A.T, self.y_data)
         z = np.zeros(self.n_parameters + self.c_n)
