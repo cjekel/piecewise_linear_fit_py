@@ -15,6 +15,7 @@ setup(
         "numpy >= 1.14.0",
         "scipy >= 0.19.0",
         "pyDOE >= 0.3.8",
+        "setuptools >= 38.6.0",
     ],
     extras_require={
         'PiecewiseLinFitTF':  ["tensorflow < 2.0.0"]
