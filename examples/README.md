@@ -63,7 +63,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 13. [fit constants or polynomials](#fit-constants-or-polynomials)
 14. [specify breakpoint bounds](#specify-breakpoint-bounds)
 15. [non-linear standard errors and p-values](#non-linear-standard-errors-and-p-values)
-16. [obtain the equation of pwlf](#obtain-the-equations-of-pwlf)
+16. [obtain the equations of fitted pwlf](#obtain-the-equations-of-fitted-pwlf)
 
 ## fit with known breakpoint locations
 
@@ -590,7 +590,7 @@ for i, row in enumerate(values):
 | Breakpoint | 0.5 | 0.0 | 537785803.646 | 0.0 |
 | Breakpoint | 0.75 | 0.0 | 482311769.159 | 0.0 |
 
-## obtain the equation of pwlf
+## obtain the equations of fitted pwlf
 
 Sometimes you may want the mathematical equations that represent your fitted model. This is easy to perform if you don't mind using sympy.
 
