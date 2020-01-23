@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Single source version now found in setup.py instead of pwlf/VERSION see issue https://github.com/cjekel/piecewise_linear_fit_py/issues/53
 - New setuptools requirement to handle new version file
+- Fix bug where forcing pwlf through points didn't work with higher degrees. See issue https://github.com/cjekel/piecewise_linear_fit_py/issues/54
 
 ## [1.1.5] - 2019-11-21
 ### Changed
