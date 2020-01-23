@@ -63,6 +63,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 13. [fit constants or polynomials](#fit-constants-or-polynomials)
 14. [specify breakpoint bounds](#specify-breakpoint-bounds)
 15. [non-linear standard errors and p-values](#non-linear-standard-errors-and-p-values)
+16. [obtain the equation of pwlf](#obtain-the-equations-of-pwlf)
 
 ## fit with known breakpoint locations
 
@@ -588,3 +589,72 @@ for i, row in enumerate(values):
 | Breakpoint | 0.2 | 0.0 | 166901856.885 | 0.0 |
 | Breakpoint | 0.5 | 0.0 | 537785803.646 | 0.0 |
 | Breakpoint | 0.75 | 0.0 | 482311769.159 | 0.0 |
+
+## obtain the equation of pwlf
+
+Sometimes you may want the mathematical equations that represent your fitted model. This is easy to perform if you don't mind using sympy.
+
+The following code will fit 5 line segments of degree=2 to a sin wave.
+```python
+import numpy as np
+import pwlf
+# generate sin wave data
+x = np.linspace(0, 10, num=100)
+y = np.sin(x * np.pi / 2)
+# add noise to the data
+y = np.random.normal(0, 0.05, 100) + y
+my_pwlf_2 = pwlf.PiecewiseLinFit(x, y, degree=2)
+res2 = my_pwlf_2.fitfast(5, pop=50)
+```
+
+Given this fit, the following code will print the mathematical equation for each line segment.
+```python
+from sympy import Symbol
+from sympy.utilities import lambdify
+x = Symbol('x')
+
+
+def get_symbolic_eqn(pwlf_, segment_number):
+    if pwlf_.degree < 1:
+        raise ValueError('Degree must be at least 1')
+    if segment_number < 1 or segment_number > pwlf_.n_segments:
+        raise ValueError('segment_number not possible')
+    # assemble degree = 1 first
+    for line in range(segment_number):
+        if line == 0:
+            my_eqn = pwlf_.beta[0] + (pwlf_.beta[1])*(x-pwlf_.fit_breaks[0])
+        else:
+            my_eqn += (pwlf_.beta[line+1])*(x-pwlf_.fit_breaks[line])
+    # assemble all other degrees
+    if pwlf_.degree > 1:
+        for k in range(2, pwlf_.degree + 1):
+            for line in range(segment_number):
+                beta_index = pwlf_.n_segments*(k-1) + line + 1 
+                my_eqn += (pwlf_.beta[beta_index])*(x-pwlf_.fit_breaks[line])**k
+    return my_eqn.simplify()
+
+
+eqn_list = []
+f_list = []
+for i in range(my_pwlf_2.n_segments):
+    eqn_list.append(get_symbolic_eqn(my_pwlf_2, i + 1))
+    print('Equation number: ', i + 1)
+    print(eqn_list[-1])
+    f_list.append(lambdify(x, eqn_list[-1]))
+```
+
+which should print out something like the following:
+```python
+Equation number:  1
+-0.953964059782599*x**2 + 1.89945177490653*x + 0.00538634182565454
+Equation number:  2
+0.951561315686298*x**2 - 5.69747505830914*x + 7.5772216545711
+Equation number:  3
+-0.949735350431857*x**2 + 9.48218236957122*x - 22.720785454735
+Equation number:  4
+0.926850298824217*x**2 - 12.9824424358344*x + 44.5102742956827
+Equation number:  5
+-1.03016230425747*x**2 + 18.5306546317065*x - 82.3508513333073
+```
+
+For more information on how this works, see [this](https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/understanding_higher_degrees/polynomials_in_pwlf.ipynb) jupyter notebook.
