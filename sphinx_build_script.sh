@@ -1,5 +1,6 @@
 
 #!/usr/bin/env bash
+pip install .
 # clean docs and doctrees
 rm -r docs/*
 rm -r doctrees/*
