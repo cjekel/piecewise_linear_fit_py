@@ -5,5 +5,4 @@ try:
         from .pwlftf import PiecewiseLinFitTF  # noqa F401
 except ImportError:
     pass
-import pwlf.version
-__version__ = pwlf.version.__version__
+from .version import __version__  # noqa F401
