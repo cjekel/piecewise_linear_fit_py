@@ -13,7 +13,7 @@ setup(
     platforms=['any'],
     install_requires=[
         "numpy >= 1.14.0",
-        "scipy >= 0.19.0",
+        "scipy >= 1.4.1",
         "pyDOE >= 0.3.8",
         "setuptools >= 38.6.0",
     ],
