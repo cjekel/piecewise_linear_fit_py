@@ -22,7 +22,7 @@
 # SOFTWARE.
 
 from __future__ import print_function
-import numpy as np
+# import libraries
 import cupy as cp
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
@@ -1028,7 +1028,7 @@ class PiecewiseLinFitCp(object):
                                                  bounds=cp.asnumpy(bounds),
                                                  **kwargs)
             x[i, :] = cp.array(resx)
-            f[i] = resf  # needs modification for cupy
+            f[i] = resf[0]  # needs modification for cupy
             d.append(resd)
             if self.print is True:
                 print(i + 1, 'of ' + str(pop) + ' complete')
