@@ -18,6 +18,6 @@ setup(
         "setuptools >= 38.6.0",
     ],
     extras_require={
-        'PiecewiseLinFitTF':  ["tensorflow < 2.0.0"]
+        'PiecewiseLinFitTF':  ["cupy >= 7.0.0"]
     }
 )
