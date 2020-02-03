@@ -11,8 +11,8 @@ install:
   - pip install . --no-cache-dir
 script:
   - pytest --cov=pwlf -p no:warnings tests/tests.py
-  - pip install "tensorflow==1.14.0"
-  - pytest --cov=pwlf --cov-append -p no:warnings tests/teststf.py
+  - pip install cupy
+  - pytest --cov=pwlf --cov-append -p no:warnings tests/testscp.py
 before_script:
   - flake8 pwlf
   - pytest --version

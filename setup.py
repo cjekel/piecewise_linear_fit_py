@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pwlf',
-    version='1.1.6',
+    version='2.0.0',
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
     packages=['pwlf'],
@@ -18,6 +18,6 @@ setup(
         "setuptools >= 38.6.0",
     ],
     extras_require={
-        'PiecewiseLinFitTF':  ["cupy >= 7.0.0"]
+        'PiecewiseLinFitCp':  ["cupy >= 7.0.0"]
     }
 )

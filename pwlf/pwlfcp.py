@@ -22,8 +22,8 @@
 # SOFTWARE.
 
 from __future__ import print_function
-# import libraries
 import numpy as np
+import cupy as cp
 from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
 from scipy import linalg
@@ -33,7 +33,7 @@ from pyDOE import lhs
 # piecewise linear fit library
 
 
-class PiecewiseLinFit(object):
+class PiecewiseLinFitCp(object):
 
     def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1):
         r"""
@@ -49,10 +49,10 @@ class PiecewiseLinFit(object):
         ----------
         x : array_like
             The x or independent data point locations as list or 1 dimensional
-            numpy array.
+            cupy array.
         y : array_like
             The y or dependent data point locations as list or 1 dimensional
-            numpy array.
+            cupy array.
         disp_res : bool, optional
             Whether the optimization results should be printed. Default is
             False.
@@ -80,9 +80,9 @@ class PiecewiseLinFit(object):
             The degree of polynomial to use. The default is degree=1 for
             linear models. Use degree=0 for constant models.
         fit_breaks : ndarray (1-D)
-            breakpoint locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D cupy array.
         intercepts : ndarray (1-D)
-            The y-intercept of each line segment as a 1-D numpy array.
+            The y-intercept of each line segment as a 1-D cupy array.
         lapack_driver : str
             Which LAPACK driver is used to solve the least-squares problem.
         print : bool
@@ -101,7 +101,7 @@ class PiecewiseLinFit(object):
             Standard errors associated with each beta parameter. Specifically
             se[0] correspounds to the standard error for beta[0], and so forth.
         slopes : ndarray (1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
+            The slope of each ling segment as a 1-D cupy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
         ssr : float
@@ -113,9 +113,9 @@ class PiecewiseLinFit(object):
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
         x_data : ndarray (1-D)
-            The inputted parameter x from the 1-D data set.
+            The icputted parameter x from the 1-D data set.
         y_data : ndarray (1-D)
-            The inputted parameter y from the 1-D data set.
+            The icputted parameter y from the 1-D data set.
         zeta : ndarray (1-D)
             The model parameters associated with the constraint function.
 
@@ -171,22 +171,22 @@ class PiecewiseLinFit(object):
         Initialize for x, y data
 
         >>> import pwlf
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
 
         Initialize for x,y data and print optimization results
 
-        >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        >>> my_pWLF = pwlf.PiecewiseLinFitCp(x, y, disp_res=True)
 
         """
 
         self.print = disp_res
         self.lapack_driver = lapack_driver
-        # x and y should be numpy arrays
-        # if they are not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
-        if isinstance(y, np.ndarray) is False:
-            y = np.array(y)
+        # x and y should be cupy arrays
+        # if they are not convert to cupy array
+        if isinstance(x, cp.ndarray) is False:
+            x = cp.array(x)
+        if isinstance(y, cp.ndarray) is False:
+            y = cp.array(y)
 
         self.x_data = x
         self.y_data = y
@@ -195,8 +195,8 @@ class PiecewiseLinFit(object):
         self.n_data = x.size
 
         # set the first and last break x values to be the min and max of x
-        self.break_0 = np.min(self.x_data)
-        self.break_n = np.max(self.x_data)
+        self.break_0 = cp.min(self.x_data)
+        self.break_n = cp.max(self.x_data)
 
         if degree < 12 and degree >= 0:
             # I actually don't know what the upper degree limit should
@@ -229,10 +229,10 @@ class PiecewiseLinFit(object):
         breaks : array_like
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
-            structured as a 1-D numpy array.
+            structured as a 1-D cupy array.
         x : ndarray (1-D)
             The x locations which the linear regression matrix is assembled on.
-            This must be a numpy array!
+            This must be a cupy array!
 
         Returns
         -------
@@ -245,41 +245,41 @@ class PiecewiseLinFit(object):
         breakpoints.
 
         >>> import pwlf
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = [0.0, 0.5, 1.0]
         >>> A = assemble_regression_matrix(breaks, self.x_data)
 
         """
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+        # Check if breaks in ndarray, if not convert to cp.array
+        if isinstance(breaks, cp.ndarray) is False:
+            breaks = cp.array(breaks)
 
         # Sort the breaks, then store them
-        breaks_order = np.argsort(breaks)
+        breaks_order = cp.argsort(breaks)
         self.fit_breaks = breaks[breaks_order]
         # store the number of parameters and line segments
         self.n_segments = len(breaks) - 1
 
         # Assemble the regression matrix
-        A_list = [np.ones_like(x)]
+        A_list = [cp.ones_like(x)]
         if self.degree >= 1:
             A_list.append(x - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1],
+                A_list.append(cp.where(x > self.fit_breaks[i+1],
                                        x - self.fit_breaks[i+1],
                                        0.0))
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
                     A_list.append((x - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        A_list.append(np.where(x > self.fit_breaks[i+1],
+                        A_list.append(cp.where(x > self.fit_breaks[i+1],
                                                (x - self.fit_breaks[i+1])**k,
                                                0.0))
         else:
-            A_list = [np.ones_like(x)]
+            A_list = [cp.ones_like(x)]
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1], 1.0, 0.0))
-        A = np.vstack(A_list).T
+                A_list.append(cp.where(x > self.fit_breaks[i+1], 1.0, 0.0))
+        A = cp.vstack(A_list).T
         self.n_parameters = A.shape[1]
         return A
 
@@ -304,7 +304,7 @@ class PiecewiseLinFit(object):
         breaks : array_like
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
-            structured as a 1-D numpy array.
+            structured as a 1-D cupy array.
 
         Returns
         -------
@@ -324,25 +324,24 @@ class PiecewiseLinFit(object):
         random.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> ssr = my_pwlf.fit_with_breaks(breaks)
 
         """
 
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+        # Check if breaks in ndarray, if not convert to cp.array
+        if isinstance(breaks, cp.ndarray) is False:
+            breaks = cp.array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
-                                           lapack_driver=self.lapack_driver)
+            beta, ssr, _, _ = cp.linalg.lstsq(A, self.y_data)
 
             # save the beta parameters
             self.beta = beta
@@ -354,26 +353,24 @@ class PiecewiseLinFit(object):
             # in this case I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
             if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
+                y_hat = cp.dot(A, beta)
                 e = y_hat - self.y_data
-                ssr = np.dot(e, e)
+                ssr = cp.dot(e, e)
             if isinstance(ssr, list):
                 ssr = ssr[0]
-            elif isinstance(ssr, np.ndarray):
+            elif isinstance(ssr, cp.ndarray):
                 if ssr.size == 0:
-                    y_hat = np.dot(A, beta)
+                    y_hat = cp.dot(A, beta)
                     e = y_hat - self.y_data
-                    ssr = np.dot(e, e)
-                else:  # easy sed flag
-                    ssr = ssr[0]  # easy sed flag
+                    ssr = cp.dot(e, e)
 
         except linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return ssr = np.print_function
+            # on an error, return ssr = cp.print_function
             # You might have a singular Matrix!!!
-            ssr = np.inf
+            ssr = cp.inf
         if ssr is None:
-            ssr = np.inf
+            ssr = cp.inf
             # something went wrong...
         self.ssr = ssr
         return ssr
@@ -393,7 +390,7 @@ class PiecewiseLinFit(object):
         breaks : array_like
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
-            structured as a 1-D numpy array.
+            structured as a 1-D cupy array.
         x_c : array_like
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
@@ -421,74 +418,74 @@ class PiecewiseLinFit(object):
         through the point (0.0, 0.0)
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
         >>> x_c = [0.0]
         >>> y_c = [0.0]
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
         """
 
-        # check if x_c and y_c are numpy array, if not convert to numpy array
-        if isinstance(x_c, np.ndarray) is False:
-            x_c = np.array(x_c)
-        if isinstance(y_c, np.ndarray) is False:
-            y_c = np.array(y_c)
+        # check if x_c and y_c are cupy array, if not convert to cupy array
+        if isinstance(x_c, cp.ndarray) is False:
+            x_c = cp.array(x_c)
+        if isinstance(y_c, cp.ndarray) is False:
+            y_c = cp.array(y_c)
         # sort the x_c and y_c data points, then store them
-        x_c_order = np.argsort(x_c)
+        x_c_order = cp.argsort(x_c)
         self.x_c = x_c[x_c_order]
         self.y_c = y_c[x_c_order]
         # store the number of constraints
         self.c_n = len(self.x_c)
 
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+        # Check if breaks in ndarray, if not convert to cp.array
+        if isinstance(breaks, cp.ndarray) is False:
+            breaks = cp.array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
         # Assemble the constraint matrix
-        C_list = [np.ones_like(self.x_c)]
+        C_list = [cp.ones_like(self.x_c)]
         if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                        self.x_c - self.fit_breaks[i+1],
                                        0.0))
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
                     C_list.append((self.x_c - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                        C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                                (self.x_c
                                                 - self.fit_breaks[i+1])**k,
                                                0.0))
         else:
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                        1.0,
                                        0.0))
-        C = np.vstack(C_list).T
+        C = cp.vstack(C_list).T
 
         _, m = A.shape
         o, _ = C.shape
 
-        K = np.zeros((m + o, m + o))
+        K = cp.zeros((m + o, m + o))
 
-        K[:m, :m] = 2.0 * np.dot(A.T, A)
+        K[:m, :m] = 2.0 * cp.dot(A.T, A)
         K[:m, m:] = C.T
         K[m:, :m] = C
         # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
+        yt = cp.dot(2.0*A.T, self.y_data)
+        z = cp.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
 
         # try to solve the regression problem
         try:
             # Solve the least squares problem
-            beta_prime = linalg.solve(K, z)
+            beta_prime = cp.linalg.solve(K, z)
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
@@ -500,22 +497,22 @@ class PiecewiseLinFit(object):
 
             # Calculate ssr
             # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
+            y_hat = cp.dot(A, self.beta)
             e = y_hat - self.y_data
-            ssr = np.dot(e, e)
+            ssr = cp.dot(e, e)
 
             # Calculate the Lagrangian function
-            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
+            # c_x_y = cp.dot(C, self.x_c.T) - self.y_c
+            p = cp.dot(C.T, self.zeta)
+            L = cp.sum(cp.abs(p)) + ssr
 
         except linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return L = np.inf
+            # on an error, return L = cp.inf
             # You might have a singular Matrix!!!
-            L = np.inf
+            L = cp.inf
         if L is None:
-            L = np.inf
+            L = cp.inf
             # something went wrong...
         self.ssr = ssr
         return L
@@ -540,7 +537,7 @@ class PiecewiseLinFit(object):
         breaks : none or array_like, optional
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
-            structured as a 1-D numpy array. Default is None.
+            structured as a 1-D cupy array. Default is None.
 
         Returns
         -------
@@ -553,31 +550,31 @@ class PiecewiseLinFit(object):
         linearly spaced.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = [0.0, 0.3, 0.6, 1.0]
         >>> ssr = my_pwlf.fit_with_breaks(breaks)
-        >>> x_new = np.linspace(0.0, 1.0, 100)
+        >>> x_new = cp.linspace(0.0, 1.0, 100)
         >>> yhat = my_pwlf.predict(x_new)
 
         """
         if beta is not None and breaks is not None:
             self.beta = beta
             # Sort the breaks, then store them
-            breaks_order = np.argsort(breaks)
+            breaks_order = cp.argsort(breaks)
             self.fit_breaks = breaks[breaks_order]
             self.n_parameters = len(self.fit_breaks)
             self.n_segments = self.n_parameters - 1
 
-        # check if x is numpy array, if not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
+        # check if x is cupy array, if not convert to cupy array
+        if isinstance(x, cp.ndarray) is False:
+            x = cp.array(x)
 
         A = self.assemble_regression_matrix(self.fit_breaks, x)
 
         # solve the regression problem
-        y_hat = np.dot(A, self.beta)
+        y_hat = cp.dot(A, self.beta)
         return y_hat
 
     def fit_with_breaks_opt(self, var):
@@ -618,8 +615,8 @@ class PiecewiseLinFit(object):
         values of x.
         """
 
-        var = np.sort(var)
-        breaks = np.zeros(len(var) + 2)
+        var = cp.sort(cp.array(var))
+        breaks = cp.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -629,33 +626,30 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
-                                           lapack_driver=self.lapack_driver)
+            beta, ssr, _, _ = cp.linalg.lstsq(A, self.y_data)
 
             # ssr is only calculated if self.n_data > self.n_parameters
             # in all other cases I'll need to calculate ssr manually
             # where ssr = sum of square of residuals
             if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
+                y_hat = cp.dot(A, beta)
                 e = y_hat - self.y_data
-                ssr = np.dot(e, e)
+                ssr = cp.dot(e, e)
             if isinstance(ssr, list):
                 ssr = ssr[0]
-            elif isinstance(ssr, np.ndarray):
+            elif isinstance(ssr, cp.ndarray):
                 if ssr.size == 0:
-                    y_hat = np.dot(A, beta)
+                    y_hat = cp.dot(A, beta)
                     e = y_hat - self.y_data
-                    ssr = np.dot(e, e)
-                else:  # easy sed flag
-                    ssr = ssr[0]  # easy sed flag
+                    ssr = cp.dot(e, e)
 
         except linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return ssr = np.inf
+            # on an error, return ssr = cp.inf
             # You might have a singular Matrix!!!
-            ssr = np.inf
+            ssr = cp.inf
         if ssr is None:
-            ssr = np.inf
+            ssr = cp.inf
             # something went wrong...
         return ssr
 
@@ -699,58 +693,58 @@ class PiecewiseLinFit(object):
         at the min and max values of x.
         """
 
-        var = np.sort(var)
-        breaks = np.zeros(len(var) + 2)
+        var = cp.sort(cp.array(var))
+        breaks = cp.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
 
         # Sort the breaks, then store them
-        breaks_order = np.argsort(breaks)
+        breaks_order = cp.argsort(breaks)
         breaks = breaks[breaks_order]
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # Assemble the constraint matrix
-        C_list = [np.ones_like(self.x_c)]
+        C_list = [cp.ones_like(self.x_c)]
         if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                        self.x_c - self.fit_breaks[i+1],
                                        0.0))
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
                     C_list.append((self.x_c - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                        C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                                (self.x_c -
                                                 self.fit_breaks[i+1])**k,
                                                0.0))
         else:
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(cp.where(self.x_c > self.fit_breaks[i+1],
                                        1.0,
                                        0.0))
-        C = np.vstack(C_list).T
+        C = cp.vstack(C_list).T
         _, m = A.shape
         o, _ = C.shape
         # Assemble the square constrained least squares matrix
-        K = np.zeros((m + o, m + o))
+        K = cp.zeros((m + o, m + o))
 
-        K[:m, :m] = 2.0 * np.dot(A.T, A)
+        K[:m, :m] = 2.0 * cp.dot(A.T, A)
         K[:m, m:] = C.T
         K[m:, :m] = C
         # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
+        yt = cp.dot(2.0*A.T, self.y_data)
+        z = cp.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
 
         # try to solve the regression problem
         try:
             # Solve the least squares problem
-            beta_prime = linalg.solve(K, z)
+            beta_prime = cp.linalg.solve(K, z)
 
             # save the beta parameters
             self.beta = beta_prime[0:self.n_parameters]
@@ -759,21 +753,21 @@ class PiecewiseLinFit(object):
 
             # Calculate ssr
             # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
+            y_hat = cp.dot(A, self.beta)
             e = y_hat - self.y_data
-            ssr = np.dot(e, e)
+            ssr = cp.dot(e, e)
 
             # Calculate the Lagrangian function
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
+            p = cp.dot(C.T, self.zeta)
+            L = cp.sum(cp.abs(p)) + ssr
 
         except linalg.LinAlgError:
             # the computation could not converge!
-            # on an error, return L = np.inf
+            # on an error, return L = cp.inf
             # You might have a singular Matrix!!!
-            L = np.inf
+            L = cp.inf
         if L is None:
-            L = np.inf
+            L = cp.inf
             # something went wrong...
         return L
 
@@ -805,7 +799,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         fit_breaks : float
-            breakpoint locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D cupy array.
 
         Raises
         ------
@@ -829,9 +823,9 @@ class PiecewiseLinFit(object):
         random.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fit(3)
 
         Additionally you desired that the piecewise linear function go
@@ -861,14 +855,14 @@ class PiecewiseLinFit(object):
 
         # if you've provided both x_c and y_c
         if x_c is not None and y_c is not None:
-            # check if x_c and y_c are numpy array
-            # if not convert to numpy array
-            if isinstance(x_c, np.ndarray) is False:
-                x_c = np.array(x_c)
-            if isinstance(y_c, np.ndarray) is False:
-                y_c = np.array(y_c)
+            # check if x_c and y_c are cupy array
+            # if not convert to cupy array
+            if isinstance(x_c, cp.ndarray) is False:
+                x_c = cp.array(x_c)
+            if isinstance(y_c, cp.ndarray) is False:
+                y_c = cp.array(y_c)
             # sort the x_c and y_c data points, then store them
-            x_c_order = np.argsort(x_c)
+            x_c_order = cp.argsort(x_c)
             self.x_c = x_c[x_c_order]
             self.y_c = y_c[x_c_order]
             # store the number of constraints
@@ -885,14 +879,14 @@ class PiecewiseLinFit(object):
 
         # initiate the bounds of the optimization
         if bounds is None:
-            bounds = np.zeros([self.nVar, 2])
+            bounds = cp.zeros([self.nVar, 2])
             bounds[:, 0] = self.break_0
             bounds[:, 1] = self.break_n
 
         # run the optimization
         if len(kwargs) == 0:
             res = differential_evolution(min_function,
-                                         bounds=bounds,
+                                         bounds=cp.asnumpy(bounds),
                                          strategy='best1bin', maxiter=1000,
                                          popsize=50, tol=1e-3,
                                          mutation=(0.5, 1), recombination=0.7,
@@ -901,7 +895,7 @@ class PiecewiseLinFit(object):
                                          atol=1e-4)
         else:
             res = differential_evolution(min_function,
-                                         bounds=bounds,
+                                         bounds=cp.asnumpy(bounds),
                                          **kwargs)
         if self.print is True:
             print(res)
@@ -909,8 +903,8 @@ class PiecewiseLinFit(object):
         self.ssr = res.fun
 
         # pull the breaks out of the result
-        var = np.sort(res.x)
-        breaks = np.zeros(len(var) + 2)
+        var = cp.sort(cp.array(res.x))
+        breaks = cp.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -958,7 +952,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         fit_breaks : float
-            breakpoint locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D cupy array.
 
         Notes
         -----
@@ -981,9 +975,9 @@ class PiecewiseLinFit(object):
         random.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fitfast(3)
 
         You can change the number of latin hypercube samples (or starting
@@ -1003,17 +997,17 @@ class PiecewiseLinFit(object):
 
         # initiate the bounds of the optimization
         if bounds is None:
-            bounds = np.zeros([self.nVar, 2])
+            bounds = cp.zeros([self.nVar, 2])
             bounds[:, 0] = self.break_0
             bounds[:, 1] = self.break_n
 
         # perform latin hypercube sampling
         mypop = lhs(self.nVar, samples=pop, criterion='maximin')
-        # scale the sampling to my variable range
+        mypop = cp.array(mypop)
         mypop = mypop * (self.break_n - self.break_0) + self.break_0
 
-        x = np.zeros((pop, self.nVar))
-        f = np.zeros(pop)
+        x = cp.zeros((pop, self.nVar))
+        f = cp.zeros(pop)
         d = []
 
         for i, x0 in enumerate(mypop):
@@ -1022,7 +1016,7 @@ class PiecewiseLinFit(object):
                                                  list(x0), fprime=None,
                                                  args=(),
                                                  approx_grad=True,
-                                                 bounds=bounds,
+                                                 bounds=cp.asnumpy(bounds),
                                                  m=10, factr=1e2, pgtol=1e-05,
                                                  epsilon=1e-08, iprint=-1,
                                                  maxfun=15000, maxiter=15000,
@@ -1031,16 +1025,16 @@ class PiecewiseLinFit(object):
                 resx, resf, resd = fmin_l_bfgs_b(self.fit_with_breaks_opt,
                                                  list(x0), fprime=None,
                                                  approx_grad=True,
-                                                 bounds=bounds,
+                                                 bounds=cp.asnumpy(bounds),
                                                  **kwargs)
-            x[i, :] = np.array(resx)
+            x[i, :] = cp.array(resx)
             f[i] = resf  # needs modification for cupy
             d.append(resd)
             if self.print is True:
                 print(i + 1, 'of ' + str(pop) + ' complete')
 
         # find the best result
-        best_ind = np.nanargmin(f)
+        best_ind = cp.nanargmin(f)
         best_val = f[best_ind]
         best_break = x[best_ind]
         res = (x[best_ind], f[best_ind], d[int(best_ind)])
@@ -1050,8 +1044,8 @@ class PiecewiseLinFit(object):
         self.ssr = best_val
 
         # obtain the breakpoint locations from the best result
-        var = np.sort(best_break)
-        breaks = np.zeros(len(var) + 2)
+        var = cp.sort(best_break)
+        breaks = cp.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -1075,7 +1069,7 @@ class PiecewiseLinFit(object):
         Parameters
         ----------
         guess_breakpoints : array_like
-            Guess where the breakpoints occur. This should be a list or numpy
+            Guess where the breakpoints occur. This should be a list or cupy
             array containing the locations where it appears breakpoints occur.
         bounds : array_like, optional
             Bounds for each breakpoint location within the optimization. This
@@ -1088,7 +1082,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         fit_breaks : float
-            breakpoint locations stored as a 1-D numpy array.
+            breakpoint locations stored as a 1-D cupy array.
 
         Notes
         -----
@@ -1106,9 +1100,9 @@ class PiecewiseLinFit(object):
         the best breakpoint location starting with this guess.
 
         >>> import pwlf
-        >>> x = np.array([4., 5., 6., 7., 8.])
-        >>> y = np.array([11., 13., 16., 28.92, 42.81])
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.array([4., 5., 6., 7., 8.])
+        >>> y = cp.array([11., 13., 16., 28.92, 42.81])
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fit_guess([6.0])
 
         Note specifying one breakpoint will result in two line segments.
@@ -1125,7 +1119,7 @@ class PiecewiseLinFit(object):
 
         # initiate the bounds of the optimization
         if bounds is None:
-            bounds = np.zeros([self.nVar, 2])
+            bounds = cp.zeros([self.nVar, 2])
             bounds[:, 0] = self.break_0
             bounds[:, 1] = self.break_n
 
@@ -1134,7 +1128,7 @@ class PiecewiseLinFit(object):
                                           guess_breakpoints,
                                           fprime=None, args=(),
                                           approx_grad=True,
-                                          bounds=bounds, m=10,
+                                          bounds=cp.asnumpy(bounds), m=10,
                                           factr=1e2, pgtol=1e-05,
                                           epsilon=1e-08, iprint=-1,
                                           maxfun=15000, maxiter=15000,
@@ -1143,13 +1137,13 @@ class PiecewiseLinFit(object):
             resx, resf, _ = fmin_l_bfgs_b(self.fit_with_breaks_opt,
                                           guess_breakpoints,
                                           fprime=None, approx_grad=True,
-                                          bounds=bounds, **kwargs)
+                                          bounds=cp.asnumpy(bounds), **kwargs)
 
         self.ssr = resf
 
         # pull the breaks out of the result
-        var = np.sort(resx)
-        breaks = np.zeros(len(var) + 2)
+        var = cp.sort(resx)
+        breaks = cp.zeros(len(var) + 2)
         breaks[1:-1] = var.copy()
         breaks[0] = self.break_0
         breaks[-1] = self.break_n
@@ -1176,7 +1170,7 @@ class PiecewiseLinFit(object):
         n_segments : int
             The x locations where each line segment terminates. These are
             referred to as breakpoints for each line segment. This should be
-            structured as a 1-D numpy array.
+            structured as a 1-D cupy array.
         x_c : none or array_like, optional
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
@@ -1202,14 +1196,14 @@ class PiecewiseLinFit(object):
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
         if x_c is not None or y_c is not None:
-            # check if x_c and y_c are numpy array
-            # if not convert to numpy array
-            if isinstance(x_c, np.ndarray) is False:
-                x_c = np.array(x_c)
-            if isinstance(y_c, np.ndarray) is False:
-                y_c = np.array(y_c)
+            # check if x_c and y_c are cupy array
+            # if not convert to cupy array
+            if isinstance(x_c, cp.ndarray) is False:
+                x_c = cp.array(x_c)
+            if isinstance(y_c, cp.ndarray) is False:
+                y_c = cp.array(y_c)
             # sort the x_c and y_c data points, then store them
-            x_c_order = np.argsort(x_c)
+            x_c_order = cp.argsort(x_c)
             self.x_c = x_c[x_c_order]
             self.y_c = y_c[x_c_order]
             # store the number of constraints
@@ -1226,7 +1220,7 @@ class PiecewiseLinFit(object):
         Returns
         -------
         slopes : ndarray(1-D)
-            The slope of each ling segment as a 1-D numpy array. This assumes
+            The slope of each ling segment as a 1-D cupy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
             of the first line segment.
 
@@ -1235,15 +1229,15 @@ class PiecewiseLinFit(object):
         Calculate the slopes after performing a simple fit
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fit(3)
         >>> slopes = my_pwlf.calc_slopes()
 
         """
         y_hat = self.predict(self.fit_breaks)
-        self.slopes = np.zeros(self.n_segments)
+        self.slopes = cp.zeros(self.n_segments)
         for i in range(self.n_segments):
             self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
                         (self.fit_breaks[i+1]-self.fit_breaks[i])
@@ -1309,9 +1303,9 @@ class PiecewiseLinFit(object):
         Calculate the standard errors after performing a simple fit.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> se = my_pwlf.standard_errors()
 
@@ -1325,13 +1319,13 @@ class PiecewiseLinFit(object):
         ny = self.n_data
         if method == 'linear':
             A = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
-            y_hat = np.dot(A, self.beta)
+            y_hat = cp.dot(A, self.beta)
             e = y_hat - self.y_data
 
         elif method == 'non-linear':
             nb = self.beta.size + self.fit_breaks.size - 2
             f0 = self.predict(self.x_data)
-            A = np.zeros((ny, nb))
+            A = cp.zeros((ny, nb))
             orig_beta = self.beta.copy()
             orig_breaks = self.fit_breaks.copy()
             # calculate differentials due to betas
@@ -1364,9 +1358,9 @@ class PiecewiseLinFit(object):
         # try to solve for the standard errors
         try:
             # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - nb)
-            A2inv = np.abs(linalg.inv(np.dot(A.T, A))).diagonal()
-            self.se = np.sqrt(variance * A2inv)
+            variance = cp.dot(e, e) / (ny - nb)
+            A2inv = cp.abs(cp.linalg.inv(cp.dot(A.T, A))).diagonal()
+            self.se = cp.sqrt(variance * A2inv)
             return self.se
 
         except linalg.LinAlgError:
@@ -1378,7 +1372,7 @@ class PiecewiseLinFit(object):
         prediction variance is the uncertainty of the model due to the lack of
         data. This can be used to find a 95% confidence interval of possible
         piecewise linear models based on the current data. This would be
-        done typically as y_hat +- 1.96*np.sqrt(pre_var). The
+        done typically as y_hat +- 1.96*cp.sqrt(pre_var). The
         prediction_variance needs to be calculated at various x locations.
         For more information see:
         www2.mae.ufl.edu/haftka/vvuq/lectures/Regression-accuracy.pptx
@@ -1412,11 +1406,11 @@ class PiecewiseLinFit(object):
         fit.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fitfast(3)
-        >>> x_new = np.linspace(0.0, 1.0, 100)
+        >>> x_new = cp.linspace(0.0, 1.0, 100)
         >>> pre_var = my_pwlf.prediction_variance(x_new)
 
         see also examples/prediction_variance.py
@@ -1431,9 +1425,9 @@ class PiecewiseLinFit(object):
 
         ny = self.n_data
 
-        # check if x is numpy array, if not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
+        # check if x is cupy array, if not convert to cupy array
+        if isinstance(x, cp.ndarray) is False:
+            x = cp.array(x)
 
         # Regression matrix on training data
         Ad = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
@@ -1441,11 +1435,11 @@ class PiecewiseLinFit(object):
         # try to solve for the unbiased variance estimation
         try:
 
-            y_hat = np.dot(Ad, self.beta)
+            y_hat = cp.dot(Ad, self.beta)
             e = y_hat - self.y_data
 
             # solve for the unbiased estimate of variance
-            variance = np.dot(e, e) / (ny - nb)
+            variance = cp.dot(e, e) / (ny - nb)
 
         except linalg.LinAlgError:
             raise linalg.LinAlgError('Singular matrix')
@@ -1456,7 +1450,7 @@ class PiecewiseLinFit(object):
         # try to solve for the prediction variance at the x locations
         try:
             pre_var = variance * \
-                np.dot(np.dot(A, linalg.inv(np.dot(Ad.T, Ad))), A.T)
+                cp.dot(cp.dot(A, cp.linalg.inv(cp.dot(Ad.T, Ad))), A.T)
             return pre_var.diagonal()
 
         except linalg.LinAlgError:
@@ -1486,9 +1480,9 @@ class PiecewiseLinFit(object):
         Calculate the R squared value after performing a simple fit.
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fitfast(3)
         >>> rsq = my_pwlf.r_squared()
 
@@ -1498,10 +1492,10 @@ class PiecewiseLinFit(object):
                      ' a fit before using standard_errors().'
             raise AttributeError(errmsg)
         ssr = self.fit_with_breaks(self.fit_breaks)
-        ybar = np.ones(self.n_data) * np.mean(self.y_data)
+        ybar = cp.ones(self.n_data) * cp.mean(self.y_data)
         ydiff = self.y_data - ybar
         try:
-            sst = np.dot(ydiff, ydiff)
+            sst = cp.dot(ydiff, ydiff)
             rsq = 1.0 - (ssr/sst)
             return rsq
         except linalg.LinAlgError:
@@ -1568,11 +1562,11 @@ class PiecewiseLinFit(object):
         parameter
 
         >>> import pwlf
-        >>> x = np.linspace(0.0, 1.0, 10)
-        >>> y = np.random.random(10)
-        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y)
+        >>> x = cp.linspace(0.0, 1.0, 10)
+        >>> y = cp.random.random(10)
+        >>> my_pwlf = pwlf.PiecewiseLinFitCp(x, y)
         >>> breaks = my_pwlf.fitfast(3)
-        >>> x_new = np.linspace(0.0, 1.0, 100)
+        >>> x_new = cp.linspace(0.0, 1.0, 100)
         >>> p = my_pwlf.p_values(x_new)
 
         see also examples/standard_errrors_and_p-values.py
@@ -1595,12 +1589,12 @@ class PiecewiseLinFit(object):
             k = nb - 1
             self.standard_errors(method=method, step_size=step_size)
             # the parameters for a non-linear model include interior breaks
-            parameters = np.concatenate((self.beta, self.fit_breaks[1:-1]))
+            parameters = cp.concatenate((self.beta, self.fit_breaks[1:-1]))
             # calculate my t-value
             t = parameters / self.se
         else:
             errmsg = "Error: method='" + method + "' is not supported!"
             raise ValueError(errmsg)
         # calculate the p-values
-        p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
+        p = 2.0 * stats.t.sf(cp.asnumpy(cp.abs(t)), df=n-k-1)
         return p
