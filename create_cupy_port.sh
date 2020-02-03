@@ -2,7 +2,7 @@
 cp pwlf/pwlf.py pwlf/pwlfcp.py
 sed -i 's/numpy/cupy/g' pwlf/pwlfcp.py
 sed -i 's/np/cp/g' pwlf/pwlfcp.py
-sed -i 's/# import libraries/import numpy as np/g' pwlf/pwlfcp.py
+# sed -i 's/# import libraries/import numpy as np/g' pwlf/pwlfcp.py
 sed -i 's/PiecewiseLinFit/PiecewiseLinFitCp/g' pwlf/pwlfcp.py 
 sed -i 's/linalg.lstsq(A, self.y_data,/cp.linalg.lstsq(A, self.y_data)/g' pwlf/pwlfcp.py
 sed -i '/                                       lapack_driver=self.lapack_driver)/d' pwlf/pwlfcp.py
