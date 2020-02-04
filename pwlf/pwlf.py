@@ -35,7 +35,7 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1):
+    def __init__(self, x, y, yerr=None, disp_res=False, lapack_driver='gelsd', degree=1):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -52,6 +52,9 @@ class PiecewiseLinFit(object):
             numpy array.
         y : array_like
             The y or dependent data point locations as list or 1 dimensional
+            numpy array.
+        yerr : array_like, optional
+            The standard deviations of the provided y data as list or 1 dimensional
             numpy array.
         disp_res : bool, optional
             Whether the optimization results should be printed. Default is
@@ -190,6 +193,12 @@ class PiecewiseLinFit(object):
 
         self.x_data = x
         self.y_data = y
+
+        self.yerr = yerr
+        if self.yerr is not None:
+            inv_weights = np.divide(1, self.yerr)
+            self.x_data = np.multiply(self.x_data, inv_weights)
+            self.y_data = np.multiply(self.y_data, inv_weights)
 
         # calculate the number of data points
         self.n_data = x.size
