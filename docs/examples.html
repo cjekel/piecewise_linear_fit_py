@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Examples &#8212; pwlf 1.1.6 documentation</title>
+    <title>Examples &#8212; pwlf 1.1.7 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -37,8 +37,8 @@
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <p>All of these examples will use the following data and imports.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 
 <span class="c1"># your data</span>
@@ -337,17 +337,17 @@ best number of line segments.</p>
 <span class="n">myBopt</span> <span class="o">=</span> <span class="n">BayesianOptimization</span><span class="p">(</span><span class="n">my_obj</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;GP&#39;</span><span class="p">,</span>
                               <span class="n">initial_design_numdata</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                               <span class="n">initial_design_type</span><span class="o">=</span><span class="s1">&#39;latin&#39;</span><span class="p">,</span>
-                              <span class="n">exact_feval</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                              <span class="n">verbosity_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                              <span class="n">exact_feval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">verbosity_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="c1"># perform the bayesian optimization to find the optimum number</span>
 <span class="c1"># of line segments</span>
-<span class="n">myBopt</span><span class="o">.</span><span class="n">run_optimization</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">myBopt</span><span class="o">.</span><span class="n">run_optimization</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Opt found </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Optimum number of line segments:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">x_opt</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Function value:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">fx_opt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Opt found </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimum number of line segments:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">x_opt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Function value:&#39;</span><span class="p">,</span> <span class="n">myBopt</span><span class="o">.</span><span class="n">fx_opt</span><span class="p">)</span>
 <span class="n">myBopt</span><span class="o">.</span><span class="n">plot_acquisition</span><span class="p">()</span>
 <span class="n">myBopt</span><span class="o">.</span><span class="n">plot_convergence</span><span class="p">()</span>
 
@@ -428,7 +428,7 @@ breakpoint occurs at 6.0. We’ll use the fit_guess() function to find the
 best breakpoint location starting with this guess. These fits should be
 much faster than the <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fitfast</span></code> function when you have a
 reasonable idea where the breakpoints occur.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">11.</span><span class="p">,</span> <span class="mf">13.</span><span class="p">,</span> <span class="mf">16.</span><span class="p">,</span> <span class="mf">28.92</span><span class="p">,</span> <span class="mf">42.81</span><span class="p">])</span>
@@ -450,7 +450,7 @@ matrix <code class="docutils literal notranslate"><span class="pre">A</span></co
 that the breakpoints occur at each of the data points. Please see the
 <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/tree/master/paper">paper</a>
 for details about the regression matrix <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 <span class="c1"># select random seed for reproducibility</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
@@ -476,7 +476,7 @@ regularizer to perform an interesting fit with the regression matrix.</p>
 <span class="n">en_model</span> <span class="o">=</span> <span class="n">ElasticNetCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                         <span class="n">l1_ratio</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span>
                                   <span class="o">.</span><span class="mi">95</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                        <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># fit the model using the elastic net</span>
 <span class="n">en_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">my_pwlf_en</span><span class="o">.</span><span class="n">y_data</span><span class="p">)</span>
@@ -650,7 +650,7 @@ following code.</p>
 
 <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter type&#39;</span><span class="p">,</span> <span class="s1">&#39;Parameter value&#39;</span><span class="p">,</span> <span class="s1">&#39;Standard error&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span>
           <span class="s1">&#39;P &gt; np.abs(t) (p-value)&#39;</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">header</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">header</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">parameters</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">)</span>
 <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">values</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">se</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -660,10 +660,10 @@ following code.</p>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
         <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Beta&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Breakpoint&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
@@ -739,7 +739,7 @@ following code.</p>
 <p>Sometimes you may want the mathematical equations that represent your
 fitted model. This is easy to perform if you don’t mind using sympy.</p>
 <p>The following code will fit 5 line segments of degree=2 to a sin wave.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pwlf</span>
 <span class="c1"># generate sin wave data</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -781,8 +781,8 @@ for each line segment.</p>
 <span class="n">f_list</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">my_pwlf_2</span><span class="o">.</span><span class="n">n_segments</span><span class="p">):</span>
     <span class="n">eqn_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_symbolic_eqn</span><span class="p">(</span><span class="n">my_pwlf_2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Equation number: &#39;</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">eqn_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Equation number: &#39;</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">eqn_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">f_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">eqn_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 </pre></div>
 </div>
