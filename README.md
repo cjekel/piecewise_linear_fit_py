@@ -59,7 +59,7 @@ Python 2.7+
 
 NumPy (Tested on version >= 1.14.0)
 
-SciPy (Tested on version >= 0.19.0)
+SciPy (Tested on version >= 1.2.0)
 
 pyDOE (Tested on version >= 0.3.8)
 
