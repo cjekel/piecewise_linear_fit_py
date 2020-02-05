@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.7] - 2020-02-05
+### Changed
+- Minimum SciPy version is now 1.2.0 because of issues with MacOS and the old SciPy versions. See issue https://github.com/cjekel/piecewise_linear_fit_py/issues/40 and thanks to bezineb5 !
+
 ## [1.1.6] - 2020-01-22
 ### Changed
 - Single source version now found in setup.py instead of pwlf/VERSION see issue https://github.com/cjekel/piecewise_linear_fit_py/issues/53

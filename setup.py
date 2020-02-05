@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pwlf',
-    version='1.1.6',
+    version='1.1.7',
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
     packages=['pwlf'],
