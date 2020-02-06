@@ -220,8 +220,8 @@ class PiecewiseLinFit(object):
             if isinstance(weights, np.ndarray) is False:
                 weights = np.array(weights)
             # self.weights2 = weights*weights
-            self.weights = np.eye(self.n_data)*weights
-            self.y_w = np.dot(self.y_data, self.weights)
+            self.weights = weights
+            self.y_w = np.dot(self.y_data, np.eye(self.n_data)*self.weights)
 
         # initialize all empty attributes as None
         self.fit_breaks = None
