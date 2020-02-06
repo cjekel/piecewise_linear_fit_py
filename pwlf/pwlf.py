@@ -1590,7 +1590,7 @@ class PiecewiseLinFit(object):
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
         else:
-            beta, _, _, _ = linalg.lstsq(np.dot(self.weights, A), self.y_w,
+            beta, _, _, _ = linalg.lstsq(np.dot(A, self.weights), self.y_w,
                                          lapack_driver=self.lapack_driver)
             # calculate the weighted sum of square of residuals
             y_hat = np.dot(A, beta)
