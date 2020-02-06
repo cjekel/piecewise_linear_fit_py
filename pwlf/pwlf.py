@@ -35,7 +35,8 @@ from pyDOE import lhs
 
 class PiecewiseLinFit(object):
 
-    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1):
+    def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1,
+                 weights=None):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -65,6 +66,11 @@ class PiecewiseLinFit(object):
         degree : int, optional
             The degree of polynomial to use. The default is degree=1 for
             linear models. Use degree=0 for constant models.
+        weights : None, or array_like
+            The individual weights are typically the reciprocal of the
+            standard deviation for each data point, where weights[i]
+            corresponds to one over the standard deviation of the ith data
+            point.
 
         Attributes
         ----------
@@ -116,6 +122,8 @@ class PiecewiseLinFit(object):
             The inputted parameter x from the 1-D data set.
         y_data : ndarray (1-D)
             The inputted parameter y from the 1-D data set.
+        y_w : ndarray (1-D)
+            The weighted y data vector.
         zeta : ndarray (1-D)
             The model parameters associated with the constraint function.
 
@@ -175,7 +183,7 @@ class PiecewiseLinFit(object):
 
         Initialize for x,y data and print optimization results
 
-        >>> my_pWLF = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        >>> my_pwlf = pwlf.PiecewiseLinFit(x, y, disp_res=True)
 
         """
 
@@ -204,6 +212,15 @@ class PiecewiseLinFit(object):
         else:
             not_suported = "degree = " + str(degree) + " is not supported."
             raise ValueError(not_suported)
+
+        self.y_w = None
+        # self.weights2 = None  # the squared weights vector
+        if weights is not None:
+            if isinstance(weights, np.ndarray) is False:
+                weights = np.array(weights)
+            # self.weights2 = weights*weights
+            self.weights = np.eye(self.n_data)*weights
+            self.y_w = np.dot(self.y_data, self.weights)
 
         # initialize all empty attributes as None
         self.fit_breaks = None
@@ -340,32 +357,7 @@ class PiecewiseLinFit(object):
 
         # try to solve the regression problem
         try:
-            # least squares solver
-            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
-                                           lapack_driver=self.lapack_driver)
-
-            # save the beta parameters
-            self.beta = beta
-
-            # save the slopes
-            self.calc_slopes()
-
-            # ssr is only calculated if self.n_data > self.n_parameters
-            # in this case I'll need to calculate ssr manually
-            # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = np.dot(e, e)
-            if isinstance(ssr, list):
-                ssr = ssr[0]
-            elif isinstance(ssr, np.ndarray):
-                if ssr.size == 0:
-                    y_hat = np.dot(A, beta)
-                    e = y_hat - self.y_data
-                    ssr = np.dot(e, e)
-                else:
-                    ssr = ssr[0]
+            ssr = self.lstsq(A)
 
         except linalg.LinAlgError:
             # the computation could not converge!
@@ -629,25 +621,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
-                                           lapack_driver=self.lapack_driver)
-
-            # ssr is only calculated if self.n_data > self.n_parameters
-            # in all other cases I'll need to calculate ssr manually
-            # where ssr = sum of square of residuals
-            if self.n_data <= self.n_parameters:
-                y_hat = np.dot(A, beta)
-                e = y_hat - self.y_data
-                ssr = np.dot(e, e)
-            if isinstance(ssr, list):
-                ssr = ssr[0]
-            elif isinstance(ssr, np.ndarray):
-                if ssr.size == 0:
-                    y_hat = np.dot(A, beta)
-                    e = y_hat - self.y_data
-                    ssr = np.dot(e, e)
-                else:
-                    ssr = ssr[0]
+            ssr = self.lstsq(A)
 
         except linalg.LinAlgError:
             # the computation could not converge!
@@ -1599,3 +1573,41 @@ class PiecewiseLinFit(object):
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
         return p
+
+    def lstsq(self, A):
+        r"""
+        Calculate the least sqaures for A matrix.
+        """
+        if self.weights is None:
+            beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
+                                           lapack_driver=self.lapack_driver)
+            # ssr is only calculated if self.n_data > self.n_parameters
+            # in this case I'll need to calculate ssr manually
+            # where ssr = sum of square of residuals
+            if self.n_data <= self.n_parameters:
+                y_hat = np.dot(A, beta)
+                e = y_hat - self.y_data
+                ssr = np.dot(e, e)
+        else:
+            beta, _, _, _ = linalg.lstsq(np.dot(self.weights, A), self.y_w,
+                                         lapack_driver=self.lapack_driver)
+            # calculate the weighted sum of square of residuals
+            y_hat = np.dot(A, beta)
+            e = y_hat - self.y_data
+            r = self.weights.diagonal()*e
+            ssr = np.dot(r, r)
+        if isinstance(ssr, list):
+            ssr = ssr[0]
+        elif isinstance(ssr, np.ndarray):
+            if ssr.size == 0:
+                y_hat = np.dot(A, beta)
+                e = y_hat - self.y_data
+                ssr = np.dot(e, e)
+            else:
+                ssr = ssr[0]
+        # save the beta parameters
+        self.beta = beta
+
+        # save the slopes
+        self.calc_slopes()
+        return ssr
