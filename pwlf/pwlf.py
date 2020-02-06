@@ -214,6 +214,7 @@ class PiecewiseLinFit(object):
             raise ValueError(not_suported)
 
         self.y_w = None
+        self.weights = None
         # self.weights2 = None  # the squared weights vector
         if weights is not None:
             if isinstance(weights, np.ndarray) is False:
