@@ -439,6 +439,31 @@ class TestEverything(unittest.TestCase):
     # End of degree tests
     # =================================================
 
+    # =================================================
+    # Start weighted least squares tests
+    def test_weighted_same_as_ols(self):
+        # test that weighted least squares is same as OLS
+        # when the weight is equal to 1.0
+        n_segments = 2
+        my = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x = np.random.random()
+        breaks = my.fit_guess([x])
+        my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                    weights=np.ones_like(self.x_small))
+        breaks_w = my_w.fit_guess([x])
+
+        self.assertTrue(np.isclose(my.ssr, my_w.ssr))
+        for i in range(n_segments+1):
+            self.assertTrue(np.isclose(breaks[i], breaks_w[i]))
+    
+    def test_heteroscedastic_data(self):
+        n_segments = 3
+        weights = self.y_small.copy()
+        weights[0] = 0.01
+        weights = 1.0 / weights
+        my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                    weights=weights)
+        breaks = my_w.fit(n_segments)
 
 if __name__ == '__main__':
     unittest.main()
