@@ -1289,7 +1289,7 @@ class PiecewiseLinFit(object):
         locations (e.g. when using the fit_with_breaks function).
 
         The non-linear regression problem is when you don't know the
-        breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+        breakpoint locations (e.g. when using the fit, fitfast, and fit_guess
         functions).
 
         References
@@ -1546,7 +1546,7 @@ class PiecewiseLinFit(object):
         locations (e.g. when using the fit_with_breaks function).
 
         The non-linear regression problem is when you don't know the
-        breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+        breakpoint locations (e.g. when using the fit, fitfast, and fit_guess
         functions).
 
         See https://github.com/cjekel/piecewise_linear_fit_py/issues/14
