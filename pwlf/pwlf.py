@@ -70,7 +70,7 @@ class PiecewiseLinFit(object):
             The individual weights are typically the reciprocal of the
             standard deviation for each data point, where weights[i]
             corresponds to one over the standard deviation of the ith data
-            point.
+            point. Default weights=None.
 
         Attributes
         ----------
@@ -1577,7 +1577,7 @@ class PiecewiseLinFit(object):
 
     def lstsq(self, A):
         r"""
-        Calculate the least sqaures for A matrix.
+        Calculate the least squares for A matrix.
         """
         if self.weights is None:
             beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
