@@ -1543,7 +1543,11 @@ class PiecewiseLinFit(object):
             # where ssr = sum of square of residuals
             y_hat = np.dot(A, self.beta)
             e = y_hat - self.y_data
-            ssr = np.dot(e, e)
+            if self.weights is None:
+                ssr = np.dot(e, e)
+            else:
+                r = self.weights*e
+                ssr = np.dot(r, r)
             self.ssr = ssr
 
             # Calculate the Lagrangian function
