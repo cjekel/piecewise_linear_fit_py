@@ -441,76 +441,7 @@ class PiecewiseLinFit(object):
             breaks = np.array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
-        # Assemble the constraint matrix
-        C_list = [np.ones_like(self.x_c)]
-        if self.degree >= 1:
-            C_list.append(self.x_c - self.fit_breaks[0])
-            for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       self.x_c - self.fit_breaks[i+1],
-                                       0.0))
-            if self.degree >= 2:
-                for k in range(2, self.degree + 1):
-                    C_list.append((self.x_c - self.fit_breaks[0])**k)
-                    for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                               (self.x_c
-                                                - self.fit_breaks[i+1])**k,
-                                               0.0))
-        else:
-            for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       1.0,
-                                       0.0))
-        C = np.vstack(C_list).T
-
-        _, m = A.shape
-        o, _ = C.shape
-
-        K = np.zeros((m + o, m + o))
-
-        K[:m, :m] = 2.0 * np.dot(A.T, A)
-        K[:m, m:] = C.T
-        K[m:, :m] = C
-        # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
-
-        # try to solve the regression problem
-        try:
-            # Solve the least squares problem
-            beta_prime = linalg.solve(K, z)
-
-            # save the beta parameters
-            self.beta = beta_prime[0:self.n_parameters]
-            # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters:]
-
-            # save the slopes
-            self.calc_slopes()
-
-            # Calculate ssr
-            # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-            ssr = np.dot(e, e)
-
-            # Calculate the Lagrangian function
-            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
-
-        except linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return L = np.inf
-            # You might have a singular Matrix!!!
-            L = np.inf
-        if L is None:
-            L = np.inf
-            # something went wrong...
-        self.ssr = ssr
+        L = self.conlstsq(A)
         return L
 
     def predict(self, x, beta=None, breaks=None):
@@ -685,71 +616,7 @@ class PiecewiseLinFit(object):
         breaks = breaks[breaks_order]
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
-
-        # Assemble the constraint matrix
-        C_list = [np.ones_like(self.x_c)]
-        if self.degree >= 1:
-            C_list.append(self.x_c - self.fit_breaks[0])
-            for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       self.x_c - self.fit_breaks[i+1],
-                                       0.0))
-            if self.degree >= 2:
-                for k in range(2, self.degree + 1):
-                    C_list.append((self.x_c - self.fit_breaks[0])**k)
-                    for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                               (self.x_c -
-                                                self.fit_breaks[i+1])**k,
-                                               0.0))
-        else:
-            for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
-                                       1.0,
-                                       0.0))
-        C = np.vstack(C_list).T
-        _, m = A.shape
-        o, _ = C.shape
-        # Assemble the square constrained least squares matrix
-        K = np.zeros((m + o, m + o))
-
-        K[:m, :m] = 2.0 * np.dot(A.T, A)
-        K[:m, m:] = C.T
-        K[m:, :m] = C
-        # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
-        z = np.zeros(self.n_parameters + self.c_n)
-        z[:self.n_parameters] = yt
-        z[self.n_parameters:] = self.y_c
-
-        # try to solve the regression problem
-        try:
-            # Solve the least squares problem
-            beta_prime = linalg.solve(K, z)
-
-            # save the beta parameters
-            self.beta = beta_prime[0:self.n_parameters]
-            # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters:]
-
-            # Calculate ssr
-            # where ssr = sum of square of residuals
-            y_hat = np.dot(A, self.beta)
-            e = y_hat - self.y_data
-            ssr = np.dot(e, e)
-
-            # Calculate the Lagrangian function
-            p = np.dot(C.T, self.zeta)
-            L = np.sum(np.abs(p)) + ssr
-
-        except linalg.LinAlgError:
-            # the computation could not converge!
-            # on an error, return L = np.inf
-            # You might have a singular Matrix!!!
-            L = np.inf
-        if L is None:
-            L = np.inf
-            # something went wrong...
+        L = self.conlstsq(A)
         return L
 
     def fit(self, n_segments, x_c=None, y_c=None, bounds=None, **kwargs):
@@ -1577,7 +1444,7 @@ class PiecewiseLinFit(object):
 
     def lstsq(self, A):
         r"""
-        Calculate the least squares for A matrix.
+        Perform the least squares fit for A matrix.
         """
         if self.weights is None:
             beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
@@ -1612,3 +1479,79 @@ class PiecewiseLinFit(object):
         # save the slopes
         self.calc_slopes()
         return ssr
+
+    def conlstsq(self, A):
+        r"""
+        Perform a constrained least squares fit for A matrix.
+        """
+        # Assemble the constraint matrix
+        C_list = [np.ones_like(self.x_c)]
+        if self.degree >= 1:
+            C_list.append(self.x_c - self.fit_breaks[0])
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       self.x_c - self.fit_breaks[i+1],
+                                       0.0))
+            if self.degree >= 2:
+                for k in range(2, self.degree + 1):
+                    C_list.append((self.x_c - self.fit_breaks[0])**k)
+                    for i in range(self.n_segments - 1):
+                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                               (self.x_c
+                                                - self.fit_breaks[i+1])**k,
+                                               0.0))
+        else:
+            for i in range(self.n_segments - 1):
+                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                                       1.0,
+                                       0.0))
+        C = np.vstack(C_list).T
+
+        _, m = A.shape
+        o, _ = C.shape
+
+        K = np.zeros((m + o, m + o))
+
+        K[:m, :m] = 2.0 * np.dot(A.T, A)
+        K[:m, m:] = C.T
+        K[m:, :m] = C
+        # Assemble right hand side vector
+        yt = np.dot(2.0*A.T, self.y_data)
+        z = np.zeros(self.n_parameters + self.c_n)
+        z[:self.n_parameters] = yt
+        z[self.n_parameters:] = self.y_c
+
+        # try to solve the regression problem
+        try:
+            # Solve the least squares problem
+            beta_prime = linalg.solve(K, z)
+
+            # save the beta parameters
+            self.beta = beta_prime[0:self.n_parameters]
+            # save the zeta parameters
+            self.zeta = beta_prime[self.n_parameters:]
+
+            # save the slopes
+            self.calc_slopes()
+
+            # Calculate ssr
+            # where ssr = sum of square of residuals
+            y_hat = np.dot(A, self.beta)
+            e = y_hat - self.y_data
+            ssr = np.dot(e, e)
+
+            # Calculate the Lagrangian function
+            # c_x_y = np.dot(C, self.x_c.T) - self.y_c
+            p = np.dot(C.T, self.zeta)
+            L = np.sum(np.abs(p)) + ssr
+
+        except linalg.LinAlgError:
+            # the computation could not converge!
+            # on an error, return L = np.inf
+            # You might have a singular Matrix!!!
+            L = np.inf
+        if L is None:
+            L = np.inf
+            # something went wrong...
+        self.ssr = ssr
+        return L
