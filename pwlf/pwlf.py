@@ -1285,8 +1285,6 @@ class PiecewiseLinFit(object):
 
             y_hat = np.dot(Ad, self.beta)
             e = y_hat - self.y_data
-            if self.weights is not None:
-                e *= self.weights
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
 
