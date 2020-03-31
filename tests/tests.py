@@ -464,6 +464,20 @@ class TestEverything(unittest.TestCase):
         my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
                                     weights=weights)
         breaks = my_w.fit(n_segments)
+        se = my_w.standard_errors()
+
+    def test_not_supported(self):
+        x = np.linspace(0.0, 1.0, num=100)
+        y = np.sin(6.0*x)
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        x_c = [0.0]
+        y_c = [0.0]
+        yhat = my_fit.predict(x_c)
+        try:
+            my_fit.fit(3, x_c, y_c)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
 
 if __name__ == '__main__':
     unittest.main()
