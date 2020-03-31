@@ -1200,10 +1200,16 @@ class PiecewiseLinFit(object):
             raise ValueError(errmsg)
         # try to solve for the standard errors
         try:
-            # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
-            A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
-            self.se = np.sqrt(variance * A2inv)
+            if self.weights is None:
+                # solve for the unbiased estimate of variance
+                A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
+                self.se = np.sqrt(variance * A2inv)
+            else:
+                A = (A.T*self.weights).T
+                A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
+                sigi = variance / self.weights
+                self.se = np.sqrt(sigi * A2inv)
             return self.se
 
         except linalg.LinAlgError:
