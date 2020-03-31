@@ -1539,6 +1539,7 @@ class PiecewiseLinFit(object):
             y_hat = np.dot(A, self.beta)
             e = y_hat - self.y_data
             ssr = np.dot(e, e)
+            self.ssr = ssr
 
             # Calculate the Lagrangian function
             # c_x_y = np.dot(C, self.x_c.T) - self.y_c
@@ -1553,5 +1554,4 @@ class PiecewiseLinFit(object):
         if L is None:
             L = np.inf
             # something went wrong...
-        self.ssr = ssr
         return L
