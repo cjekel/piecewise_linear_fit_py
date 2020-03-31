@@ -478,5 +478,6 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
+
 if __name__ == '__main__':
     unittest.main()
