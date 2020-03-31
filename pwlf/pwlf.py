@@ -1484,6 +1484,8 @@ class PiecewiseLinFit(object):
         r"""
         Perform a constrained least squares fit for A matrix.
         """
+        if self.weights is not None:
+            A = (A.T*self.weights).T
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
         if self.degree >= 1:
@@ -1516,7 +1518,10 @@ class PiecewiseLinFit(object):
         K[:m, m:] = C.T
         K[m:, :m] = C
         # Assemble right hand side vector
-        yt = np.dot(2.0*A.T, self.y_data)
+        if self.weights is None:
+            yt = np.dot(2.0*A.T, self.y_data)
+        else:
+            yt = np.dot(2.0*A.T, self.y_w)
         z = np.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
