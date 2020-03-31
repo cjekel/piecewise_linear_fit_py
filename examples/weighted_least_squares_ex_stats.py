@@ -23,6 +23,8 @@ X = np.tile(x, n_data_sets)
 my_pwlf = pwlf.PiecewiseLinFit(X.flatten(), y.flatten())
 my_pwlf.fit(n_segments)
 se = my_pwlf.standard_errors()
+pv = my_pwlf.prediction_variance(x)
+
 # compute the standard deviation in y
 y_std = np.std(y, axis=0)
 # set the weights to be one over the standard deviation
@@ -32,7 +34,10 @@ weights = 1.0 / y_std
 my_pwlf_w = pwlf.PiecewiseLinFit(x, y.mean(axis=0), weights=weights)
 my_pwlf_w.fit(n_segments)
 se_w = my_pwlf_w.standard_errors()
-print(se, se_w)
+pv_w = my_pwlf_w.prediction_variance(x)
+
+print('Standard errors', se, se_w)
+print('Prediction varance', pv, pv_w)
 
 # compare the fits
 xhat = np.linspace(0, 10, 1000)
