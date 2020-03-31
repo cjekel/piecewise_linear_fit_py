@@ -1208,8 +1208,7 @@ class PiecewiseLinFit(object):
             else:
                 A = (A.T*self.weights).T
                 A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
-                sigi = variance / self.weights
-                self.se = np.sqrt(sigi * A2inv)
+                self.se = np.sqrt(variance * A2inv)
             return self.se
 
         except linalg.LinAlgError:
