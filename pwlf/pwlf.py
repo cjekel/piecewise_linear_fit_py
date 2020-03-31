@@ -1485,7 +1485,9 @@ class PiecewiseLinFit(object):
         Perform a constrained least squares fit for A matrix.
         """
         if self.weights is not None:
-            A = (A.T*self.weights).T
+            raise ValueError('Constrained least squares with weights are not '
+                             'supported since these have a tendency of being '
+                             'numerically instable.')
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
         if self.degree >= 1:
@@ -1518,10 +1520,8 @@ class PiecewiseLinFit(object):
         K[:m, m:] = C.T
         K[m:, :m] = C
         # Assemble right hand side vector
-        if self.weights is None:
-            yt = np.dot(2.0*A.T, self.y_data)
-        else:
-            yt = np.dot(2.0*A.T, self.y_w)
+        yt = np.dot(2.0*A.T, self.y_data)
+
         z = np.zeros(self.n_parameters + self.c_n)
         z[:self.n_parameters] = yt
         z[self.n_parameters:] = self.y_c
@@ -1543,11 +1543,7 @@ class PiecewiseLinFit(object):
             # where ssr = sum of square of residuals
             y_hat = np.dot(A, self.beta)
             e = y_hat - self.y_data
-            if self.weights is None:
-                ssr = np.dot(e, e)
-            else:
-                r = self.weights*e
-                ssr = np.dot(r, r)
+            ssr = np.dot(e, e)
             self.ssr = ssr
 
             # Calculate the Lagrangian function
