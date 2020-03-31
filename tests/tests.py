@@ -463,8 +463,8 @@ class TestEverything(unittest.TestCase):
         weights = 1.0 / weights
         my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
                                     weights=weights)
-        breaks = my_w.fit(n_segments)
-        se = my_w.standard_errors()
+        _ = my_w.fit(n_segments)
+        _ = my_w.standard_errors()
 
     def test_not_supported(self):
         x = np.linspace(0.0, 1.0, num=100)
