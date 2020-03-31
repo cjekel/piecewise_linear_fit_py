@@ -472,7 +472,6 @@ class TestEverything(unittest.TestCase):
         my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
         x_c = [0.0]
         y_c = [0.0]
-        yhat = my_fit.predict(x_c)
         try:
             my_fit.fit(3, x_c, y_c)
             self.assertTrue(False)
