@@ -1040,6 +1040,10 @@ class PiecewiseLinFit(object):
         fit_with_breaks_opt(var) will return the sum of the square of the
         residuals which you'll want to minimize with your optimization
         routine.
+
+        Raises
+        ------
+        ValueError 
         """
 
         self.n_segments = int(n_segments)

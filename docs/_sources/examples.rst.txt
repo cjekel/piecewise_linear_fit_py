@@ -78,6 +78,7 @@ All of these examples will use the following data and imports.
     p-values <#non-linear-standard-errors-and-p-values>`__
 16. `obtain the equations of fitted
     pwlf <#obtain-the-equations-of-fitted-pwlf>`__
+17. `weighted least squares fit <#weighted-least-squares-fit>`__
 
 fit with known breakpoint locations
 -----------------------------------
@@ -769,3 +770,71 @@ which should print out something like the following:
 For more information on how this works, see
 `this <https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/understanding_higher_degrees/polynomials_in_pwlf.ipynb>`__
 jupyter notebook.
+
+weighted least squares fit
+--------------------------
+
+Sometimes your data will not have a constant variance
+(heteroscedasticity), and you need to perform a weighted least squares
+fit. The following example will perform a standard and weighted fit so
+you can compare the differences. First we need to generate a data set
+which will be a good candidate to use for weighted least squares fits.
+
+.. code:: python
+
+   # generate data with heteroscedasticity
+   n = 100
+   n_data_sets = 100
+   n_segments = 6
+   # generate sine data
+   x = np.linspace(0, 10, n)
+   y = np.zeros((n_data_sets, n))
+   sigma_change = np.linspace(0.001, 0.05, 100)
+   for i in range(n_data_sets):
+       y[i] = np.sin(x * np.pi / 2)
+       # add noise to the data
+       y[i] = np.random.normal(0, sigma_change, 100) + y[i]
+   X = np.tile(x, n_data_sets)
+
+The individual weights in pwlf are the reciprocal of the standard
+deviation for each data point. Here weights[i] corresponds to one over
+the standard deviation of the ith data point. The result of this is that
+data points with higher variance are less important to the overall pwlf
+than data point with small variance. Let’s perform a standard pwlf fit
+and a weighted fit.
+
+.. code:: python
+
+   # perform an ordinary pwlf fit to the entire data
+   my_pwlf = pwlf.PiecewiseLinFit(X.flatten(), y.flatten())
+   my_pwlf.fit(n_segments)
+
+   # compute the standard deviation in y
+   y_std = np.std(y, axis=0)
+   # set the weights to be one over the standard deviation
+   weights = 1.0 / y_std
+
+   # perform a weighted least squares to the data
+   my_pwlf_w = pwlf.PiecewiseLinFit(x, y.mean(axis=0), weights=weights)
+   my_pwlf_w.fit(n_segments)
+
+   # compare the fits
+   xhat = np.linspace(0, 10, 1000)
+   yhat = my_pwlf.predict(xhat)
+   yhat_w = my_pwlf_w.predict(xhat)
+
+   plt.figure()
+   plt.plot(X.flatten(), y.flatten(), '.')
+   plt.plot(xhat, yhat, '-', label='Ordinary LS')
+   plt.plot(xhat, yhat_w, '-', label='Weighted LS')
+   plt.legend()
+   plt.show()
+
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example
+   :alt: Weighted pwlf fit.
+
+   Weighted pwlf fit.
+
+We can see that the weighted pwlf fit tries fit data with low variance
+better than data with high variance, however the ordinary pwlf fits the
+data assuming a uniform variance.
