@@ -404,6 +404,8 @@ class PiecewiseLinFit(object):
         ------
         LinAlgError
             This typically means your regression problem is ill-conditioned.
+        ValueError
+            You can't specify weights with x_c and y_c.
 
         Examples
         --------
@@ -660,6 +662,8 @@ class PiecewiseLinFit(object):
             You probably provided x_c without y_c (or vice versa).
             You must provide both x_c and y_c if you plan to force
             the model through data point(s).
+        ValueError
+            You can't specify weights with x_c and y_c.
 
         Notes
         -----
@@ -1043,7 +1047,9 @@ class PiecewiseLinFit(object):
 
         Raises
         ------
-        ValueError 
+        ValueError
+            You can't specify weights with x_c and y_c.
+
         """
 
         self.n_segments = int(n_segments)
