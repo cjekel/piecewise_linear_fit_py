@@ -1428,9 +1428,9 @@ class PiecewiseLinFit(object):
         k = self.beta.size - 1
 
         if method == 'linear':
-             self.standard_errors()
-             # calculate my t-value
-             t = self.beta / self.se
+            self.standard_errors()
+            # calculate my t-value
+            t = self.beta / self.se
 
         elif method == 'non-linear':
             nb = self.beta.size + self.fit_breaks.size - 2
