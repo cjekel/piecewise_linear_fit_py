@@ -469,7 +469,8 @@ class TestEverything(unittest.TestCase):
     def test_not_supported(self):
         x = np.linspace(0.0, 1.0, num=100)
         y = np.sin(6.0*x)
-        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        w = np.random.random(size=100)
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True, weights=w)
         x_c = [0.0]
         y_c = [0.0]
         try:
