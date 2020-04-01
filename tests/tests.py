@@ -482,12 +482,12 @@ class TestEverything(unittest.TestCase):
     def not_supported_fit_with_breaks_force_points(self):
         x = np.linspace(0.0, 1.0, num=100)
         y = np.sin(6.0*x)
-        w = np.random.random(size=100)
+        w = list(np.random.random(size=100))
         my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True, weights=w)
         x_c = [0.0]
         y_c = [0.0]
         try:
-            my_fit.fit([0.1, 0.2, 0.3], x_c, y_c)
+            my_fit.fit_with_breaks_force_points([0.1, 0.2, 0.3], x_c, y_c)
             self.assertTrue(False)
         except ValueError:
             self.assertTrue(True)
