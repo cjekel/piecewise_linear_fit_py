@@ -436,6 +436,11 @@ class PiecewiseLinFit(object):
         # store the number of constraints
         self.c_n = len(self.x_c)
 
+        if self.weights is not None:
+            raise ValueError('Constrained least squares with weights are'
+                             ' not supported since these have a tendency '
+                             'of being numerically instable.')
+
         # Check if breaks in ndarray, if not convert to np.array
         if isinstance(breaks, np.ndarray) is False:
             breaks = np.array(breaks)
@@ -717,6 +722,10 @@ class PiecewiseLinFit(object):
             self.c_n = len(self.x_c)
             # Use a different function to minimize
             min_function = self.fit_force_points_opt
+            if self.weights is not None:
+                raise ValueError('Constrained least squares with weights are'
+                                 ' not supported since these have a tendency '
+                                 'of being numerically instable.')
 
         # store the number of line segments and number of parameters
         self.n_segments = int(n_segments)
@@ -1051,6 +1060,10 @@ class PiecewiseLinFit(object):
             self.y_c = y_c[x_c_order]
             # store the number of constraints
             self.c_n = len(self.x_c)
+            if self.weights is not None:
+                raise ValueError('Constrained least squares with weights are'
+                                 ' not supported since these have a tendency '
+                                 'of being numerically instable.')
 
     def calc_slopes(self):
         r"""
@@ -1489,10 +1502,6 @@ class PiecewiseLinFit(object):
         r"""
         Perform a constrained least squares fit for A matrix.
         """
-        if self.weights is not None:
-            raise ValueError('Constrained least squares with weights are not '
-                             'supported since these have a tendency of being '
-                             'numerically instable.')
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
         if self.degree >= 1:
