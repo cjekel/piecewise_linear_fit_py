@@ -57,11 +57,11 @@ New ```degree=``` keyword allows you to fit segmented constants or piecewise pol
 # Requirements
 Python 2.7+
 
-NumPy (Tested on version >= 1.14.0)
+NumPy >= 1.14.0
 
-SciPy (Tested on version >= 1.2.0)
+SciPy >= 1.2.0
 
-pyDOE (Tested on version >= 0.3.8)
+pyDOE >= 0.3.8
 
 setuptools >= 38.6.0
 
