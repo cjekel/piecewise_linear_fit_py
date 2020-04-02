@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2020-04-02
+### Added
+- Added supports for pwlf to fit to weighted data sets! Check out [this example](https://github.com/cjekel/piecewise_linear_fit_py/tree/master/examples#weighted-least-squares-fit).
+### Changed
+- Setup.py now grabs markdown file for long description
+### Removed
+- TBD
+
+
 ## [1.1.7] - 2020-02-05
 ### Changed
 - Minimum SciPy version is now 1.2.0 because of issues with MacOS and the old SciPy versions. See issue https://github.com/cjekel/piecewise_linear_fit_py/issues/40 and thanks to bezineb5 !
