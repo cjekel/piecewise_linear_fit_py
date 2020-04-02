@@ -19,7 +19,4 @@ setup(
         "pyDOE >= 0.3.8",
         "setuptools >= 38.6.0",
     ],
-    extras_require={
-        'PiecewiseLinFitTF':  ["tensorflow < 2.0.0"]
-    }
 )
