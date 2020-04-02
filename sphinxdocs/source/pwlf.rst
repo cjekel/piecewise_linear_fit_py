@@ -5,7 +5,6 @@ pwlf package contents
      :toctree: stubs
 
      pwlf.PiecewiseLinFit
-     pwlftf.PiecewiseLinFitTF
 
 .. autoclass:: pwlf.PiecewiseLinFit
     :members:
