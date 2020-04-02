@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pwlf package contents &#8212; pwlf 1.1.7 documentation</title>
+    <title>pwlf package contents &#8212; pwlf 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -46,15 +46,14 @@
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF" title="pwlftf.PiecewiseLinFitTF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwlftf.PiecewiseLinFitTF</span></code></a>(x, y[, disp_res, …])</p></td>
-<td><p><p class="rubric">Methods</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwlftf.PiecewiseLinFitTF</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
 <dt id="pwlf.PiecewiseLinFit">
-<em class="property">class </em><code class="sig-prename descclassname">pwlf.</code><code class="sig-name descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">lapack_driver='gelsd'</em>, <em class="sig-param">degree=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pwlf.</code><code class="sig-name descname">PiecewiseLinFit</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">lapack_driver='gelsd'</em>, <em class="sig-param">degree=1</em>, <em class="sig-param">weights=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
@@ -69,26 +68,32 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.calc_slopes" title="pwlf.PiecewiseLinFit.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>(self)</p></td>
 <td><p>Calculate the slopes of the lines after a piecewise linear function has been fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c, bounds])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.conlstsq" title="pwlf.PiecewiseLinFit.conlstsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conlstsq</span></code></a>(self, A)</p></td>
+<td><p>Perform a constrained least squares fit for A matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit" title="pwlf.PiecewiseLinFit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c, bounds])</p></td>
 <td><p>Fit a continuous piecewise linear function for a specified number of line segments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_force_points_opt" title="pwlf.PiecewiseLinFit.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints[, bounds])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_guess" title="pwlf.PiecewiseLinFit.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints[, bounds])</p></td>
 <td><p>Uses L-BFGS-B optimization to find the location of breakpoints from a guess of where breakpoint locations should be.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks" title="pwlf.PiecewiseLinFit.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="pwlf.PiecewiseLinFit.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(self, breaks, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_force_points" title="pwlf.PiecewiseLinFit.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(self, breaks, …)</p></td>
 <td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations, where you force the fit to go through the data points at x_c and y_c.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fit_with_breaks_opt" title="pwlf.PiecewiseLinFit.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
 <td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop, bounds])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.fitfast" title="pwlf.PiecewiseLinFit.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop, bounds])</p></td>
 <td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.lstsq" title="pwlf.PiecewiseLinFit.lstsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lstsq</span></code></a>(self, A)</p></td>
+<td><p>Perform the least squares fit for A matrix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pwlf.PiecewiseLinFit.p_values" title="pwlf.PiecewiseLinFit.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self[, method, step_size])</p></td>
 <td><p>Calculate the p-values for each beta parameter.</p></td>
@@ -174,6 +179,12 @@ of the first line segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pwlf.PiecewiseLinFit.conlstsq">
+<code class="sig-name descname">conlstsq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.conlstsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a constrained least squares fit for A matrix.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pwlf.PiecewiseLinFit.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">bounds=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a continuous piecewise linear function for a specified number
@@ -211,6 +222,8 @@ information.</p>
 <dt>ValueError</dt><dd><p>You probably provided x_c without y_c (or vice versa).
 You must provide both x_c and y_c if you plan to force
 the model through data point(s).</p>
+</dd>
+<dt>ValueError</dt><dd><p>You can’t specify weights with x_c and y_c.</p>
 </dd>
 </dl>
 </dd>
@@ -431,6 +444,8 @@ of the residuals plus the constraint penalty.</p>
 <dd class="field-odd"><dl class="simple">
 <dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
 </dd>
+<dt>ValueError</dt><dd><p>You can’t specify weights with x_c and y_c.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -567,6 +582,12 @@ samples.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pwlf.PiecewiseLinFit.lstsq">
+<code class="sig-name descname">lstsq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.lstsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the least squares fit for A matrix.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pwlf.PiecewiseLinFit.p_values">
 <code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">method='linear'</em>, <em class="sig-param">step_size=0.0001</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlf.PiecewiseLinFit.p_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the p-values for each beta parameter.</p>
@@ -611,7 +632,7 @@ beta[0] and so forth</p>
 <p>The linear regression problem is when you know the breakpoint
 locations (e.g. when using the fit_with_breaks function).</p>
 <p>The non-linear regression problem is when you don’t know the
-breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+breakpoint locations (e.g. when using the fit, fitfast, and fit_guess
 functions).</p>
 <p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
 <p class="rubric">References</p>
@@ -815,7 +836,7 @@ se[0] correspounds to the standard error for beta[0], and so forth.</p>
 <p>The linear regression problem is when you know the breakpoint
 locations (e.g. when using the fit_with_breaks function).</p>
 <p>The non-linear regression problem is when you don’t know the
-breakpoint locations (e.g. when using the fit, fitfast, and fitguess
+breakpoint locations (e.g. when using the fit, fitfast, and fit_guess
 functions).</p>
 <p class="rubric">References</p>
 <dl class="citation">
@@ -862,976 +883,9 @@ function will be forced to go through.</p>
 </dd>
 </dl>
 </dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Optimize fit_with_breaks_opt(var) where var is a 1D array
-containing the x locations of your variables
-var has length n_segments - 1, because the two breakpoints
-are always defined (1. the min of x, 2. the max of x).</p>
-<p>fit_with_breaks_opt(var) will return the sum of the square of the
-residuals which you’ll want to minimize with your optimization
-routine.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pwlftf.PiecewiseLinFitTF">
-<em class="property">class </em><code class="sig-prename descclassname">pwlftf.</code><code class="sig-name descname">PiecewiseLinFitTF</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">disp_res=False</em>, <em class="sig-param">dtype='float64'</em>, <em class="sig-param">fast=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="pwlftf.PiecewiseLinFitTF.assemble_regression_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_regression_matrix</span></code></a>(self, breaks, x)</p></td>
-<td><p>Assemble the linear regression matrix A</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="pwlftf.PiecewiseLinFitTF.calc_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_slopes</span></code></a>(self)</p></td>
-<td><p>Calculate the slopes of the lines after a piecewise linear function has been fitted.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit" title="pwlftf.PiecewiseLinFitTF.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
-<td><p>Fit a continuous piecewise linear function for a specified number of line segments.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="pwlftf.PiecewiseLinFitTF.fit_force_points_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_force_points_opt</span></code></a>(self, var)</p></td>
-<td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="pwlftf.PiecewiseLinFitTF.fit_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_guess</span></code></a>(self, guess_breakpoints, \*\*kwargs)</p></td>
-<td><p>Uses L-BFGS-B optimization to find the location of breakpoints from a guess of where breakpoint locations should be.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks</span></code></a>(self, breaks)</p></td>
-<td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_force_points</span></code></a>(self, breaks, …)</p></td>
-<td><p>A function which fits a continuous piecewise linear function for specified breakpoint locations, where you force the fit to go through the data points at x_c and y_c.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_with_breaks_opt</span></code></a>(self, var)</p></td>
-<td><p>The objective function to perform a continuous piecewise linear fit for a specified number of breakpoints.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="pwlftf.PiecewiseLinFitTF.fitfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitfast</span></code></a>(self, n_segments[, pop])</p></td>
-<td><p>Uses multi start LBFGSB optimization to find the location of breakpoints for a given number of line segments by minimizing the sum of the square of the errors.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.p_values" title="pwlftf.PiecewiseLinFitTF.p_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_values</span></code></a>(self)</p></td>
-<td><p>Calculate the p-values for each beta parameter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.predict" title="pwlftf.PiecewiseLinFitTF.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, x[, beta, breaks])</p></td>
-<td><p>Evaluate the fitted continuous piecewise linear function at untested points.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="pwlftf.PiecewiseLinFitTF.prediction_variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prediction_variance</span></code></a>(self, x)</p></td>
-<td><p>Calculate the prediction variance for each specified x location.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="pwlftf.PiecewiseLinFitTF.r_squared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_squared</span></code></a>(self)</p></td>
-<td><p>Calculate the coefficient of determination (“R squared”, R^2) value after a fit has been performed.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="pwlftf.PiecewiseLinFitTF.standard_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_errors</span></code></a>(self)</p></td>
-<td><p>Calculate the standard errors for each beta parameter determined from the piecewise linear fit.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="pwlftf.PiecewiseLinFitTF.use_custom_opt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_custom_opt</span></code></a>(self, n_segments[, x_c, y_c])</p></td>
-<td><p>Provide the number of line segments you want to use with your custom optimization routine.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.assemble_regression_matrix">
-<code class="sig-name descname">assemble_regression_matrix</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.assemble_regression_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assemble the linear regression matrix A</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>breaks</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where each line segment terminates. These are
-referred to as breakpoints for each line segment. This should be
-structured as a 1-D numpy array.</p>
-</dd>
-<dt><strong>x</strong><span class="classifier">tf.tensor (n_data, 1)</span></dt><dd><p>The x locations which the linear regression matrix is assembled on.
-This must be a numpy array!</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">tf.tensor (2-D)</span></dt><dd><p>The assembled linear regression matrix.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Assemble the linear regression matrix on the x data for some set of
-breakpoints.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">assemble_regression_matrix</span><span class="p">(</span><span class="n">breaks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_data</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.calc_slopes">
-<code class="sig-name descname">calc_slopes</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.calc_slopes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the slopes of the lines after a piecewise linear
-function has been fitted.</p>
-<p>This will also calculate the y-intercept from each line in the form
-y = mx + b. The intercepts are stored at self.intercepts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>slopes</strong><span class="classifier">ndarray(1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Calculate the slopes after performing a simple fit</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">slopes</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">calc_slopes</span><span class="p">()</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit a continuous piecewise linear function for a specified number
-of line segments. Uses differential evolution to finds the optimum
-location of breakpoints for a given number of line segments by
-minimizing the sum of the square error.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The desired number of line segments.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">array_like, optional</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">array_like, optional</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.differential_evolution(). This
-will override any pwlf defaults when provided. See Note for more
-information.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">float</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>You probably provided x_c without y_c (or vice versa).
-You must provide both x_c and y_c if you plan to force
-the model through data point(s).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>All <a href="#id17"><span class="problematic" id="id18">**</span></a>kwargs are passed into sicpy.optimize.differential_evolution.
-If any <a href="#id19"><span class="problematic" id="id20">**</span></a>kwargs is used, it will override my differential_evolution,
-defaults. This allows advanced users to tweak their own optimization.
-For me information see:
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232">https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232</a></p>
-<p class="rubric">Examples</p>
-<p>This example shows you how to fit three continuous piecewise lines to
-a dataset. This assumes that x is linearly spaced from [0, 1), and y is
-random.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Additionally you desired that the piecewise linear function go
-through the point (0.0, 0.0).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x_c</span><span class="o">=</span><span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="o">=</span><span class="n">y_c</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Additionally you desired that the piecewise linear function go
-through the points (0.0, 0.0) and (1.0, 1.0).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x_c</span><span class="o">=</span><span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="o">=</span><span class="n">y_c</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>Optimal sum of square error.</p>
-</dd>
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>nVar</strong><span class="classifier">int</span></dt><dd><p>The number of variables in the global optimization problem.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>zeta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters associated with the constraint function,
-if x_c and y_c is provided. Only created if x_c and y_c provided.</p>
-</dd>
-<dt><strong>zetaTF</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The model parameters associated with the constraint function,
-if x_c and y_c is provided. Only created if x_c and y_c provided.</p>
-</dd>
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through. Only created if x_c
-and y_c provided.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">ndarray (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through. Only created if x_c
-and y_c provided.</p>
-</dd>
-<dt><strong>c_n</strong><span class="classifier">int</span></dt><dd><p>The number of constraint points. This is the same as len(x_c).
-Only created if x_c and y_c provided.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit_force_points_opt">
-<code class="sig-name descname">fit_force_points_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_force_points_opt" title="Permalink to this definition">¶</a></dt>
-<dd><p>The objective function to perform a continuous piecewise linear
-fit for a specified number of breakpoints. This is to be used
-with a custom optimization routine, and after use_custom_opt has
-been called.</p>
-<p>Use this function if you intend to be force the model through
-x_c and y_c, while performing a custom optimization.</p>
-<p>This was intended for advanced users only.
-See the following example
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py">https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>var</strong><span class="classifier">array_like</span></dt><dd><p>The breakpoint locations, or variable, in a custom
-optimization routine.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>The sum of square of the residuals.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>You should run use_custom_opt to initialize necessary object
-attributes first.</p>
-<p>Unlike fit_with_breaks_force_points, fit_force_points_opt
-automatically assumes that the first and last breakpoints occur
-at the min and max values of x.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit_guess">
-<code class="sig-name descname">fit_guess</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">guess_breakpoints</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_guess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses L-BFGS-B optimization to find the location of breakpoints
-from a guess of where breakpoint locations should be.</p>
-<p>In some cases you may have a good idea where the breakpoint locations
-occur. It generally won’t be necessary to run a full global
-optimization to search the entire domain for the breakpoints when you
-have a good idea where the breakpoints occur. Here a local optimization
-is run from a guess of the breakpoint locations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>guess_breakpoints</strong><span class="classifier">array_like</span></dt><dd><p>Guess where the breakpoints occur. This should be a list or numpy
-array containing the locations where it appears breakpoints occur.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">float</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>All <a href="#id21"><span class="problematic" id="id22">**</span></a>kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
-<a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs is used, it will override my defaults. This allows
-advanced users to tweak their own optimization. For me information see:
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232">https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232</a></p>
-<p>You do not need to specify the x.min() or x.max() in geuss_breakpoints!</p>
-<p class="rubric">Examples</p>
-<p>In this example we see two distinct linear regions, and we believe a
-breakpoint occurs at 6.0. We’ll use the fit_guess() function to find
-the best breakpoint location starting with this guess.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">11.</span><span class="p">,</span> <span class="mf">13.</span><span class="p">,</span> <span class="mf">16.</span><span class="p">,</span> <span class="mf">28.92</span><span class="p">,</span> <span class="mf">42.81</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_guess</span><span class="p">([</span><span class="mf">6.0</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>Note specifying one breakpoint will result in two line segments.
-If we wanted three line segments, we’ll have to specify two
-breakpoints.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_guess</span><span class="p">([</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>Optimal sum of square error.</p>
-</dd>
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>nVar</strong><span class="classifier">int</span></dt><dd><p>The number of variables in the global optimization problem.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks">
-<code class="sig-name descname">fit_with_breaks</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function which fits a continuous piecewise linear function
-for specified breakpoint locations.</p>
-<p>The function minimizes the sum of the square of the residuals for the
-x y data.</p>
-<p>If you want to understand the math behind this read
-<a class="reference external" href="https://jekel.me/2018/Continous-piecewise-linear-regression/">https://jekel.me/2018/Continous-piecewise-linear-regression/</a></p>
-<p>Other useful resources:
-<a class="reference external" href="http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf">http://golovchenko.org/docs/ContinuousPiecewiseLinearFit.pdf</a>
-<a class="reference external" href="https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic">https://www.mathworks.com/matlabcentral/fileexchange/40913-piecewise-linear-least-square-fittic</a>
-<a class="reference external" href="http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/">http://www.regressionist.com/2018/02/07/continuous-piecewise-linear-fitting/</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>breaks</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where each line segment terminates. These are
-referred to as breakpoints for each line segment. This should be
-structured as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>Returns the sum of squares of the residuals.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The above attributes are added or modified while running this function.</p>
-<p class="rubric">Examples</p>
-<p>If your x data exists from 0 &lt;= x &lt;= 1 and you want three
-piecewise linear lines where the lines terminate at x = 0.0, 0.3, 0.6,
-and 1.0. This assumes that x is linearly spaced from [0, 1), and y is
-random.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ssr</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points">
-<code class="sig-name descname">fit_with_breaks_force_points</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">breaks</em>, <em class="sig-param">x_c</em>, <em class="sig-param">y_c</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_force_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function which fits a continuous piecewise linear function
-for specified breakpoint locations, where you force the
-fit to go through the data points at x_c and y_c.</p>
-<p>The function minimizes the sum of the square of the residuals for the
-pair of x, y data points.</p>
-<p>If you want to understand the math behind this read
-<a class="reference external" href="https://jekel.me/2018/Force-piecwise-linear-fit-through-data/">https://jekel.me/2018/Force-piecwise-linear-fit-through-data/</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>breaks</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where each line segment terminates. These are
-referred to as breakpoints for each line segment. This should be
-structured as a 1-D numpy array.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">array_like</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">array_like</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>L</strong><span class="classifier">float</span></dt><dd><p>Returns the Lagrangian function value. This is the sum of squares
-of the residuals plus the constraint penalty.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The above attributes are added or modified while running this function.
-Input:</p>
-<p>If your x data exists from 0 &lt;= x &lt;= 1 and you want three
-piecewise linear lines where the lines terminate at x = 0.0, 0.3, 0.6,
-and 1.0. This assumes that x is linearly spaced from [0, 1), and y is
-random. Additionally you desired that the piecewise linear function go
-through the point (0.0, 0.0)</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y_c</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks_force_points</span><span class="p">(</span><span class="n">breaks</span><span class="p">,</span> <span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>zeta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters associated with the constraint function.</p>
-</dd>
-<dt><strong>zetaTF</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The model parameters associated with the constraint function.</p>
-</dd>
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>c_n</strong><span class="classifier">int</span></dt><dd><p>The number of constraint points. This is the same as len(x_c).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt">
-<code class="sig-name descname">fit_with_breaks_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fit_with_breaks_opt" title="Permalink to this definition">¶</a></dt>
-<dd><p>The objective function to perform a continuous piecewise linear
-fit for a specified number of breakpoints. This is to be used
-with a custom optimization routine, and after use_custom_opt has
-been called.</p>
-<p>This was intended for advanced users only.</p>
-<p>See the following example
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py">https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>var</strong><span class="classifier">array_like</span></dt><dd><p>The breakpoint locations, or variable, in a custom
-optimization routine.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>The sum of square of the residuals.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>You should run use_custom_opt to initialize necessary object
-attributes first.</p>
-<p>Unlike fit_with_breaks, fit_with_breaks_opt automatically
-assumes that the first and last breakpoints occur at the min and max
-values of x.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.fitfast">
-<code class="sig-name descname">fitfast</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">pop=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.fitfast" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses multi start LBFGSB optimization to find the location of
-breakpoints for a given number of line segments by minimizing the sum
-of the square of the errors.</p>
-<p>The idea is that we generate n random latin hypercube samples
-and run LBFGSB optimization on each one. This isn’t guaranteed to
-find the global optimum. It’s suppose to be a reasonable compromise
-between speed and quality of fit. Let me know how it works.</p>
-<p>Since this is based on random sampling, you might want to run it
-multiple times and save the best version… The best version will
-have the lowest self.ssr (sum of square of residuals).</p>
-<p>There is no guarantee that this will be faster than fit(), however
-you may find it much faster sometimes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The desired number of line segments.</p>
-</dd>
-<dt><strong>pop</strong><span class="classifier">int, optional</span></dt><dd><p>The number of latin hypercube samples to generate. Default pop=2.</p>
-</dd>
-<dt><strong>**kwargs</strong><span class="classifier">optional</span></dt><dd><p>Directly passed into scipy.optimize.fmin_l_bfgs_b(). This
-will override any pwlf defaults when provided. See Note for more
-information.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">float</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<dl class="simple">
-<dt>The default number of multi start optimizations is 2.</dt><dd><ul class="simple">
-<li><p>Decreasing this number will result in a faster run time.</p></li>
-<li><dl class="simple">
-<dt>Increasing this number will improve the likelihood of finding</dt><dd><p>good results</p>
-</dd>
-</dl>
-</li>
-<li><p>You can specify the number of starts using the following call</p></li>
-<li><p>Minimum value of pop is 2</p></li>
-</ul>
-</dd>
-</dl>
-<p>All <a href="#id25"><span class="problematic" id="id26">**</span></a>kwargs are passed into sicpy.optimize.fmin_l_bfgs_b. If any
-<a href="#id27"><span class="problematic" id="id28">**</span></a>kwargs is used, it will override my defaults. This allows
-advanced users to tweak their own optimization. For me information see:
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232">https://github.com/cjekel/piecewise_linear_fit_py/issues/15#issuecomment-434717232</a></p>
-<p class="rubric">Examples</p>
-<p>This example shows you how to fit three continuous piecewise lines to
-a dataset. This assumes that x is linearly spaced from [0, 1), and y is
-random.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>You can change the number of latin hypercube samples (or starting
-point, locations) to use with pop. The following example will use 50
-samples.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>ssr</strong><span class="classifier">float</span></dt><dd><p>Optimal sum of square error.</p>
-</dd>
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>nVar</strong><span class="classifier">int</span></dt><dd><p>The number of variables in the global optimization problem.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>slopes</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The slope of each ling segment as a 1-D numpy array. This assumes
-that x[0] &lt;= x[1] &lt;= … &lt;= x[n]. Thus, slopes[0] is the slope
-of the first line segment.</p>
-</dd>
-<dt><strong>intercepts</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The y-intercept of each line segment as a 1-D numpy array.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.p_values">
-<code class="sig-name descname">p_values</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.p_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the p-values for each beta parameter.</p>
-<p>This calculates the p-values for the beta parameters under the
-assumption that your breakpoint locations are known. Section 2.4.2 of
-<a class="reference internal" href="#r4f377d2f3873-2" id="id29">[2]</a> defines how to calculate the p-value of individual parameters.
-This is really a marginal test since each parameter is dependent upon
-the other parameters.</p>
-<p>These values are typically compared to some confidence level alpha for
-significance. A 95% confidence level would have alpha = 0.05.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>p</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>p-values for each beta parameter where p-value[0] corresponds to
-beta[0] and so forth</p>
-</dd>
-</dl>
-</dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
-<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This assumes that your breakpoint locations are exact! and does
-not consider the uncertainty with your breakpoint locations.</p>
-<p>See <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/issues/14">https://github.com/cjekel/piecewise_linear_fit_py/issues/14</a></p>
-<p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r4f377d2f3873-2"><span class="brackets"><a class="fn-backref" href="#id29">2</a></span></dt>
-<dd><p>Myers RH, Montgomery DC, Anderson-Cook CM. Response surface
-methodology . Hoboken. New Jersey: John Wiley &amp; Sons, Inc.
-2009;20:38-44.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>After performing a fit, one can calculate the p-value for each beta
-parameter</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">p_values</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>see also examples/standard_errrors_and_p-values.py</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">beta=None</em>, <em class="sig-param">breaks=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the fitted continuous piecewise linear function at untested
-points.</p>
-<p>You can manfully specify the breakpoints and calculated
-values for beta if you want to quickly predict from different models
-and the same data set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where you want to predict the output of the fitted
-continuous piecewise linear function.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">none or ndarray (1-D), optional</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.
-Default is None.</p>
-</dd>
-<dt><strong>breaks</strong><span class="classifier">none or array_like, optional</span></dt><dd><p>The x locations where each line segment terminates. These are
-referred to as breakpoints for each line segment. This should be
-structured as a 1-D numpy array. Default is None.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>y_hat</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The predicted values at x.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The above attributes are added or modified if any optional parameter
-is specified.</p>
-<p>Fits a simple model, then predict at x_new locations which are
-linearly spaced.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ssr</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_with_breaks</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
-</dd>
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>beta</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-<dt><strong>betaTF</strong><span class="classifier">tf.tensor (n_parameters, 1)</span></dt><dd><p>The model parameters for the continuous piecewise linear fit.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.prediction_variance">
-<code class="sig-name descname">prediction_variance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.prediction_variance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the prediction variance for each specified x location. The
-prediction variance is the uncertainty of the model due to the lack of
-data. This can be used to find a 95% confidence interval of possible
-piecewise linear models based on the current data. This would be
-done typically as y_hat +- 1.96*np.sqrt(pre_var). The
-prediction_variance needs to be calculated at various x locations.
-For more information see:
-www2.mae.ufl.edu/haftka/vvuq/lectures/Regression-accuracy.pptx</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The x locations where you want the prediction variance from the
-fitted continuous piecewise linear function.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>pre_var</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>Numpy array (floats) of prediction variance at each x location.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
-</dd>
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This assumes that your breakpoint locations are exact! and does
-not consider the uncertainty with your breakpoint locations.</p>
-<p class="rubric">Examples</p>
-<p>Calculate the prediction variance at x_new after performing a simple
-fit.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pre_var</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">prediction_variance</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>see also examples/prediction_variance.py</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.r_squared">
-<code class="sig-name descname">r_squared</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.r_squared" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the coefficient of determination (“R squared”, R^2) value
-after a fit has been performed.
-For more information see:
-<a class="reference external" href="https://en.wikipedia.org/wiki/Coefficient_of_determination">https://en.wikipedia.org/wiki/Coefficient_of_determination</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>rsq</strong><span class="classifier">float</span></dt><dd><p>Coefficient of determination, or ‘R squared’ value.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
-<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
-</dd>
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Calculate the R squared value after performing a simple fit.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rsq</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">r_squared</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.standard_errors">
-<code class="sig-name descname">standard_errors</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.standard_errors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the standard errors for each beta parameter determined
-from the piecewise linear fit. Typically +- 1.96*se will yield the
-center of a 95% confidence region around your parameters. This
-assumes the parmaters follow a normal distribution. For more
-information see:
-<a class="reference external" href="https://en.wikipedia.org/wiki/Standard_error">https://en.wikipedia.org/wiki/Standard_error</a></p>
-<p>This calculation follows the derivation provided in <a class="reference internal" href="#r7676cca87ba3-1" id="id31">[1]</a>. A taylor-
-series expansion is not needed since this is linear regression.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>se</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>Standard errors associated with each beta parameter. Specifically
-se[0] correspounds to the standard error for beta[0], and so forth.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
-<dt>AttributeError</dt><dd><p>You have probably not performed a fit yet.</p>
-</dd>
-<dt>LinAlgError</dt><dd><p>This typically means your regression problem is ill-conditioned.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Note, this assumes no uncertainty in breakpoint locations.</p>
-<p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r7676cca87ba3-1"><span class="brackets"><a class="fn-backref" href="#id31">1</a></span></dt>
-<dd><p>Coppe, A., Haftka, R. T., and Kim, N. H., “Uncertainty
-Identification of Damage Growth Parameters Using Nonlinear
-Regression,” AIAA Journal, Vol. 49, No. 12, dec 2011, pp.
-2818–2821.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Calculate the standard errors after performing a simple fit.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pwlf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFitTF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fitfast</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">se</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="pwlftf.PiecewiseLinFitTF.use_custom_opt">
-<code class="sig-name descname">use_custom_opt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_segments</em>, <em class="sig-param">x_c=None</em>, <em class="sig-param">y_c=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pwlftf.PiecewiseLinFitTF.use_custom_opt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provide the number of line segments you want to use with your
-custom optimization routine.</p>
-<p>Run this function first to initialize necessary attributes!!!</p>
-<p>This was intended for advanced users only.</p>
-<p>See the following example
-<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py">https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/useCustomOptimizationRoutine.py</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The x locations where each line segment terminates. These are
-referred to as breakpoints for each line segment. This should be
-structured as a 1-D numpy array.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">none or array_like, optional</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">none or array_like, optional</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
+<dt>ValueError</dt><dd><p>You can’t specify weights with x_c and y_c.</p>
 </dd>
 </dl>
 </dd>
@@ -1844,27 +898,6 @@ are always defined (1. the min of x, 2. the max of x).</p>
 <p>fit_with_breaks_opt(var) will return the sum of the square of the
 residuals which you’ll want to minimize with your optimization
 routine.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>n_parameters</strong><span class="classifier">int</span></dt><dd><p>The number of model parameters. This is equivalent to the
-len(beta).</p>
-</dd>
-<dt><strong>nVar</strong><span class="classifier">int</span></dt><dd><p>The number of variables in the global optimization problem.</p>
-</dd>
-<dt><strong>n_segments</strong><span class="classifier">int</span></dt><dd><p>The number of line segments.</p>
-</dd>
-<dt><strong>x_c</strong><span class="classifier">tf.tensor (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>y_c</strong><span class="classifier">ndarray (c_n, 1)</span></dt><dd><p>The x locations of the data points that the piecewise linear
-function will be forced to go through.</p>
-</dd>
-<dt><strong>c_n</strong><span class="classifier">int</span></dt><dd><p>The number of constraint points. This is the same as len(x_c).</p>
-</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>

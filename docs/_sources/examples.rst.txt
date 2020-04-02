@@ -494,10 +494,11 @@ regularizer to perform an interesting fit with the regression matrix.
 use of tensorflow
 -----------------
 
-You’ll be able to use the ``PiecewiseLinFitTF`` class if you have
-TensorFlow installed, which may offer performance improvements for
-larger data sets over the original ``PiecewiseLinFit`` class. For
-performance benchmarks see this blog
+You need to install
+`pwlftf <https://github.com/cjekel/piecewise_linear_fit_py_tf>`__ which
+will have the ``PiecewiseLinFitTF`` class. For performance benchmarks
+(these benchmarks are outdated! and the regular pwlf may be faster in
+many applications) see this blog
 `post <https://jekel.me/2019/Adding-tensorflow-to-pwlf/>`__.
 
 The use of the TF class is nearly identical to the original class,
@@ -512,6 +513,7 @@ however note the following exceptions. ``PiecewiseLinFitTF`` does:
 
 .. code:: python
 
+   import pwlftf as pwlf
    # your desired line segment end locations
    x0 = np.array([min(x), 0.039, 0.10, max(x)])
 
@@ -830,7 +832,7 @@ and a weighted fit.
    plt.legend()
    plt.show()
 
-.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png
    :alt: Weighted pwlf fit.
 
    Weighted pwlf fit.

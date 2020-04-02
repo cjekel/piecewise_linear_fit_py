@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Examples &#8212; pwlf 1.1.7 documentation</title>
+    <title>Examples &#8212; pwlf 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -112,6 +112,7 @@ matrix</a></p></li>
 p-values</a></p></li>
 <li><p><a class="reference external" href="#obtain-the-equations-of-fitted-pwlf">obtain the equations of fitted
 pwlf</a></p></li>
+<li><p><a class="reference external" href="#weighted-least-squares-fit">weighted least squares fit</a></p></li>
 </ol>
 <div class="section" id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
@@ -494,10 +495,11 @@ regularizer to perform an interesting fit with the regression matrix.</p>
 </div>
 <div class="section" id="use-of-tensorflow">
 <h2>use of tensorflow<a class="headerlink" href="#use-of-tensorflow" title="Permalink to this headline">¶</a></h2>
-<p>You’ll be able to use the <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> class if you have
-TensorFlow installed, which may offer performance improvements for
-larger data sets over the original <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFit</span></code> class. For
-performance benchmarks see this blog
+<p>You need to install
+<a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py_tf">pwlftf</a> which
+will have the <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> class. For performance benchmarks
+(these benchmarks are outdated! and the regular pwlf may be faster in
+many applications) see this blog
 <a class="reference external" href="https://jekel.me/2019/Adding-tensorflow-to-pwlf/">post</a>.</p>
 <p>The use of the TF class is nearly identical to the original class,
 however note the following exceptions. <code class="docutils literal notranslate"><span class="pre">PiecewiseLinFitTF</span></code> does:</p>
@@ -509,7 +511,8 @@ float64 and float32 data types</p></li>
 decomposition (default <code class="docutils literal notranslate"><span class="pre">fast=True</span></code>), and orthogonal decomposition
 (<code class="docutils literal notranslate"><span class="pre">fast=False</span></code>)</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your desired line segment end locations</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pwlftf</span> <span class="k">as</span> <span class="nn">pwlf</span>
+<span class="c1"># your desired line segment end locations</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.039</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
 
 <span class="c1"># initialize TF piecewise linear fit with your x and y data</span>
@@ -803,6 +806,68 @@ for each line segment.</p>
 <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/understanding_higher_degrees/polynomials_in_pwlf.ipynb">this</a>
 jupyter notebook.</p>
 </div>
+<div class="section" id="weighted-least-squares-fit">
+<h2>weighted least squares fit<a class="headerlink" href="#weighted-least-squares-fit" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes your data will not have a constant variance
+(heteroscedasticity), and you need to perform a weighted least squares
+fit. The following example will perform a standard and weighted fit so
+you can compare the differences. First we need to generate a data set
+which will be a good candidate to use for weighted least squares fits.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate data with heteroscedasticity</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">n_data_sets</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">n_segments</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="c1"># generate sine data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_data_sets</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">sigma_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_data_sets</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># add noise to the data</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma_change</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_data_sets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The individual weights in pwlf are the reciprocal of the standard
+deviation for each data point. Here weights[i] corresponds to one over
+the standard deviation of the ith data point. The result of this is that
+data points with higher variance are less important to the overall pwlf
+than data point with small variance. Let’s perform a standard pwlf fit
+and a weighted fit.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># perform an ordinary pwlf fit to the entire data</span>
+<span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_segments</span><span class="p">)</span>
+
+<span class="c1"># compute the standard deviation in y</span>
+<span class="n">y_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># set the weights to be one over the standard deviation</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">y_std</span>
+
+<span class="c1"># perform a weighted least squares to the data</span>
+<span class="n">my_pwlf_w</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">my_pwlf_w</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_segments</span><span class="p">)</span>
+
+<span class="c1"># compare the fits</span>
+<span class="n">xhat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xhat</span><span class="p">)</span>
+<span class="n">yhat_w</span> <span class="o">=</span> <span class="n">my_pwlf_w</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xhat</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xhat</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Ordinary LS&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xhat</span><span class="p">,</span> <span class="n">yhat_w</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Weighted LS&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id9">
+<img alt="Weighted pwlf fit." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png" />
+<p class="caption"><span class="caption-text">Weighted pwlf fit.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+<p>We can see that the weighted pwlf fit tries fit data with low variance
+better than data with high variance, however the ordinary pwlf fits the
+data assuming a uniform variance.</p>
+</div>
 </div>
 
 
@@ -842,6 +907,7 @@ jupyter notebook.</p>
 <li class="toctree-l2"><a class="reference internal" href="#specify-breakpoint-bounds">specify breakpoint bounds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and p-values</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#obtain-the-equations-of-fitted-pwlf">obtain the equations of fitted pwlf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#weighted-least-squares-fit">weighted least squares fit</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
