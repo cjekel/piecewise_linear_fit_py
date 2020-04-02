@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Setup.py now grabs markdown file for long description
 ### Removed
-- TBD
+- Tensorflow support has been removed. It hasn't been updated in a long time. If you still require this object, check out [pwlftf](https://github.com/cjekel/piecewise_linear_fit_py_tf)
 
 
 ## [1.1.7] - 2020-02-05

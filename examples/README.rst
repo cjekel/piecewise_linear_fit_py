@@ -494,10 +494,11 @@ regularizer to perform an interesting fit with the regression matrix.
 use of tensorflow
 -----------------
 
-You’ll be able to use the ``PiecewiseLinFitTF`` class if you have
-TensorFlow installed, which may offer performance improvements for
-larger data sets over the original ``PiecewiseLinFit`` class. For
-performance benchmarks see this blog
+You need to install
+`pwlftf <https://github.com/cjekel/piecewise_linear_fit_py_tf>`__ which
+will have the ``PiecewiseLinFitTF`` class. For performance benchmarks
+(these benchmarks are outdated! and the regular pwlf may be faster in
+many applications) see this blog
 `post <https://jekel.me/2019/Adding-tensorflow-to-pwlf/>`__.
 
 The use of the TF class is nearly identical to the original class,
@@ -512,6 +513,7 @@ however note the following exceptions. ``PiecewiseLinFitTF`` does:
 
 .. code:: python
 
+   import pwlftf as pwlf
    # your desired line segment end locations
    x0 = np.array([min(x), 0.039, 0.10, max(x)])
 
@@ -681,35 +683,18 @@ following code.
            row[0] = 'Breakpoint'
            print(*row, sep=' | ')
 
-+-------------+-------------+-------------+-------------+-------------+
-| Parameter   | Parameter   | Standard    | t           | P >         |
-| type        | value       | error       |             | np.abs(t)   |
-|             |             |             |             | (p-value)   |
-+=============+=============+=============+=============+=============+
-| Beta        | 1.821       | 0.0         | 1763191476. | 0.0         |
-|             |             |             | 046         |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Beta        | -0.427      | 0.0         | -46404554.4 | 0.0         |
-|             |             |             | 93          |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Beta        | -1.165      | 0.0         | -111181494. | 0.0         |
-|             |             |             | 162         |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Beta        | -1.397      | 0.0         | -168954500. | 0.0         |
-|             |             |             | 421         |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Beta        | 0.873       | 0.0         | 93753841.24 | 0.0         |
-|             |             |             | 2           |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Breakpoint  | 0.2         | 0.0         | 166901856.8 | 0.0         |
-|             |             |             | 85          |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Breakpoint  | 0.5         | 0.0         | 537785803.6 | 0.0         |
-|             |             |             | 46          |             |
-+-------------+-------------+-------------+-------------+-------------+
-| Breakpoint  | 0.75        | 0.0         | 482311769.1 | 0.0         |
-|             |             |             | 59          |             |
-+-------------+-------------+-------------+-------------+-------------+
+============== =============== ============== ============== =======================
+Parameter type Parameter value Standard error t              P > np.abs(t) (p-value)
+============== =============== ============== ============== =======================
+Beta           1.821           0.0            1763191476.046 0.0
+Beta           -0.427          0.0            -46404554.493  0.0
+Beta           -1.165          0.0            -111181494.162 0.0
+Beta           -1.397          0.0            -168954500.421 0.0
+Beta           0.873           0.0            93753841.242   0.0
+Breakpoint     0.2             0.0            166901856.885  0.0
+Breakpoint     0.5             0.0            537785803.646  0.0
+Breakpoint     0.75            0.0            482311769.159  0.0
+============== =============== ============== ============== =======================
 
 obtain the equations of fitted pwlf
 -----------------------------------

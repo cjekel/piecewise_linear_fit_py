@@ -421,7 +421,7 @@ yhat_en = my_pwlf_en.predict(xhat, breaks=breaks,
 
 ## use of tensorflow
 
-You'll be able to use the ```PiecewiseLinFitTF``` class if you have TensorFlow installed, which may offer performance improvements for larger data sets over the original ```PiecewiseLinFit``` class. For performance benchmarks see this blog [post](https://jekel.me/2019/Adding-tensorflow-to-pwlf/).
+You need to install [pwlftf](https://github.com/cjekel/piecewise_linear_fit_py_tf) which will have the ```PiecewiseLinFitTF``` class. For performance benchmarks (these benchmarks are outdated! and the regular pwlf may be faster in many applications) see this blog [post](https://jekel.me/2019/Adding-tensorflow-to-pwlf/).
 
 The use of the TF class is nearly identical to the original class, however note the following exceptions.
 ```PiecewiseLinFitTF``` does:
@@ -433,6 +433,7 @@ The use of the TF class is nearly identical to the original class, however note 
 
 
 ```python
+import pwlftf as pwlf
 # your desired line segment end locations
 x0 = np.array([min(x), 0.039, 0.10, max(x)])
 

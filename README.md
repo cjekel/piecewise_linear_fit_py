@@ -65,10 +65,6 @@ pyDOE (Tested on version >= 0.3.8)
 
 setuptools >= 38.6.0
 
-Optional:
-
-TensorFlow (Versions < 2.0.0)
-
 # License
 MIT License
 
