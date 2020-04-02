@@ -173,6 +173,14 @@ class TestEverything(unittest.TestCase):
         res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
         self.assertTrue(np.isclose(res['fun'], 0.0))
 
+    def test_custom_opt_with_con(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        my_pwlf.use_custom_opt(3, x_c=[0.], y_c=[0.])
+        x_guess = np.array((0.9, 1.1))
+        from scipy.optimize import minimize
+        res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
+        self.assertTrue(True)
+
     def test_single_force_break_point1(self):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x_c = [-0.5]
