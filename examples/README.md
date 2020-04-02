@@ -710,6 +710,6 @@ plt.legend()
 plt.show()
 ```
 
-![Weighted pwlf fit.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example)
+![Weighted pwlf fit.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png)
 
 We can see that the weighted pwlf fit tries fit data with low variance better than data with high variance, however the ordinary pwlf fits the data assuming a uniform variance.

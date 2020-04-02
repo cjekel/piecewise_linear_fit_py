@@ -847,7 +847,7 @@ and a weighted fit.
    plt.legend()
    plt.show()
 
-.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example
+.. figure:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png
    :alt: Weighted pwlf fit.
 
    Weighted pwlf fit.
