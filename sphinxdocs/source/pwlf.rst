@@ -11,9 +11,3 @@ pwlf package contents
     :members:
     :undoc-members:
     :show-inheritance:
-
-.. autoclass:: pwlftf.PiecewiseLinFitTF
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    
