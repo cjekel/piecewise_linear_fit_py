@@ -173,6 +173,14 @@ class TestEverything(unittest.TestCase):
         res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
         self.assertTrue(np.isclose(res['fun'], 0.0))
 
+    def test_custom_opt_with_con(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        my_pwlf.use_custom_opt(3, x_c=[0.], y_c=[0.])
+        x_guess = np.array((0.9, 1.1))
+        from scipy.optimize import minimize
+        res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
+        self.assertTrue(True)
+
     def test_single_force_break_point1(self):
         my_fit = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         x_c = [-0.5]
@@ -438,6 +446,67 @@ class TestEverything(unittest.TestCase):
         my_pwlf_3.calc_slopes()
     # End of degree tests
     # =================================================
+
+    # =================================================
+    # Start weighted least squares tests
+    def test_weighted_same_as_ols(self):
+        # test that weighted least squares is same as OLS
+        # when the weight is equal to 1.0
+        n_segments = 2
+        my = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        x = np.random.random()
+        breaks = my.fit_guess([x])
+        my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                    weights=np.ones_like(self.x_small))
+        breaks_w = my_w.fit_guess([x])
+
+        self.assertTrue(np.isclose(my.ssr, my_w.ssr))
+        for i in range(n_segments+1):
+            self.assertTrue(np.isclose(breaks[i], breaks_w[i]))
+    
+    def test_heteroscedastic_data(self):
+        n_segments = 3
+        weights = self.y_small.copy()
+        weights[0] = 0.01
+        weights = 1.0 / weights
+        my_w = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                    weights=weights)
+        _ = my_w.fit(n_segments)
+        _ = my_w.standard_errors()
+
+    def test_not_supported_fit(self):
+        x = np.linspace(0.0, 1.0, num=100)
+        y = np.sin(6.0*x)
+        w = np.random.random(size=100)
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True, weights=w)
+        x_c = [0.0]
+        y_c = [0.0]
+        try:
+            my_fit.fit(3, x_c, y_c)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def not_supported_fit_with_breaks_force_points(self):
+        x = np.linspace(0.0, 1.0, num=100)
+        y = np.sin(6.0*x)
+        w = list(np.random.random(size=100))
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True, weights=w)
+        x_c = [0.0]
+        y_c = [0.0]
+        try:
+            my_fit.fit_with_breaks_force_points([0.1, 0.2, 0.3], x_c, y_c)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def custom_opt_not_supported(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        try:
+            my_pwlf.use_custom_opt(3, x_c=[0], y_c=[0])
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
 
 
 if __name__ == '__main__':
