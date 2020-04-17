@@ -283,20 +283,20 @@ class PiecewiseLinFit(object):
         if self.degree >= 1:
             A_list.append(x - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1],
+                A_list.append(np.where(x >= self.fit_breaks[i+1],
                                        x - self.fit_breaks[i+1],
                                        0.0))
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
                     A_list.append((x - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        A_list.append(np.where(x > self.fit_breaks[i+1],
+                        A_list.append(np.where(x >= self.fit_breaks[i+1],
                                                (x - self.fit_breaks[i+1])**k,
                                                0.0))
         else:
             A_list = [np.ones_like(x)]
             for i in range(self.n_segments - 1):
-                A_list.append(np.where(x > self.fit_breaks[i+1], 1.0, 0.0))
+                A_list.append(np.where(x >= self.fit_breaks[i+1], 1.0, 0.0))
         A = np.vstack(A_list).T
         self.n_parameters = A.shape[1]
         return A
@@ -1517,20 +1517,20 @@ class PiecewiseLinFit(object):
         if self.degree >= 1:
             C_list.append(self.x_c - self.fit_breaks[0])
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(np.where(self.x_c >= self.fit_breaks[i+1],
                                        self.x_c - self.fit_breaks[i+1],
                                        0.0))
             if self.degree >= 2:
                 for k in range(2, self.degree + 1):
                     C_list.append((self.x_c - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                        C_list.append(np.where(self.x_c >= self.fit_breaks[i+1],
                                                (self.x_c
                                                 - self.fit_breaks[i+1])**k,
                                                0.0))
         else:
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i+1],
+                C_list.append(np.where(self.x_c >= self.fit_breaks[i+1],
                                        1.0,
                                        0.0))
         C = np.vstack(C_list).T
