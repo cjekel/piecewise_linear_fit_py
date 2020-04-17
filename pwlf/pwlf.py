@@ -1524,7 +1524,7 @@ class PiecewiseLinFit(object):
                 for k in range(2, self.degree + 1):
                     C_list.append((self.x_c - self.fit_breaks[0])**k)
                     for i in range(self.n_segments - 1):
-                        C_list.append(np.where(self.x_c >= self.fit_breaks[i+1],
+                        C_list.append(np.where(self.x_c >= self.fit_breaks[i+1],  # noqa E501
                                                (self.x_c
                                                 - self.fit_breaks[i+1])**k,
                                                0.0))
