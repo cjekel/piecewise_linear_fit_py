@@ -17,6 +17,6 @@ setup(
         "numpy >= 1.14.0",
         "scipy >= 1.2.0",
         "pyDOE >= 0.3.8",
-        "setuptools >= 38.6.0",
+        'importlib-metadata ~= 1.0 ; python_version < "3.8"',
     ],
 )
