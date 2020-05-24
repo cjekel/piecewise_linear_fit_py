@@ -1,9 +1,9 @@
 import io
-from setuptools import setup
+from distutils.core import setup
 
 setup(
     name='pwlf',
-    version='2.0.0',
+    version='2.0.1',
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
     packages=['pwlf'],
@@ -17,6 +17,6 @@ setup(
         "numpy >= 1.14.0",
         "scipy >= 1.2.0",
         "pyDOE >= 0.3.8",
-        "setuptools >= 38.6.0",
+        'importlib-metadata ~= 1.0 ; python_version < "3.8"',
     ],
 )

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2020-05-24
+### Changed
+- Removed setuptools for importlib single source versioning
+### Added
+- Requirement for importlib-metadata if Python version is less than 3.8
+### Removed
+- Requriement for setuptools
+
 ## [2.0.0] - 2020-04-02
 ### Added
 - Added supports for pwlf to fit to weighted data sets! Check out [this example](https://github.com/cjekel/piecewise_linear_fit_py/tree/master/examples#weighted-least-squares-fit).

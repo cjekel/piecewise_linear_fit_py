@@ -7,4 +7,4 @@ Requirements
 
 `pyDOE <https://pypi.org/project/pyDOE/>`__ ( >= 0.3.8)
 
-`setuptools <https://pypi.org/project/setuptools/>`__ (>= 38.6.0)
+`importlib-metadata <https://pypi.org/project/importlib-metadata/>`__ ('importlib-metadata ~= 1.0 ; python_version < "3.8"')
