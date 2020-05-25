@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='pwlf',
-    version='2.0.1',
+    version='2.0.2',
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
     packages=['pwlf'],
