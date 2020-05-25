@@ -2,9 +2,9 @@ language: python
 cache: pip
 python:
   - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
 install:
   - pip install coverage==4.5.4
   - pip install flake8 pytest-cov pyDOE coveralls python-coveralls
