@@ -10,7 +10,7 @@ setup(
     url='https://github.com/cjekel/piecewise_linear_fit_py',
     license='MIT License',
     description='fit piecewise linear functions to data',
-    long_description=io.open('README.rst').read(),
+    long_description=io.open('README.rst', encoding="utf-8").read(),
     # long_description_content_type='text/markdown',
     platforms=['any'],
     install_requires=[
