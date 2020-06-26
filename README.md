@@ -63,8 +63,6 @@ SciPy >= 1.2.0
 
 pyDOE >= 0.3.8
 
-importlib-metadata ~= 1.0 ; python_version < "3.8"
-
 # License
 MIT License
 
