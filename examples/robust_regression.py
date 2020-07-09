@@ -35,24 +35,36 @@ def my_fun(breaks_and_beta):
     return resids
 
 
-# fit the data three line segments and use this result as a starting point
-res = my_pwlf.fitfast(num_of_line_segments)
+n_runs = 50  # perfrom 50 robust regressions, and take the best one
+results = []
+for i in range(n_runs):
+    # fit the data three line segments and use this result as a starting point
+    res = my_pwlf.fitfast(num_of_line_segments)
+
+    breaks_and_beta_guess = np.zeros(num_in_breaks + n_beta)
+    breaks_and_beta_guess[:num_in_breaks] = res[1:num_of_line_segments]
+    breaks_and_beta_guess[num_in_breaks:] = my_pwlf.beta
+
+    # use the result from pwlf to start a robust regresion
+    # notes on soft_l1: from documentation
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
+    # ‘soft_l1’ : rho(z) = 2 * ((1 + z)**0.5 - 1). The smooth approximation of l1
+    # (absolute value) loss. Usually a good choice for robust least squares.
+    result = least_squares(my_fun,
+                           breaks_and_beta_guess,  # initial guess
+                           loss='soft_l1',
+                           f_scale=0.1)  # inlier residuals less than 0.1
+    results.append(result)
+# find the best result
+costs = []
+for r in results:
+    costs.append(r['cost'])  # the objective function from each Robust Reg.
+index_best_result = np.argmin(costs)
+result = results[index_best_result]
+
+# least squares result
 xhat = np.linspace(0, 10, 1000)
 yhat_ols = my_pwlf.predict(xhat)  # initial guess
-
-breaks_and_beta_guess = np.zeros(num_in_breaks + n_beta)
-breaks_and_beta_guess[:num_in_breaks] = res[1:num_of_line_segments]
-breaks_and_beta_guess[num_in_breaks:] = my_pwlf.beta
-
-# use the result from pwlf to start a robust regresion
-# notes on soft_l1: from documentation
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
-# ‘soft_l1’ : rho(z) = 2 * ((1 + z)**0.5 - 1). The smooth approximation of l1
-# (absolute value) loss. Usually a good choice for robust least squares.
-result = least_squares(my_fun,
-                       breaks_and_beta_guess,  # initial guess
-                       loss='soft_l1',
-                       f_scale=0.1)  # inlier residuals less than 0.1
 
 # put the results back into my_pwlf
 breaks = np.zeros(num_of_line_segments+1)
