@@ -21,7 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from __future__ import print_function
 # import libraries
 import numpy as np
 from scipy.optimize import differential_evolution
@@ -189,39 +188,29 @@ class PiecewiseLinFit(object):
 
         self.print = disp_res
         self.lapack_driver = lapack_driver
-        # x and y should be numpy arrays
-        # if they are not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
-        if isinstance(y, np.ndarray) is False:
-            y = np.array(y)
+        x, y = self._switch_to_np_array(x), self._switch_to_np_array(y)
 
-        self.x_data = x
-        self.y_data = y
+        self.x_data, self.y_data = x, y
 
         # calculate the number of data points
         self.n_data = x.size
 
         # set the first and last break x values to be the min and max of x
-        self.break_0 = np.min(self.x_data)
-        self.break_n = np.max(self.x_data)
+        self.break_0, self.break_n = np.min(self.x_data), np.max(self.x_data)
 
-        if degree < 12 and degree >= 0:
+        if 12 > degree >= 0:
             # I actually don't know what the upper degree limit should
             self.degree = int(degree)
         else:
-            not_suported = "degree = " + str(degree) + " is not supported."
-            raise ValueError(not_suported)
+            raise ValueError(f"degree = {degree} is not supported.")
 
         self.y_w = None
         self.weights = None
         # self.weights2 = None  # the squared weights vector
         if weights is not None:
-            if isinstance(weights, np.ndarray) is False:
-                weights = np.array(weights)
+            self.weights = self._switch_to_np_array(weights)
             # self.weights2 = weights*weights
-            self.weights = weights
-            self.y_w = np.dot(self.y_data, np.eye(self.n_data)*self.weights)
+            self.y_w = np.dot(self.y_data, np.eye(self.n_data) * self.weights)
 
         # initialize all empty attributes as None
         self.fit_breaks = None
@@ -237,6 +226,44 @@ class PiecewiseLinFit(object):
         self.slopes = None
         self.intercepts = None
         self.se = None
+
+    @staticmethod
+    def _switch_to_np_array(input_):
+        r"""
+        Check the input, if it's not a Numpy array transform it to one.
+
+        Parameters
+        ----------
+        input_ : array_like
+            The object that requires a check.
+
+        Returns
+        -------
+        input_ : ndarray
+            The input data that's been transformed when required.
+        """
+        if isinstance(input_, np.ndarray) is False:
+            input_ = np.array(input_)
+        return input_
+
+    def _get_breaks(self, input_):
+        r"""
+        Use input to form a ndarray containing breakpoints
+
+        Parameters
+        ----------
+        input_ : array_like
+            The object containing some of the breakpoints
+
+        Returns
+        -------
+        b_ : ndarray
+            All the line breaks
+        """
+        v = np.sort(input_)
+        b_ = np.zeros(len(v) + 2)
+        b_[0], b_[1:-1], b_[-1] = self.break_0, v.copy(), self.break_n
+        return b_
 
     def assemble_regression_matrix(self, breaks, x):
         r"""
@@ -268,9 +295,8 @@ class PiecewiseLinFit(object):
         >>> A = assemble_regression_matrix(breaks, self.x_data)
 
         """
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+
+        breaks = self._switch_to_np_array(breaks)
 
         # Sort the breaks, then store them
         breaks_order = np.argsort(breaks)
@@ -350,9 +376,7 @@ class PiecewiseLinFit(object):
 
         """
 
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+        breaks = self._switch_to_np_array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
@@ -426,15 +450,10 @@ class PiecewiseLinFit(object):
 
         """
 
-        # check if x_c and y_c are numpy array, if not convert to numpy array
-        if isinstance(x_c, np.ndarray) is False:
-            x_c = np.array(x_c)
-        if isinstance(y_c, np.ndarray) is False:
-            y_c = np.array(y_c)
+        x_c, y_c = self._switch_to_np_array(x_c), self._switch_to_np_array(y_c)
         # sort the x_c and y_c data points, then store them
         x_c_order = np.argsort(x_c)
-        self.x_c = x_c[x_c_order]
-        self.y_c = y_c[x_c_order]
+        self.x_c, self.y_c = x_c[x_c_order], y_c[x_c_order]
         # store the number of constraints
         self.c_n = len(self.x_c)
 
@@ -443,9 +462,7 @@ class PiecewiseLinFit(object):
                              ' not supported since these have a tendency '
                              'of being numerically instable.')
 
-        # Check if breaks in ndarray, if not convert to np.array
-        if isinstance(breaks, np.ndarray) is False:
-            breaks = np.array(breaks)
+        breaks = self._switch_to_np_array(breaks)
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
         L = self.conlstsq(A)
@@ -501,9 +518,7 @@ class PiecewiseLinFit(object):
             self.n_parameters = len(self.fit_breaks)
             self.n_segments = self.n_parameters - 1
 
-        # check if x is numpy array, if not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
+        x = self._switch_to_np_array(x)
 
         A = self.assemble_regression_matrix(self.fit_breaks, x)
 
@@ -549,12 +564,7 @@ class PiecewiseLinFit(object):
         values of x.
         """
 
-        var = np.sort(var)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
-
+        breaks = self._get_breaks(input_=var)
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
         # try to solve the regression problem
@@ -612,12 +622,7 @@ class PiecewiseLinFit(object):
         at the min and max values of x.
         """
 
-        var = np.sort(var)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
-
+        breaks = self._get_breaks(input_=var)
         # Sort the breaks, then store them
         breaks_order = np.argsort(breaks)
         breaks = breaks[breaks_order]
@@ -712,16 +717,11 @@ class PiecewiseLinFit(object):
 
         # if you've provided both x_c and y_c
         if x_c is not None and y_c is not None:
-            # check if x_c and y_c are numpy array
-            # if not convert to numpy array
-            if isinstance(x_c, np.ndarray) is False:
-                x_c = np.array(x_c)
-            if isinstance(y_c, np.ndarray) is False:
-                y_c = np.array(y_c)
+            x_c = self._switch_to_np_array(x_c)
+            y_c = self._switch_to_np_array(y_c)
             # sort the x_c and y_c data points, then store them
             x_c_order = np.argsort(x_c)
-            self.x_c = x_c[x_c_order]
-            self.y_c = y_c[x_c_order]
+            self.x_c, self.y_c = x_c[x_c_order], y_c[x_c_order]
             # store the number of constraints
             self.c_n = len(self.x_c)
             # Use a different function to minimize
@@ -761,12 +761,7 @@ class PiecewiseLinFit(object):
 
         self.ssr = res.fun
 
-        # pull the breaks out of the result
-        var = np.sort(res.x)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
+        breaks = self._get_breaks(input_=res.x)
 
         # assign values
         if x_c is None and y_c is None:
@@ -887,7 +882,7 @@ class PiecewiseLinFit(object):
             f[i] = resf
             d.append(resd)
             if self.print is True:
-                print(i + 1, 'of ' + str(pop) + ' complete')
+                print(f"{i + 1} of {pop} complete")
 
         # find the best result
         best_ind = np.nanargmin(f)
@@ -899,12 +894,7 @@ class PiecewiseLinFit(object):
 
         self.ssr = best_val
 
-        # obtain the breakpoint locations from the best result
-        var = np.sort(best_break)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
+        breaks = self._get_breaks(input_=best_break)
 
         # assign parameters
         self.fit_with_breaks(breaks)
@@ -997,12 +987,7 @@ class PiecewiseLinFit(object):
 
         self.ssr = resf
 
-        # pull the breaks out of the result
-        var = np.sort(resx)
-        breaks = np.zeros(len(var) + 2)
-        breaks[1:-1] = var.copy()
-        breaks[0] = self.break_0
-        breaks[-1] = self.break_n
+        breaks = self._get_breaks(input_=resx)
 
         # assign values
         self.fit_with_breaks(breaks)
@@ -1058,16 +1043,11 @@ class PiecewiseLinFit(object):
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
         if x_c is not None or y_c is not None:
-            # check if x_c and y_c are numpy array
-            # if not convert to numpy array
-            if isinstance(x_c, np.ndarray) is False:
-                x_c = np.array(x_c)
-            if isinstance(y_c, np.ndarray) is False:
-                y_c = np.array(y_c)
+            x_c = self._switch_to_np_array(x_c)
+            y_c = self._switch_to_np_array(y_c)
             # sort the x_c and y_c data points, then store them
             x_c_order = np.argsort(x_c)
-            self.x_c = x_c[x_c_order]
-            self.y_c = y_c[x_c_order]
+            self.x_c, self.y_c = x_c[x_c_order], y_c[x_c_order]
             # store the number of constraints
             self.c_n = len(self.x_c)
             if self.weights is not None:
@@ -1103,11 +1083,12 @@ class PiecewiseLinFit(object):
 
         """
         y_hat = self.predict(self.fit_breaks)
-        self.slopes = np.zeros(self.n_segments)
-        for i in range(self.n_segments):
-            self.slopes[i] = (y_hat[i+1]-y_hat[i]) / \
-                        (self.fit_breaks[i+1]-self.fit_breaks[i])
-        self.intercepts = y_hat[0:-1] - self.slopes*self.fit_breaks[0:-1]
+        self.slopes = np.divide(
+                    (y_hat[1:self.n_segments + 1] -
+                     y_hat[:self.n_segments]),
+                    (self.fit_breaks[1:self.n_segments + 1] -
+                     self.fit_breaks[:self.n_segments]))
+        self.intercepts = y_hat[0:-1] - self.slopes * self.fit_breaks[0:-1]
         return self.slopes
 
     def standard_errors(self, method='linear', step_size=1e-4):
@@ -1201,7 +1182,7 @@ class PiecewiseLinFit(object):
                 # vary beta and keep breaks constant
                 f = self.predict(self.x_data, beta=temp_beta,
                                  breaks=orig_breaks)
-                A[:, i] = (f-f0) / step_size
+                A[:, i] = (f - f0) / step_size
             # append differentials due to break points
             for i in range(self.beta.size, nb):
                 # 'ind' ignores first and last entry in self.fit_breaks since
@@ -1212,14 +1193,14 @@ class PiecewiseLinFit(object):
                 # vary break and keep betas constant
                 f = self.predict(self.x_data, beta=orig_beta,
                                  breaks=temp_breaks)
-                A[:, i] = (f-f0) / step_size
+                A[:, i] = (f - f0) / step_size
             e = f0 - self.y_data
             # reset beta and breaks back to original values
             self.beta = orig_beta
             self.fit_breaks = orig_breaks
 
         else:
-            errmsg = "Error: method='" + method + "' is not supported!"
+            errmsg = f"Error: method=\'{method}\' is not supported!"
             raise ValueError(errmsg)
         # try to solve for the standard errors
         try:
@@ -1295,17 +1276,13 @@ class PiecewiseLinFit(object):
             raise AttributeError(errmsg)
 
         ny = self.n_data
-
-        # check if x is numpy array, if not convert to numpy array
-        if isinstance(x, np.ndarray) is False:
-            x = np.array(x)
+        x = self._switch_to_np_array(x)
 
         # Regression matrix on training data
         Ad = self.assemble_regression_matrix(self.fit_breaks, self.x_data)
 
         # try to solve for the unbiased variance estimation
         try:
-
             y_hat = np.dot(Ad, self.beta)
             e = y_hat - self.y_data
             # solve for the unbiased estimate of variance
@@ -1464,10 +1441,10 @@ class PiecewiseLinFit(object):
             # calculate my t-value
             t = parameters / self.se
         else:
-            errmsg = "Error: method='" + method + "' is not supported!"
+            errmsg = f"Error: method=\'{method}\' is not supported!"
             raise ValueError(errmsg)
         # calculate the p-values
-        p = 2.0 * stats.t.sf(np.abs(t), df=n-k-1)
+        p = 2.0 * stats.t.sf(np.abs(t), df=n - k - 1)
         return p
 
     def lstsq(self, A):
