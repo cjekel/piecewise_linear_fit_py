@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2020-08-27
+### Deprecated
+- Python 2.7 will not be supported in future releases
+- Python 3.5 reaches [end-of-life](https://devguide.python.org/#status-of-python-branches) on 2020-09-13, and will not be supported in future releases
+### Added
+- ```python_requires``` in setup.py
+
 ## [2.0.3] - 2020-06-26
 ### Changed
 - version handling does not require any dependencies 
