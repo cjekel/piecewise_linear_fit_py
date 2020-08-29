@@ -1200,7 +1200,7 @@ class PiecewiseLinFit(object):
             self.fit_breaks = orig_breaks
 
         else:
-            errmsg = f"Error: method=\'{method}\' is not supported!"
+            errmsg = f"Error: method='{method}' is not supported!"
             raise ValueError(errmsg)
         # try to solve for the standard errors
         try:
@@ -1441,7 +1441,7 @@ class PiecewiseLinFit(object):
             # calculate my t-value
             t = parameters / self.se
         else:
-            errmsg = f"Error: method=\'{method}\' is not supported!"
+            errmsg = f"Error: method='{method}' is not supported!"
             raise ValueError(errmsg)
         # calculate the p-values
         p = 2.0 * stats.t.sf(np.abs(t), df=n - k - 1)
