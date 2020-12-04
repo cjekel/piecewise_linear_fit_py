@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install coverage==4.5.4
-        python -m pip install flake8 pytest-cov pyDOE coveralls python-coveralls
+        python -m pip install flake8 pytest-cov pyDOE
         pip install pytest --upgrade
         pip install flake8 pytest
     - name: Install pwlf
@@ -32,7 +32,6 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=pwlf -p no:warnings tests/tests.py
-        coveralls
     - name: Coveralls Finished
       uses: coverallsapp/github-action@master
       with:
