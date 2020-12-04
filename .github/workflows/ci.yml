@@ -33,7 +33,13 @@ jobs:
       run: |
         pytest --cov=pwlf -p no:warnings tests/tests.py
     - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        parallel-finished: true
+      run: |
+        python -m pip install coveralls
+        coveralls --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+    # - name: Coveralls Finished
+    #   uses: coverallsapp/github-action@master
+    #   with:
+    #     github-token: ${{ secrets.github_token }}
+    #     parallel-finished: true
