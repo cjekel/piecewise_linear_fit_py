@@ -28,15 +28,20 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 pwlf
-        pytest --version
     - name: Test with pytest
       run: |
+        pytest --version
         pytest --cov=pwlf -p no:warnings tests/tests.py
+    - name: Install coveralls
+      run : |
+        coveralls --output=coverage.json
+        coveralls-lcov -v -n coverage.info > coverage.json
     # - name: Coveralls Finished
     #   run: |
     #     python -m pip install coveralls
     #     coveralls --finish
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.github_token }}
-    - name: Coveralls Upload
-      uses: AndreMiras/coveralls-python-action@develop
+    # - name: Coveralls Upload
+    #   uses: AndreMiras/coveralls-python-action@develop
+        # python -m pip install coveralls
