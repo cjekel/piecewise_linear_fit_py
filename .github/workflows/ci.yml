@@ -22,7 +22,9 @@ jobs:
         python -m pip install flake8 pytest-cov pyDOE coveralls python-coveralls
         pip install pytest --upgrade
         pip install flake8 pytest
-        python install . --no-cache-dir
+    - name: Install pwlf
+      run: |
+        python -m pip install . --no-cache-dir
     - name: Lint with flake8
       run: |
         flake8 pwlf
