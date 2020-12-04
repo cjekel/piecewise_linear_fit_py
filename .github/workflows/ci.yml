@@ -39,9 +39,4 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.github_token }}
     - name: Coveralls Upload
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        path-to-lcov: .coverage
-      run: |
-        coveralls
+      uses: AndreMiras/coveralls-python-action@develop
