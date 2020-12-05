@@ -1,7 +1,7 @@
 # About
 A library for fitting continuous piecewise linear functions to data. Just specify the number of line segments you desire and provide the data.
 
-![Downloads a month](https://img.shields.io/pypi/dm/pwlf.svg) [![Build Status](https://travis-ci.org/cjekel/piecewise_linear_fit_py.svg?branch=master)](https://travis-ci.org/cjekel/piecewise_linear_fit_py)  [![Coverage Status](https://coveralls.io/repos/github/cjekel/piecewise_linear_fit_py/badge.svg?branch=master)](https://coveralls.io/github/cjekel/piecewise_linear_fit_py?branch=master)![PyPI version](https://img.shields.io/pypi/v/pwlf)
+![Downloads a month](https://img.shields.io/pypi/dm/pwlf.svg) ![pwlf ci](https://github.com/cjekel/piecewise_linear_fit_py/workflows/pwlf%20ci/badge.svg) [![codecov](https://codecov.io/gh/cjekel/piecewise_linear_fit_py/branch/master/graph/badge.svg?token=AgeDFEQXed)](https://codecov.io/gh/cjekel/piecewise_linear_fit_py) ![PyPI version](https://img.shields.io/pypi/v/pwlf)
 
 Check out the [documentation](https://jekel.me/piecewise_linear_fit_py)!
 
