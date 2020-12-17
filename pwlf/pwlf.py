@@ -1207,11 +1207,11 @@ class PiecewiseLinFit(object):
             variance = np.dot(e, e) / (ny - nb)
             if self.weights is None:
                 # solve for the unbiased estimate of variance
-                A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
+                A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
                 self.se = np.sqrt(variance * A2inv)
             else:
                 A = (A.T*self.weights).T
-                A2inv = np.abs(linalg.inv(np.dot(A.T, A)).diagonal())
+                A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
                 self.se = np.sqrt(variance * A2inv)
             return self.se
 
@@ -1297,7 +1297,7 @@ class PiecewiseLinFit(object):
         # try to solve for the prediction variance at the x locations
         try:
             pre_var = variance * \
-                np.dot(np.dot(A, linalg.inv(np.dot(Ad.T, Ad))), A.T)
+                np.dot(np.dot(A, linalg.pinv(np.dot(Ad.T, Ad))), A.T)
             return pre_var.diagonal()
 
         except linalg.LinAlgError:
