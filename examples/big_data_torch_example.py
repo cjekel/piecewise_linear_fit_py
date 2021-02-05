@@ -41,7 +41,7 @@ class PwlfNet(nn.Module):
 
     def __init__(self, n_segments, x_min, x_max, degree=1, n_dim=1):
         """
-        Initialize Polynomial model as one layer feed forward network
+        Initialize pwlf model as one layer feed forward network
 
         Args:
             n_segments (int): Number of line segments
