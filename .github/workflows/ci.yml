@@ -2,9 +2,6 @@ name: pwlf ci
 
 on:
   push:
-  schedule:
-    # Also run every 24 hours
-    - cron:  '* */24 * * *'
 
 jobs:
   build:
