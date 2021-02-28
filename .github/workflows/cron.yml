@@ -1,6 +1,7 @@
 name: pwlf cron
 
 on:
+  push:
   schedule:
     # Also run every 24 hours
     - cron:  '* */24 * * *'
