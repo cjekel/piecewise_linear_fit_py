@@ -1,7 +1,9 @@
-name: pwlf ci
+name: pwlf cron
 
 on:
-  push:
+  schedule:
+    # Also run every 24 hours
+    - cron:  '* */24 * * *'
 
 jobs:
   build:
@@ -29,14 +31,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=pwlf --cov-report=xml -p no:warnings tests/tests.py
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
-        directory: ./coverage/reports/
-        flags: unittests
-        env_vars: OS,PYTHON
-        name: codecov-umbrella
-        fail_ci_if_error: true
-        verbose: false
