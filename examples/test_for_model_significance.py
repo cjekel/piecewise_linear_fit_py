@@ -62,15 +62,15 @@ res = my_pwlf.fit_with_breaks(x0)
 # As defined in Section 2.4.1 of Myers RH, Montgomery DC, Anderson-Cook CM.
 # Response surface methodology . Hoboken. New Jersey: John Wiley & Sons, Inc.
 # 2009;20:38-44.
-ssr = my_pwlf.ssr
+sse = my_pwlf.ssr  # this is to follow the notation in the above textbook
 ybar = np.ones(my_pwlf.n_data) * np.mean(my_pwlf.y_data)
 ydiff = my_pwlf.y_data - ybar
 sst = np.dot(ydiff, ydiff)
 
-sse = sst - ssr
+ssr = sst - sse
 k = my_pwlf.beta.size - 1
 n = my_pwlf.n_data
-f0 = (ssr / k) / (sse / (n - k -1))
+f0 = (ssr / k) / (sse / (n - k - 1))
 
 p_value = f.sf(f0, k, n-k-1)
 print(f"Linear p-value: {p_value}")
@@ -79,18 +79,19 @@ print(f"Linear p-value: {p_value}")
 # The following case is for the non-linear model, where we do not know the
 # break point locations
 res = my_pwlf.fit(2)
-ssr = my_pwlf.ssr
+sse = my_pwlf.ssr  # to follow the Book notation
 ybar = np.ones(my_pwlf.n_data) * np.mean(my_pwlf.y_data)
 ydiff = my_pwlf.y_data - ybar
 sst = np.dot(ydiff, ydiff)
 
-sse = sst - ssr
+ssr = sst - sse
 nb = my_pwlf.beta.size + my_pwlf.fit_breaks.size - 2
 k = nb - 1
 n = my_pwlf.n_data
-f0 = (ssr / k) / (sse / (n - k -1))
+f0 = (ssr / k) / (sse / (n - k - 1))
 
 p_value = f.sf(f0, k, n-k-1)
-print(f"non-linear p_value: ", p_value)
+print(f"non-linear p_value: {p_value}")
 
-# in both these cases, the p_value is very large, so we can't reject H0
+# in both these cases, the p_value is very small, so we reject H0
+# and thus our paramters are significant!
