@@ -1,7 +1,7 @@
 # About
 A library for fitting continuous piecewise linear functions to data. Just specify the number of line segments you desire and provide the data.
 
-![Downloads a month](https://img.shields.io/pypi/dm/pwlf.svg) ![pwlf ci](https://github.com/cjekel/piecewise_linear_fit_py/workflows/pwlf%20ci/badge.svg) [![codecov](https://codecov.io/gh/cjekel/piecewise_linear_fit_py/branch/master/graph/badge.svg?token=AgeDFEQXed)](https://codecov.io/gh/cjekel/piecewise_linear_fit_py) ![PyPI version](https://img.shields.io/pypi/v/pwlf)
+![Downloads a month](https://img.shields.io/pypi/dm/pwlf.svg) ![pwlf ci](https://github.com/cjekel/piecewise_linear_fit_py/workflows/pwlf%20ci/badge.svg) [![codecov](https://codecov.io/gh/cjekel/piecewise_linear_fit_py/branch/master/graph/badge.svg?token=AgeDFEQXed)](https://codecov.io/gh/cjekel/piecewise_linear_fit_py) ![PyPI version](https://img.shields.io/pypi/v/pwlf) [![Conda](https://img.shields.io/conda/vn/conda-forge/pwlf)](https://anaconda.org/conda-forge/pwlf)
 
 Check out the [documentation](https://jekel.me/piecewise_linear_fit_py)!
 
@@ -27,15 +27,21 @@ Instead of using differential evolution, you can now use a multi-start gradient 
 
 # Installation
 
+## Python Package Index (PyPI)
+
 You can now install with pip.
 ```
 [sudo] pip install pwlf
 ```
 
+## Conda
+
 If you have conda, you can also install from conda-forge.
 ```
 conda install -c conda-forge pwlf
 ```
+
+## From source
 
 Or clone the repo
 ```
