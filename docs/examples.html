@@ -4,15 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Examples &#8212; pwlf 2.0.4 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Examples &#8212; pwlf 2.0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -35,7 +35,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="examples">
+  <section id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <p>All of these examples will use the following data and imports.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -115,7 +115,7 @@ p-values</a></p></li>
 pwlf</a></p></li>
 <li><p><a class="reference external" href="#weighted-least-squares-fit">weighted least squares fit</a></p></li>
 </ol>
-<div class="section" id="fit-with-known-breakpoint-locations">
+<section id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
 <p>You can perform a least squares fit if you know the breakpoint
 locations.</p>
@@ -141,12 +141,14 @@ locations.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id1">
+<figure class="align-default" id="id1">
 <img alt="fit with known breakpoint locations" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fit_breaks.png" />
-<p class="caption"><span class="caption-text">fit with known breakpoint locations</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="fit-for-specified-number-of-line-segments">
+<figcaption>
+<p><span class="caption-text">fit with known breakpoint locations</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="fit-for-specified-number-of-line-segments">
 <h2>fit for specified number of line segments<a class="headerlink" href="#fit-for-specified-number-of-line-segments" title="Permalink to this headline">¶</a></h2>
 <p>Use a global optimization to find the breakpoint locations that minimize
 the sum of squares error. This uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html">Differential
@@ -169,12 +171,14 @@ from scipy.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id2">
+<figure class="align-default" id="id2">
 <img alt="fit for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/numberoflines.png" />
-<p class="caption"><span class="caption-text">fit for specified number of line segments</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="fitfast-for-specified-number-of-line-segments">
+<figcaption>
+<p><span class="caption-text">fit for specified number of line segments</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="fitfast-for-specified-number-of-line-segments">
 <h2>fitfast for specified number of line segments<a class="headerlink" href="#fitfast-for-specified-number-of-line-segments" title="Permalink to this headline">¶</a></h2>
 <p>This performs a fit for a specified number of line segments with a
 multi-start gradient based optimization. This should be faster than
@@ -199,12 +203,14 @@ for a small number of starting points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id3">
+<figure class="align-default" id="id3">
 <img alt="fitfast for specified number of line segments" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/fitfast.png" />
-<p class="caption"><span class="caption-text">fitfast for specified number of line segments</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="force-a-fit-through-data-points">
+<figcaption>
+<p><span class="caption-text">fitfast for specified number of line segments</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="force-a-fit-through-data-points">
 <h2>force a fit through data points<a class="headerlink" href="#force-a-fit-through-data-points" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes it’s necessary to force the piecewise continuous model through
 a particular data point, or a set of data points. The following example
@@ -231,12 +237,14 @@ finds the best 4 line segments that go through two data points.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id4">
+<figure class="align-default" id="id4">
 <img alt="force a fit through data points" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/force.png" />
-<p class="caption"><span class="caption-text">force a fit through data points</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="use-custom-optimization-routine">
+<figcaption>
+<p><span class="caption-text">force a fit through data points</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="use-custom-optimization-routine">
 <h2>use custom optimization routine<a class="headerlink" href="#use-custom-optimization-routine" title="Permalink to this headline">¶</a></h2>
 <p>You can use your favorite optimization routine to find the breakpoint
 locations. The following example uses scipy’s
@@ -279,8 +287,8 @@ function.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="pass-differential-evolution-keywords">
+</section>
+<section id="pass-differential-evolution-keywords">
 <h2>pass differential evolution keywords<a class="headerlink" href="#pass-differential-evolution-keywords" title="Permalink to this headline">¶</a></h2>
 <p>You can pass keyword arguments from the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function into scipy’s
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html">Differential
@@ -303,8 +311,8 @@ Evolution</a>.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="find-the-best-number-of-line-segments">
+</section>
+<section id="find-the-best-number-of-line-segments">
 <h2>find the best number of line segments<a class="headerlink" href="#find-the-best-number-of-line-segments" title="Permalink to this headline">¶</a></h2>
 <p>This example uses EGO (bayesian optimization) and a penalty function to
 find the best number of line segments. This will require careful use of
@@ -366,8 +374,8 @@ best number of line segments.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="model-persistence">
+</section>
+<section id="model-persistence">
 <h2>model persistence<a class="headerlink" href="#model-persistence" title="Permalink to this headline">¶</a></h2>
 <p>You can save fitted models with pickle. Alternatively see
 <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a>.</p>
@@ -394,8 +402,8 @@ best number of line segments.</p>
     <span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="bad-fits-when-you-have-more-unknowns-than-data">
+</section>
+<section id="bad-fits-when-you-have-more-unknowns-than-data">
 <h2>bad fits when you have more unknowns than data<a class="headerlink" href="#bad-fits-when-you-have-more-unknowns-than-data" title="Permalink to this headline">¶</a></h2>
 <p>You can get very bad fits with pwlf when you have more unknowns than
 data points. The following example will fit 99 line segments to the 59
@@ -418,12 +426,14 @@ unknowns than you have data with pwlf!</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id5">
+<figure class="align-default" id="id5">
 <img alt="bad fits when you have more unknowns than data" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/badfit.png" />
-<p class="caption"><span class="caption-text">bad fits when you have more unknowns than data</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="fit-with-a-breakpoint-guess">
+<figcaption>
+<p><span class="caption-text">bad fits when you have more unknowns than data</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="fit-with-a-breakpoint-guess">
 <h2>fit with a breakpoint guess<a class="headerlink" href="#fit-with-a-breakpoint-guess" title="Permalink to this headline">¶</a></h2>
 <p>In this example we see two distinct linear regions, and we believe a
 breakpoint occurs at 6.0. We’ll use the fit_guess() function to find the
@@ -443,8 +453,8 @@ wanted three line segments, we’ll have to specify two breakpoints.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">breaks</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit_guess</span><span class="p">([</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="get-the-linear-regression-matrix">
+</section>
+<section id="get-the-linear-regression-matrix">
 <h2>get the linear regression matrix<a class="headerlink" href="#get-the-linear-regression-matrix" title="Permalink to this headline">¶</a></h2>
 <p>In some cases it may be desirable to work with the linear regression
 matrix directly. The following example grabs the linear regression
@@ -489,12 +499,14 @@ regularizer to perform an interesting fit with the regression matrix.</p>
                              <span class="n">beta</span><span class="o">=</span><span class="n">en_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id6">
+<figure class="align-default" id="id6">
 <img alt="interesting elastic net fit" src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/sin_en_net_fit.png" />
-<p class="caption"><span class="caption-text">interesting elastic net fit</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="use-of-tensorflow">
+<figcaption>
+<p><span class="caption-text">interesting elastic net fit</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="use-of-tensorflow">
 <h2>use of tensorflow<a class="headerlink" href="#use-of-tensorflow" title="Permalink to this headline">¶</a></h2>
 <p>You need to install
 <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py_tf">pwlftf</a> which
@@ -529,8 +541,8 @@ decomposition (default <code class="docutils literal notranslate"><span class="p
 <span class="n">yHat</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xHat</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="fit-constants-or-polynomials">
+</section>
+<section id="fit-constants-or-polynomials">
 <h2>fit constants or polynomials<a class="headerlink" href="#fit-constants-or-polynomials" title="Permalink to this headline">¶</a></h2>
 <p>You can use pwlf to fit segmented constant models, or piecewise
 polynomials. The following example fits a segmented constant model,
@@ -571,12 +583,14 @@ piecewise linear, and a piecewise quadratic model to a sine wave.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id7">
+<figure class="align-default" id="id7">
 <img alt="Example of multiple degree fits to a sine wave." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png" />
-<p class="caption"><span class="caption-text">Example of multiple degree fits to a sine wave.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="specify-breakpoint-bounds">
+<figcaption>
+<p><span class="caption-text">Example of multiple degree fits to a sine wave.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="specify-breakpoint-bounds">
 <h2>specify breakpoint bounds<a class="headerlink" href="#specify-breakpoint-bounds" title="Permalink to this headline">¶</a></h2>
 <p>You may want extra control over the search space for feasible
 breakpoints. One way to do this is to specify the bounds for each
@@ -605,8 +619,8 @@ breakpoint location.</p>
 <span class="n">res</span> <span class="o">=</span> <span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_segments</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="non-linear-standard-errors-and-p-values">
+</section>
+<section id="non-linear-standard-errors-and-p-values">
 <h2>non-linear standard errors and p-values<a class="headerlink" href="#non-linear-standard-errors-and-p-values" title="Permalink to this headline">¶</a></h2>
 <p>You can calculate non-linear standard errors using the Delta method.
 This will calculate the standard errors of the piecewise linear
@@ -629,10 +643,12 @@ parameters (intercept + slopes) and the breakpoint locations!</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id8">
+<figure class="align-default" id="id8">
 <img alt="True piecewise linear data." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/true_pwlf.png" />
-<p class="caption"><span class="caption-text">True piecewise linear data.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">True piecewise linear data.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Now we can perform a fit, calculate the standard errors, and p-values.
 The non-linear method uses a first order taylor series expansion to
 linearize the non-linear regression problem. A positive step_size
@@ -737,8 +753,8 @@ following code.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="obtain-the-equations-of-fitted-pwlf">
+</section>
+<section id="obtain-the-equations-of-fitted-pwlf">
 <h2>obtain the equations of fitted pwlf<a class="headerlink" href="#obtain-the-equations-of-fitted-pwlf" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes you may want the mathematical equations that represent your
 fitted model. This is easy to perform if you don’t mind using sympy.</p>
@@ -806,8 +822,8 @@ for each line segment.</p>
 <p>For more information on how this works, see
 <a class="reference external" href="https://github.com/cjekel/piecewise_linear_fit_py/blob/master/examples/understanding_higher_degrees/polynomials_in_pwlf.ipynb">this</a>
 jupyter notebook.</p>
-</div>
-<div class="section" id="weighted-least-squares-fit">
+</section>
+<section id="weighted-least-squares-fit">
 <h2>weighted least squares fit<a class="headerlink" href="#weighted-least-squares-fit" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes your data will not have a constant variance
 (heteroscedasticity), and you need to perform a weighted least squares
@@ -861,15 +877,17 @@ and a weighted fit.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id9">
+<figure class="align-default" id="id9">
 <img alt="Weighted pwlf fit." src="https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png" />
-<p class="caption"><span class="caption-text">Weighted pwlf fit.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Weighted pwlf fit.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>We can see that the weighted pwlf fit tries fit data with low variance
 better than data with high variance, however the ordinary pwlf fits the
 data assuming a uniform variance.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -930,7 +948,7 @@ data assuming a uniform variance.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -952,7 +970,7 @@ data assuming a uniform variance.</p>
       &copy;2020, Charles Jekel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
