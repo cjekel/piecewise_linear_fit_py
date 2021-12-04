@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2021-12-04
+### Added
+- conda force installs are now officially mentioned on readme and in documentation
+
 ## [2.0.4] - 2020-08-27
 ### Deprecated
 - Python 2.7 will not be supported in future releases

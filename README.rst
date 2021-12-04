@@ -5,7 +5,7 @@ A library for fitting continuous piecewise linear functions to data.
 Just specify the number of line segments you desire and provide the
 data.
 
-|Downloads a month| |Build Status| |Coverage Status|\ |PyPI version|
+|Downloads a month| |pwlf ci| |codecov| |PyPI version| |Conda|
 
 Check out the
 `documentation <https://jekel.me/piecewise_linear_fit_py>`__!
@@ -59,11 +59,26 @@ runtime differences!
 Installation
 ============
 
+Python Package Index (PyPI)
+---------------------------
+
 You can now install with pip.
 
 ::
 
    [sudo] pip install pwlf
+
+Conda
+-----
+
+If you have conda, you can also install from conda-forge.
+
+::
+
+   conda install -c conda-forge pwlf
+
+From source
+-----------
 
 Or clone the repo
 
@@ -140,10 +155,10 @@ Citation
    }
 
 .. |Downloads a month| image:: https://img.shields.io/pypi/dm/pwlf.svg
-.. |Build Status| image:: https://travis-ci.org/cjekel/piecewise_linear_fit_py.svg?branch=master
-   :target: https://travis-ci.org/cjekel/piecewise_linear_fit_py
-.. |Coverage Status| image:: https://coveralls.io/repos/github/cjekel/piecewise_linear_fit_py/badge.svg?branch=master
-   :target: https://coveralls.io/github/cjekel/piecewise_linear_fit_py?branch=master
+.. |pwlf ci| image:: https://github.com/cjekel/piecewise_linear_fit_py/workflows/pwlf%20ci/badge.svg
+.. |codecov| image:: https://codecov.io/gh/cjekel/piecewise_linear_fit_py/branch/master/graph/badge.svg?token=AgeDFEQXed
+   :target: https://codecov.io/gh/cjekel/piecewise_linear_fit_py
 .. |PyPI version| image:: https://img.shields.io/pypi/v/pwlf
+.. |Conda| image:: https://img.shields.io/conda/vn/conda-forge/pwlf
+   :target: https://anaconda.org/conda-forge/pwlf
 .. |Example of multiple degree fits to a sine wave.| image:: https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/figs/multi_degree.png
-
