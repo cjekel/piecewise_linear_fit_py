@@ -31,7 +31,7 @@ Instead of using differential evolution, you can now use a multi-start gradient 
 
 You can now install with pip.
 ```
-[sudo] pip install pwlf
+python -m pip install pwlf
 ```
 
 ## Conda
@@ -50,7 +50,7 @@ git clone https://github.com/cjekel/piecewise_linear_fit_py.git
 
 then install with pip
 ```
-[sudo] pip install ./piecewise_linear_fit_py
+python -m pip install ./piecewise_linear_fit_py
 ```
 
 # How it works
