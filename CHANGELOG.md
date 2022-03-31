@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.5] - 2021-12-04
 ### Added
-- conda force installs are now officially mentioned on readme and in documentation
+- conda forge installs are now officially mentioned on readme and in documentation
 
 ## [2.0.4] - 2020-08-27
 ### Deprecated
