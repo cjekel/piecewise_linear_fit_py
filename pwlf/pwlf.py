@@ -570,7 +570,7 @@ class PiecewiseLinFit(object):
         # try to solve the regression problem
         try:
             # least squares solver
-            ssr = self.lstsq(A)
+            ssr = self.lstsq(A, calc_slopes=False)
 
         except linalg.LinAlgError:
             # the computation could not converge!
@@ -628,7 +628,7 @@ class PiecewiseLinFit(object):
         breaks = breaks[breaks_order]
 
         A = self.assemble_regression_matrix(breaks, self.x_data)
-        L = self.conlstsq(A)
+        L = self.conlstsq(A, calc_slopes=False)
         return L
 
     def fit(self, n_segments, x_c=None, y_c=None, bounds=None, **kwargs):
@@ -1447,9 +1447,18 @@ class PiecewiseLinFit(object):
         p = 2.0 * stats.t.sf(np.abs(t), df=n - k - 1)
         return p
 
-    def lstsq(self, A):
+    def lstsq(self, A, calc_slopes=True):
         r"""
         Perform the least squares fit for A matrix.
+
+        Parameters
+        ----------
+        A : ndarray (2-D)
+            The regression matrix you want to fit in the linear system of
+            equations Ab=y.
+        calc_slopes : boolean, optional
+            Whether to calculate slopes after performing a fit. Default is
+            calc_slopes=True.
         """
         if self.weights is None:
             beta, ssr, _, _ = linalg.lstsq(A, self.y_data,
@@ -1481,13 +1490,23 @@ class PiecewiseLinFit(object):
         # save the beta parameters
         self.beta = beta
 
-        # save the slopes
-        self.calc_slopes()
+        if calc_slopes:
+            # save the slopes
+            self.calc_slopes()
         return ssr
 
-    def conlstsq(self, A):
+    def conlstsq(self, A, calc_slopes=True):
         r"""
         Perform a constrained least squares fit for A matrix.
+
+        Parameters
+        ----------
+        A : ndarray (2-D)
+            The regression matrix you want to fit in the linear system of
+            equations Ab=y.
+        calc_slopes : boolean, optional
+            Whether to calculate slopes after performing a fit. Default is
+            calc_slopes=True.
         """
         # Assemble the constraint matrix
         C_list = [np.ones_like(self.x_c)]
@@ -1538,7 +1557,8 @@ class PiecewiseLinFit(object):
             self.zeta = beta_prime[self.n_parameters:]
 
             # save the slopes
-            self.calc_slopes()
+            if calc_slopes:
+                self.calc_slopes()
 
             # Calculate ssr
             # where ssr = sum of square of residuals
