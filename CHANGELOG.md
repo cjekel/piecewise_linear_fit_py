@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-03-31
+### Changed
+- All instances of `linalg.inv` now use `linalg.pinv`. All APIs are still the same, but this is potentially a backwards breaking change as previous results may be different from new results. This will mainly affect standard error calculations.
+- Previously `calc_slopes` was called after every least squares fit in optimization routines trying to find breakpoints. This would occasionally raise a numpy `RuntimeWarning` if two breakpoints were the same, or if a breakpoint was on the boundary. Now `calc_slopes` is not called during experimental breakpoint calculation, which should no longer raise this warning for most users. Slopes will still be calculated once optimal breakpoints are found!
+
 ## [2.0.5] - 2021-12-04
 ### Added
 - conda force installs are now officially mentioned on readme and in documentation
