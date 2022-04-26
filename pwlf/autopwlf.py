@@ -4,8 +4,8 @@ import numpy as np
 from sympy import Symbol
 from sympy.utilities import lambdify
 from collections import defaultdict
+import matplotlib.pyplot as plt
 from scipy.optimize import rosen, differential_evolution
-from utils.io import *
 
 class AutoPiecewiseLinFit(object):
 
@@ -230,3 +230,61 @@ class AutoPiecewiseLinFit(object):
     def piecewise_fit_fast(self):
         # TODO : Further improve computation speed by restricting break points to int
         return
+
+if __name__ == "__main__":
+    ## complex dataset 
+    # x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74]
+    # y1 = [50.69, 50.63, 50.01, 50.22, 49.63, 47.62, 48.5, 48.71, 48.35, 49.05, 48.15, 49.05, 49.23, 49.85, 49.76, 49.34, 48.02, 48.58, 49.01, 49.7, 51.37, 51.82, 51.85, 50.9, 51.0, 50.77, 49.21, 51.35, 51.71, 51.62, 51.71, 52.76, 51.2, 50.22, 51.07, 51.46, 52.06, 51.76, 51.22, 50.83, 50.02, 49.81, 49.8, 50.24, 49.47, 49.73, 48.7, 46.76, 45.48, 44.39, 44.7, 44.45, 42.15, 39.45, 42.58, 44.51, 46.17, 44.81, 45.53, 45.76, 45.77, 45.18, 45.05, 45.01, 46.23, 46.8, 47.1, 47.39, 46.86, 47.18, 45.9, 45.7, 45.75, 42.1, 41.1]
+    # y2 = [6.02, 6.0, 5.98, 5.99, 6.02, 5.95, 6.01, 6.02, 6.0, 5.99, 5.96, 5.96, 5.99, 6.0, 6.02, 6.05, 6.04, 6.08, 6.13, 6.2, 6.33, 6.41, 6.51, 6.53, 6.54, 6.54, 6.52, 6.57, 6.59, 6.63, 6.64, 6.7, 6.7, 6.69, 6.72, 6.73, 6.74, 6.75, 6.73, 6.74, 6.73, 6.71, 6.71, 6.73, 6.73, 6.73, 6.71, 6.65, 6.61, 6.59, 6.58, 6.57, 6.56, 6.57, 6.57, 6.59, 6.7, 6.7, 6.73, 6.76, 6.78, 6.77, 6.78, 6.78, 6.79, 6.76, 6.74, 6.72, 6.72, 6.73, 6.72, 6.66, 6.69, 6.57, 6.47]
+    """ a simple dataset """
+    x = np.arange(0, 4*np.pi, 0.1)
+    y = np.sin(x)
+    """ 
+    coeff is parameter of polyfit model. 
+    One degree polynomial model y = a_1*x + a_0
+    >>> x = np.linspace(-5, 5, 100)
+    >>> y = 4 * x + 1.5
+    >>> noise_y = y + np.random.randn(y.shape[-1]) * 2.5
+    >>> p = plt.plot(x, noise_y, 'rx')
+    >>> p = plt.plot(x, y, 'b:')
+    >>> coeff = polyfit(x, noise_y, 1)
+    >>> print(coeff)
+    >>> [3.93921315  1.59379469] -> [a_1, a_0]
+    """
+    coeff = np.polyfit(x, y, deg=9)
+    """
+    poly1d assemble coeff to polynomial model
+    >>> f = poly1d(coeff)
+    >>> print(f)
+    >>> 3.939 x + 1.594
+    """
+    f = np.poly1d(coeff)
+    """np.polyder is a tool that return the derivative of the specified order of a polynomial."""
+    f_d = np.polyder(f, 1)
+    """
+    np.roots return the roots of a polynomial with coefficients given in p.
+    here xroot are [-27.02577916   8.46877068   4.36903767]
+    when increasing degree to deg=9, results contain imaginary roots:
+    [12.83124078+1.06520938j 12.83124078-1.06520938j 10.98184655+0.j
+    7.86313591+0.j          4.70268776+0.j          1.58653459+0.j
+    -0.28007017+1.04758677j -0.28007017-1.04758677j] 
+    """
+    xroot = np.roots(f_d)
+    """
+    but we just need xroot between x.min() and x.max()
+    after filter, xroot are [8.468770676220245, 4.369037674890286]
+    """
+    min, max = x.min(), x.max()
+    xroot = list(filter(lambda x : (x >= min and x < max), xroot))
+    yroot = np.sin(xroot)
+    fit_1 = AutoPiecewiseLinFit(x, y)
+    n_1 = fit_1.fit_curve_and_guess()
+    fit_1.piecewise_fit(n_1)
+    model = fit_1.parse_model()
+    x_hat = [key for key, _ in model.items() for key in key]
+    y_hat = [value(key) for key, value in model.items() for key in key]
+    fig, axes = plt.subplots(1, 1, figsize=(12, 8))
+    axes.plot(x,y)
+    axes.scatter(xroot, yroot, color='red')
+    axes.plot(x_hat, y_hat, color='green')
+    plt.savefig('polyfit_deg_9.png')
