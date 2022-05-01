@@ -79,6 +79,7 @@ All of these examples will use the following data and imports.
 16. `obtain the equations of fitted
     pwlf <#obtain-the-equations-of-fitted-pwlf>`__
 17. `weighted least squares fit <#weighted-least-squares-fit>`__
+18. `weighted least squares fit <#weighted-least-squares-fit>`__
 
 fit with known breakpoint locations
 -----------------------------------
@@ -840,3 +841,20 @@ and a weighted fit.
 We can see that the weighted pwlf fit tries fit data with low variance
 better than data with high variance, however the ordinary pwlf fits the
 data assuming a uniform variance.
+
+reproducible results
+--------------------
+
+The `fit` and `fitfast` methods are stochastic and may not give the same
+result every time the program is run. To have reproducible results you can
+manually specify a numpy.random.seed on init. Now everytime the following
+program is run, the results of the fit(2) should be the same.
+
+.. code:: python
+
+   # initialize piecewise linear fit with a random seed
+   my_pwlf = pwlf.PiecewiseLinFit(x, y, seed=123)
+
+   # Now the fit() method will be reproducible
+   my_pwlf.fit(2)
+
