@@ -501,7 +501,8 @@ class TestEverything(unittest.TestCase):
             self.assertTrue(True)
 
     def test_custom_opt_not_supported(self):
-        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       weights=self.y_small)
         try:
             my_pwlf.use_custom_opt(3, x_c=[0], y_c=[0])
             self.assertTrue(False)
