@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.0] - 2022-05-01
 ### Added
 - Now you can specify a numpy.random.seed to use on init to get reproducible results from the `fit` and `fitfast` methods. Simply specify an integer seed number like so `pwlf.PiecewiseLinFit(x, y, seed=123)`. Note this hijacks your current random seed. By default, not random seed is specified.
+- Python 3.9 is now part of the ci
 ### Changed
 - Add flake8 checks to tests
 - Two tests were not being checked because the method did not start with `test`
