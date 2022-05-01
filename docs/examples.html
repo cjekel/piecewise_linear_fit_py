@@ -114,6 +114,7 @@ p-values</a></p></li>
 <li><p><a class="reference external" href="#obtain-the-equations-of-fitted-pwlf">obtain the equations of fitted
 pwlf</a></p></li>
 <li><p><a class="reference external" href="#weighted-least-squares-fit">weighted least squares fit</a></p></li>
+<li><p><a class="reference external" href="#reproducibleresults">reproducible results</a></p></li>
 </ol>
 <section id="fit-with-known-breakpoint-locations">
 <h2>fit with known breakpoint locations<a class="headerlink" href="#fit-with-known-breakpoint-locations" title="Permalink to this headline">¶</a></h2>
@@ -887,6 +888,20 @@ and a weighted fit.</p>
 better than data with high variance, however the ordinary pwlf fits the
 data assuming a uniform variance.</p>
 </section>
+<section id="reproducible-results">
+<h2>reproducible results<a class="headerlink" href="#reproducible-results" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>fit</cite> and <cite>fitfast</cite> methods are stochastic and may not give the same
+result every time the program is run. To have reproducible results you can
+manually specify a numpy.random.seed on init. Now everytime the following
+program is run, the results of the fit(2) should be the same.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize piecewise linear fit with a random seed</span>
+<span class="n">my_pwlf</span> <span class="o">=</span> <span class="n">pwlf</span><span class="o">.</span><span class="n">PiecewiseLinFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="c1"># Now the fit() method will be reproducible</span>
+<span class="n">my_pwlf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -927,6 +942,7 @@ data assuming a uniform variance.</p>
 <li class="toctree-l2"><a class="reference internal" href="#non-linear-standard-errors-and-p-values">non-linear standard errors and p-values</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#obtain-the-equations-of-fitted-pwlf">obtain the equations of fitted pwlf</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#weighted-least-squares-fit">weighted least squares fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reproducible-results">reproducible results</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pwlf.html">pwlf package contents</a></li>
