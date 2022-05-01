@@ -35,7 +35,7 @@ from pyDOE import lhs
 class PiecewiseLinFit(object):
 
     def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1,
-                 weights=None):
+                 weights=None, seed=None):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -70,6 +70,11 @@ class PiecewiseLinFit(object):
             standard deviation for each data point, where weights[i]
             corresponds to one over the standard deviation of the ith data
             point. Default weights=None.
+        seed : None, or int
+            Pick an integer which will set the numpy.random.seed on init.
+            The fit and fitfast methods rely on stochastic methods and setting
+            this value will make the results reproducible. The default
+            behavior is to not specify a seed.
 
         Attributes
         ----------
@@ -105,6 +110,8 @@ class PiecewiseLinFit(object):
         se : ndarray (1-D)
             Standard errors associated with each beta parameter. Specifically
             se[0] correspounds to the standard error for beta[0], and so forth.
+        seed : int
+            Numpy random seed number set on init.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
@@ -211,6 +218,10 @@ class PiecewiseLinFit(object):
             self.weights = self._switch_to_np_array(weights)
             # self.weights2 = weights*weights
             self.y_w = np.dot(self.y_data, np.eye(self.n_data) * self.weights)
+
+        if seed:
+            np.random.seed(seed)
+        self.seed = seed
 
         # initialize all empty attributes as None
         self.fit_breaks = None

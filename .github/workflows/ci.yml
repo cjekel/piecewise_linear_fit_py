@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -26,6 +26,7 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 pwlf
+        flake8 tests/tests.py
     - name: Test with pytest
       run: |
         pytest --cov=pwlf --cov-report=xml -p no:warnings tests/tests.py

@@ -178,7 +178,7 @@ class TestEverything(unittest.TestCase):
         my_pwlf.use_custom_opt(3, x_c=[0.], y_c=[0.])
         x_guess = np.array((0.9, 1.1))
         from scipy.optimize import minimize
-        res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
+        _ = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
         self.assertTrue(True)
 
     def test_single_force_break_point1(self):
@@ -463,7 +463,7 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(my.ssr, my_w.ssr))
         for i in range(n_segments+1):
             self.assertTrue(np.isclose(breaks[i], breaks_w[i]))
-    
+
     def test_heteroscedastic_data(self):
         n_segments = 3
         weights = self.y_small.copy()
@@ -487,7 +487,7 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
-    def not_supported_fit_with_breaks_force_points(self):
+    def test_not_supported_fit_with_breaks_force_points(self):
         x = np.linspace(0.0, 1.0, num=100)
         y = np.sin(6.0*x)
         w = list(np.random.random(size=100))
@@ -500,13 +500,38 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
-    def custom_opt_not_supported(self):
-        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+    def test_custom_opt_not_supported(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       weights=self.y_small)
         try:
             my_pwlf.use_custom_opt(3, x_c=[0], y_c=[0])
             self.assertTrue(False)
         except ValueError:
             self.assertTrue(True)
+
+    def test_random_seed_fit(self):
+        np.random.seed(1)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit1 = my_pwlf.fit(2)
+        np.random.seed(2)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit2 = my_pwlf.fit(2)
+        same_breaks = np.isclose(fit1, fit2)
+        self.assertTrue(same_breaks.sum() == same_breaks.size)
+
+    def test_random_seed_fitfast(self):
+        np.random.seed(1)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit1 = my_pwlf.fitfast(2)
+        np.random.seed(2)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit2 = my_pwlf.fitfast(2)
+        same_breaks = np.isclose(fit1, fit2)
+        self.assertTrue(same_breaks.sum() == same_breaks.size)
 
 
 if __name__ == '__main__':
