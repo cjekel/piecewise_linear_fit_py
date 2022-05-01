@@ -178,7 +178,7 @@ class TestEverything(unittest.TestCase):
         my_pwlf.use_custom_opt(3, x_c=[0.], y_c=[0.])
         x_guess = np.array((0.9, 1.1))
         from scipy.optimize import minimize
-        res = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
+        _ = minimize(my_pwlf.fit_with_breaks_opt, x_guess)
         self.assertTrue(True)
 
     def test_single_force_break_point1(self):
@@ -463,7 +463,7 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(my.ssr, my_w.ssr))
         for i in range(n_segments+1):
             self.assertTrue(np.isclose(breaks[i], breaks_w[i]))
-    
+
     def test_heteroscedastic_data(self):
         n_segments = 3
         weights = self.y_small.copy()
