@@ -487,7 +487,7 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
-    def not_supported_fit_with_breaks_force_points(self):
+    def test_not_supported_fit_with_breaks_force_points(self):
         x = np.linspace(0.0, 1.0, num=100)
         y = np.sin(6.0*x)
         w = list(np.random.random(size=100))
@@ -500,7 +500,7 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
-    def custom_opt_not_supported(self):
+    def test_custom_opt_not_supported(self):
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         try:
             my_pwlf.use_custom_opt(3, x_c=[0], y_c=[0])
