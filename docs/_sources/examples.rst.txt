@@ -79,7 +79,7 @@ All of these examples will use the following data and imports.
 16. `obtain the equations of fitted
     pwlf <#obtain-the-equations-of-fitted-pwlf>`__
 17. `weighted least squares fit <#weighted-least-squares-fit>`__
-18. `weighted least squares fit <#weighted-least-squares-fit>`__
+18. `reproducible results <#reproducible-results>`__
 
 fit with known breakpoint locations
 -----------------------------------
