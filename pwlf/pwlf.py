@@ -73,7 +73,8 @@ class PiecewiseLinFit(object):
         seed : None, or int
             Pick an integer which will set the numpy.random.seed on init.
             The fit and fitfast methods rely on stochastic methods and setting
-            this value will make the results reproducible.
+            this value will make the results reproducible. The default
+            behavior is to not specify a seed.
 
         Attributes
         ----------
