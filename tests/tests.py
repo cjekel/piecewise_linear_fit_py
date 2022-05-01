@@ -509,6 +509,30 @@ class TestEverything(unittest.TestCase):
         except ValueError:
             self.assertTrue(True)
 
+    def test_random_seed_fit(self):
+        np.random.seed(1)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit1 = my_pwlf.fit(2)
+        np.random.seed(2)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit2 = my_pwlf.fit(2)
+        same_breaks = np.isclose(fit1, fit2)
+        self.assertTrue(same_breaks.sum() == same_breaks.size)
+
+    def test_random_seed_fitfast(self):
+        np.random.seed(1)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit1 = my_pwlf.fitfast(2)
+        np.random.seed(2)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
+                                       seed=123)
+        fit2 = my_pwlf.fitfast(2)
+        same_breaks = np.isclose(fit1, fit2)
+        self.assertTrue(same_breaks.sum() == same_breaks.size)
+
 
 if __name__ == '__main__':
     unittest.main()
