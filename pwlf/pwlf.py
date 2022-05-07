@@ -276,6 +276,12 @@ class PiecewiseLinFit(object):
         b_[0], b_[1:-1], b_[-1] = self.break_0, v.copy(), self.break_n
         return b_
 
+    def _fit_one_segment(self):
+        r"""
+        Fit for a single line segment
+        """
+        self.fit_with_breaks([self.break_0, self.break_n])
+
     def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
@@ -749,6 +755,11 @@ class PiecewiseLinFit(object):
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
 
+        # special fit for one line segment
+        if self.n_segments == 1:
+            self._fit_one_segment()
+            return self.fit_breaks
+
         # initiate the bounds of the optimization
         if bounds is None:
             bounds = np.zeros([self.nVar, 2])
@@ -859,6 +870,11 @@ class PiecewiseLinFit(object):
 
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
+
+        # special fit for one line segment
+        if self.n_segments == 1:
+            self._fit_one_segment()
+            return self.fit_breaks
 
         # initiate the bounds of the optimization
         if bounds is None:

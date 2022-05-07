@@ -533,6 +533,15 @@ class TestEverything(unittest.TestCase):
         same_breaks = np.isclose(fit1, fit2)
         self.assertTrue(same_breaks.sum() == same_breaks.size)
 
+    def test_one_segment_fits(self):
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        fit1 = my_pwlf.fitfast(1)
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
+        fit2 = my_pwlf.fit(1)
+        same_breaks = np.isclose(fit1, fit2)
+        self.assertTrue(same_breaks[0])
+        self.assertTrue(same_breaks[1])
+
 
 if __name__ == '__main__':
     unittest.main()
