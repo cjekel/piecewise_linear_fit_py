@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 # MIT License
 #
-# Copyright (c) 2017-2019 Charles Jekel
+# Copyright (c) 2017-2022 Charles Jekel
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ from pyDOE import lhs
 class PiecewiseLinFit(object):
 
     def __init__(self, x, y, disp_res=False, lapack_driver='gelsd', degree=1,
-                 weights=None):
+                 weights=None, seed=None):
         r"""
         An object to fit a continuous piecewise linear function
         to data.
@@ -70,6 +70,11 @@ class PiecewiseLinFit(object):
             standard deviation for each data point, where weights[i]
             corresponds to one over the standard deviation of the ith data
             point. Default weights=None.
+        seed : None, or int
+            Pick an integer which will set the numpy.random.seed on init.
+            The fit and fitfast methods rely on stochastic methods and setting
+            this value will make the results reproducible. The default
+            behavior is to not specify a seed.
 
         Attributes
         ----------
@@ -105,6 +110,8 @@ class PiecewiseLinFit(object):
         se : ndarray (1-D)
             Standard errors associated with each beta parameter. Specifically
             se[0] correspounds to the standard error for beta[0], and so forth.
+        seed : int
+            Numpy random seed number set on init.
         slopes : ndarray (1-D)
             The slope of each ling segment as a 1-D numpy array. This assumes
             that x[0] <= x[1] <= ... <= x[n]. Thus, slopes[0] is the slope
@@ -212,6 +219,10 @@ class PiecewiseLinFit(object):
             # self.weights2 = weights*weights
             self.y_w = np.dot(self.y_data, np.eye(self.n_data) * self.weights)
 
+        if seed:
+            np.random.seed(seed)
+        self.seed = seed
+
         # initialize all empty attributes as None
         self.fit_breaks = None
         self.n_segments = None
@@ -264,6 +275,12 @@ class PiecewiseLinFit(object):
         b_ = np.zeros(len(v) + 2)
         b_[0], b_[1:-1], b_[-1] = self.break_0, v.copy(), self.break_n
         return b_
+
+    def _fit_one_segment(self):
+        r"""
+        Fit for a single line segment
+        """
+        self.fit_with_breaks([self.break_0, self.break_n])
 
     def assemble_regression_matrix(self, breaks, x):
         r"""
@@ -738,6 +755,11 @@ class PiecewiseLinFit(object):
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
 
+        # special fit for one line segment
+        if self.n_segments == 1:
+            self._fit_one_segment()
+            return self.fit_breaks
+
         # initiate the bounds of the optimization
         if bounds is None:
             bounds = np.zeros([self.nVar, 2])
@@ -848,6 +870,11 @@ class PiecewiseLinFit(object):
 
         # calculate the number of variables I have to solve for
         self.nVar = self.n_segments - 1
+
+        # special fit for one line segment
+        if self.n_segments == 1:
+            self._fit_one_segment()
+            return self.fit_breaks
 
         # initiate the bounds of the optimization
         if bounds is None:

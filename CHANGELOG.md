@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2022-05-07
+### Added
+- You can now perform `fit` and `fitfast` for one line segment!
+
+## [2.2.0] - 2022-05-01
+### Added
+- Now you can specify a numpy.random.seed to use on init to get reproducible results from the `fit` and `fitfast` methods. Simply specify an integer seed number like so `pwlf.PiecewiseLinFit(x, y, seed=123)`. Note this hijacks your current random seed. By default, not random seed is specified.
+- Python 3.9 is now part of the ci
+### Changed
+- Add flake8 checks to tests
+- Two tests were not being checked because the method did not start with `test`
+
 ## [2.1.0] - 2022-03-31
 ### Changed
 - All instances of `linalg.inv` now use `linalg.pinv`. All APIs are still the same, but this is potentially a backwards breaking change as previous results may be different from new results. This will mainly affect standard error calculations.

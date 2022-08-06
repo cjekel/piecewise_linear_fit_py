@@ -65,6 +65,7 @@ x = np.array([0.00000000e+00, 8.82678000e-03, 3.25615100e-02,
 15. [non-linear standard errors and p-values](#non-linear-standard-errors-and-p-values)
 16. [obtain the equations of fitted pwlf](#obtain-the-equations-of-fitted-pwlf)
 17. [weighted least squares fit](#weighted-least-squares-fit)
+18. [reproducible results](#reproducible-resultss)
 
 
 ## fit with known breakpoint locations
@@ -714,3 +715,19 @@ plt.show()
 ![Weighted pwlf fit.](https://raw.githubusercontent.com/cjekel/piecewise_linear_fit_py/master/examples/weighted_least_squares_example.png)
 
 We can see that the weighted pwlf fit tries fit data with low variance better than data with high variance, however the ordinary pwlf fits the data assuming a uniform variance.
+
+## reproducible results
+
+The `fit` and `fitfast` methods are stochastic and may not give the same
+result every time the program is run. To have reproducible results you can
+manually specify a numpy.random.seed on init. Now everytime the following
+program is run, the results of the fit(2) should be the same.
+
+```python
+
+# initialize piecewise linear fit with a random seed
+my_pwlf = pwlf.PiecewiseLinFit(x, y, seed=123)
+
+# Now the fit() method will be reproducible
+my_pwlf.fit(2)
+```
