@@ -286,7 +286,8 @@ class PiecewiseLinFit(object):
         r"""
         Fit for a single line segment with force points
         """
-        self.fit_with_breaks_force_points([self.break_0, self.break_n], x_c, y_c)
+        self.fit_with_breaks_force_points([self.break_0, self.break_n],
+                                          x_c, y_c)
 
     def assemble_regression_matrix(self, breaks, x):
         r"""

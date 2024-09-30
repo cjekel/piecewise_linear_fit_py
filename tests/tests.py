@@ -225,6 +225,28 @@ class TestEverything(unittest.TestCase):
         yhat = my_fit.predict(x_c)
         self.assertTrue(np.isclose(y_c, yhat))
 
+    def test_opt_fit_single_segment(self):
+        # Test fit for a single segment without force points
+        x = np.linspace(0.0, 1.0, num=100)
+        y = x + 1
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        my_fit.fit(1)
+        xhat = 0
+        yhat = my_fit.predict(xhat)
+        self.assertTrue(np.isclose(xhat + 1, yhat))
+
+    def test_opt_fit_with_force_points_single_segment(self):
+        # Test fit for a single segment (same as above)
+        # but with a force point
+        x = np.linspace(0.0, 1.0, num=100)
+        y = x + 1
+        my_fit = pwlf.PiecewiseLinFit(x, y, disp_res=True)
+        x_c = [0.0]
+        y_c = [0.0]
+        my_fit.fit(1, x_c, y_c)
+        yhat = my_fit.predict(x_c)
+        self.assertTrue(np.isclose(y_c, yhat))
+
     def test_se(self):
         # check to see if it will let me calculate standard errors
         my_pwlf = pwlf.PiecewiseLinFit(np.random.random(20),
