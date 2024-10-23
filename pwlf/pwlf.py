@@ -218,7 +218,7 @@ class PiecewiseLinFit(object):
         # set the first and last break x values to be the min and max of x
         self.break_0, self.break_n = np.min(self.x_data), np.max(self.x_data)
         self.mixed_degree = False
-        if type(degree) == list:
+        if isinstance(degree, list):
             # make sure the min and max are withing the limit
             max_degree = max(degree)
             min_degree = min(degree)
