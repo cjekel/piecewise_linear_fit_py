@@ -347,7 +347,12 @@ class PiecewiseLinFit(object):
 
         # Assemble the regression matrix
         A_list = [np.ones_like(x)]
-        if self.mixed_degree is True:
+        if self.mixed_degree:
+            if len(self.degree) != self.n_segments:
+                raise ValueError(
+                    "Number of degrees does not much number of segments.",
+                )
+
             for i in range(self.n_segments):
                 degree = self.degree[i]
                 if i == 0:
