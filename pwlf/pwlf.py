@@ -282,6 +282,13 @@ class PiecewiseLinFit(object):
         """
         self.fit_with_breaks([self.break_0, self.break_n])
 
+    def _fit_one_segment_force_points(self, x_c, y_c):
+        r"""
+        Fit for a single line segment with force points
+        """
+        self.fit_with_breaks_force_points([self.break_0, self.break_n],
+                                          x_c, y_c)
+
     def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
@@ -757,7 +764,10 @@ class PiecewiseLinFit(object):
 
         # special fit for one line segment
         if self.n_segments == 1:
-            self._fit_one_segment()
+            if x_c is None and y_c is None:
+                self._fit_one_segment()
+            else:
+                self._fit_one_segment_force_points(self.x_c, self.y_c)
             return self.fit_breaks
 
         # initiate the bounds of the optimization
