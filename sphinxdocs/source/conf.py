@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('../../pwlf'))
 # -- Project information -----------------------------------------------------
 
 project = 'pwlf'
-copyright = '2022, Charles Jekel'
+copyright = '2024, Charles Jekel'
 author = 'Charles Jekel'
 
 # The short X.Y version
@@ -64,7 +64,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -86,7 +86,7 @@ pygments_style = None
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'analytics_id': 'UA-67542734-2'}
+html_theme_options = {'analytics_id': 'G-QKPGZSZ8CD'}
 html_favicon = 'favicon.ico'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -184,4 +184,4 @@ epub_exclude_files = ['search.html']
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
