@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2024-10-26
+### Changed
+- You can now force fits of one line segment to go through a particular point `mypwlf.fit(1, x_c, y_c)`. Thanks to [fredrikhellman](https://github.com/fredrikhellman).
+- Update docs to sphinx 8 (from 4)
+- Update ci version to `python==3.9`, `python==3.10`, `python==3.11`, and `python==3.12`
+
 ## [2.2.1] - 2022-05-07
 ### Added
 - You can now perform `fit` and `fitfast` for one line segment!
