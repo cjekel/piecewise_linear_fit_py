@@ -386,11 +386,14 @@ class PiecewiseLinFit(object):
                         for j in range(1, a_size):
                             A_list[j][inds] = 0.0
                         # add the new zero slopes
-                        A_list.append(np.where(x > self.fit_breaks[i], 1.0, 0.0))
+                        A_list.append(
+                            np.where(x > self.fit_breaks[i], 1.0, 0.0)
+                        )
                     elif degree == 1:
                         A_list.append(
                             np.where(
-                                x > self.fit_breaks[i], x - self.fit_breaks[i], 0.0
+                                x > self.fit_breaks[i], x - self.fit_breaks[i],
+                                0.0
                             )
                         )
         elif self.degree >= 1:
@@ -398,7 +401,8 @@ class PiecewiseLinFit(object):
             for i in range(self.n_segments - 1):
                 A_list.append(
                     np.where(
-                        x > self.fit_breaks[i + 1], x - self.fit_breaks[i + 1], 0.0
+                        x > self.fit_breaks[i + 1], x - self.fit_breaks[i + 1],
+                        0.0
                     )
                 )
             if self.degree >= 2:
@@ -1241,9 +1245,9 @@ class PiecewiseLinFit(object):
         """
         y_hat = self.predict(self.fit_breaks)
         self.slopes = np.divide(
-            (y_hat[1 : self.n_segments + 1] - y_hat[: self.n_segments]),
+            (y_hat[1: self.n_segments + 1] - y_hat[: self.n_segments]),
             (
-                self.fit_breaks[1 : self.n_segments + 1]
+                self.fit_breaks[1: self.n_segments + 1]
                 - self.fit_breaks[: self.n_segments]
             ),
         )
@@ -1341,7 +1345,9 @@ class PiecewiseLinFit(object):
                 temp_beta = orig_beta.copy()
                 temp_beta[i] += step_size
                 # vary beta and keep breaks constant
-                f = self.predict(self.x_data, beta=temp_beta, breaks=orig_breaks)
+                f = self.predict(
+                    self.x_data, beta=temp_beta, breaks=orig_breaks,
+                )
                 A[:, i] = (f - f0) / step_size
             # append differentials due to break points
             for i in range(self.beta.size, nb):
@@ -1351,7 +1357,11 @@ class PiecewiseLinFit(object):
                 temp_breaks = orig_breaks.copy()
                 temp_breaks[ind] += step_size
                 # vary break and keep betas constant
-                f = self.predict(self.x_data, beta=orig_beta, breaks=temp_breaks)
+                f = self.predict(
+                    self.x_data,
+                    beta=orig_beta,
+                    breaks=temp_breaks,
+                )
                 A[:, i] = (f - f0) / step_size
             e = f0 - self.y_data
             # reset beta and breaks back to original values
@@ -1457,7 +1467,9 @@ class PiecewiseLinFit(object):
 
         # try to solve for the prediction variance at the x locations
         try:
-            pre_var = variance * np.dot(np.dot(A, linalg.pinv(np.dot(Ad.T, Ad))), A.T)
+            pre_var = variance * np.dot(
+                np.dot(A, linalg.pinv(np.dot(Ad.T, Ad))), A.T,
+            )
             return pre_var.diagonal()
 
         except linalg.LinAlgError:
@@ -1637,7 +1649,9 @@ class PiecewiseLinFit(object):
                 ssr = np.dot(e, e)
         else:
             beta, _, _, _ = linalg.lstsq(
-                (A.T * self.weights).T, self.y_w, lapack_driver=self.lapack_driver
+                (A.T * self.weights).T,
+                self.y_w,
+                lapack_driver=self.lapack_driver,
             )
             # calculate the weighted sum of square of residuals
             y_hat = np.dot(A, beta)
@@ -1699,7 +1713,12 @@ class PiecewiseLinFit(object):
                         )
         else:
             for i in range(self.n_segments - 1):
-                C_list.append(np.where(self.x_c > self.fit_breaks[i + 1], 1.0, 0.0))
+                C_list.append(
+                    np.where(
+                        self.x_c > self.fit_breaks[i + 1],
+                        1.0, 0.0,
+                        )
+                    )
         C = np.vstack(C_list).T
 
         _, m = A.shape
@@ -1715,7 +1734,7 @@ class PiecewiseLinFit(object):
 
         z = np.zeros(self.n_parameters + self.c_n)
         z[: self.n_parameters] = yt
-        z[self.n_parameters :] = self.y_c
+        z[self.n_parameters:] = self.y_c
 
         # try to solve the regression problem
         try:
@@ -1723,9 +1742,9 @@ class PiecewiseLinFit(object):
             beta_prime = linalg.solve(K, z)
 
             # save the beta parameters
-            self.beta = beta_prime[0 : self.n_parameters]
+            self.beta = beta_prime[0: self.n_parameters]
             # save the zeta parameters
-            self.zeta = beta_prime[self.n_parameters :]
+            self.zeta = beta_prime[self.n_parameters:]
 
             # save the slopes
             if calc_slopes:
