@@ -565,6 +565,22 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(same_breaks[0])
         self.assertTrue(same_breaks[1])
 
+    def test_float32(self):
+        my_pwlf = pwlf.PiecewiseLinFit(
+            np.linspace(0, 10, 3, dtype=np.float32),
+            np.random.random(3).astype(np.float32),
+        )
+        fit1 = my_pwlf.fitfast(2)
+        self.assertTrue(True)
+
+    def test_float128(self):
+        my_pwlf = pwlf.PiecewiseLinFit(
+            np.linspace(0, 10, 3, dtype=np.float128),
+            np.random.random(3).astype(np.float128),
+        )
+        fit1 = my_pwlf.fitfast(2)
+        self.assertTrue(True)
+
 
 if __name__ == '__main__':
     unittest.main()
