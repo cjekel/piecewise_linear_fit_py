@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2024-12-31
+### Added
+- Added support for mixing degree fits. You may now specify `degree=[0,1,0]` to fit a constant, then linear, then constant line. These are discontinuous piecewise linear.  Currently this only supports mixing degrees of 0 and 1. Thanks to [wonch002](https://github.com/wonch002) for resurrecting an old branch.
+### Changed
+- fixed a bug where `seed=0` would net get set. Thanks to [filippobistaffa](https://github.com/filippobistaffa) from https://github.com/cjekel/piecewise_linear_fit_py/pull/118 .
+
 ## [2.3.0] - 2024-10-26
 ### Changed
 - You can now force fits of one line segment to go through a particular point `mypwlf.fit(1, x_c, y_c)`. Thanks to [fredrikhellman](https://github.com/fredrikhellman).
