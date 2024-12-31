@@ -98,9 +98,10 @@ class PiecewiseLinFit(object):
             The largest x value.
         c_n : int
             The number of constraint points. This is the same as len(x_c).
-        degree: int
+        degree: int, list
             The degree of polynomial to use. The default is degree=1 for
-            linear models. Use degree=0 for constant models.
+            linear models. Use degree=0 for constant models. This will be a
+            list if the user provided a list.
         fit_breaks : ndarray (1-D)
             breakpoint locations stored as a 1-D numpy array.
         intercepts : ndarray (1-D)
