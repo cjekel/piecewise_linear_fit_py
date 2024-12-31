@@ -74,7 +74,6 @@ class PiecewiseLinFit(object):
             The degree of polynomial to use. The default is degree=1 for
             linear models. Use degree=0 for constant models. Use a list for
             mixed degrees (only supports degrees 1 or 0). List should be read
-
             from left to right, degree=[1,0,1] corresponds to a mixed degree
             model, where the left most segment has degree 1, the middle
             segment degree 0, and the right most segment degree 1.
