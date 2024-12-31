@@ -312,6 +312,18 @@ class PiecewiseLinFit(object):
         self.fit_with_breaks_force_points([self.break_0, self.break_n],
                                           x_c, y_c)
 
+    def _check_mixed_degree_list(self, n_segments):
+        r"""
+        Fit for a single line segment with force points
+        """
+        if self.mixed_degree:
+            degree_list_len = len(self.degree)
+            error_message = f"""
+            Error: degree list does not match n_segments!
+            degree list length {degree_list_len} must equal {n_segments}"""
+            if degree_list_len != n_segments:
+                raise ValueError(error_message)
+
     def assemble_regression_matrix(self, breaks, x):
         r"""
         Assemble the linear regression matrix A
@@ -455,6 +467,7 @@ class PiecewiseLinFit(object):
         >>> ssr = my_pwlf.fit_with_breaks(breaks)
 
         """
+        self._check_mixed_degree_list(len(breaks)-1)
 
         breaks = self._switch_to_np_array(breaks)
 
@@ -529,6 +542,7 @@ class PiecewiseLinFit(object):
         >>> L = my_pwlf.fit_with_breaks_force_points(breaks, x_c, y_c)
 
         """
+        self._check_mixed_degree_list(len(breaks)-1)
 
         x_c, y_c = self._switch_to_np_array(x_c), self._switch_to_np_array(y_c)
         # sort the x_c and y_c data points, then store them
@@ -645,7 +659,6 @@ class PiecewiseLinFit(object):
         assumes that the first and last breakpoints occur at the min and max
         values of x.
         """
-
         breaks = self._get_breaks(input_=var)
         A = self.assemble_regression_matrix(breaks, self.x_data)
 
@@ -787,7 +800,7 @@ class PiecewiseLinFit(object):
         >>> breaks = my_pwlf.fit(3, x_c=x_c, y_c=y_c)
 
         """
-
+        self._check_mixed_degree_list(n_segments)
         # check to see if you've provided just x_c or y_c
         logic1 = x_c is not None and y_c is None
         logic2 = y_c is not None and x_c is None
@@ -813,6 +826,11 @@ class PiecewiseLinFit(object):
                     "Constrained least squares with weights are"
                     " not supported since these have a tendency "
                     "of being numerically instable."
+                )
+            elif self.mixed_degree:
+                raise ValueError(
+                    "Constrained least squares with mixed degree"
+                    " lists is not supported."
                 )
 
         # store the number of line segments and number of parameters
@@ -941,6 +959,8 @@ class PiecewiseLinFit(object):
         >>> breaks = my_pwlf.fitfast(3, pop=50)
 
         """
+        self._check_mixed_degree_list(n_segments)
+
         pop = int(pop)  # ensure that the population is integer
 
         self.n_segments = int(n_segments)
@@ -1077,6 +1097,8 @@ class PiecewiseLinFit(object):
         >>> breaks = my_pwlf.fit_guess([5.5, 6.0])
 
         """
+        self._check_mixed_degree_list(guess_breakpoints)
+
         # calculate the number of variables I have to solve for
         self.nVar = len(guess_breakpoints)
         self.n_segments = self.nVar + 1
@@ -1167,6 +1189,7 @@ class PiecewiseLinFit(object):
             You can't specify weights with x_c and y_c.
 
         """
+        self._check_mixed_degree_list(n_segments)
 
         self.n_segments = int(n_segments)
         self.n_parameters = self.n_segments + 1
