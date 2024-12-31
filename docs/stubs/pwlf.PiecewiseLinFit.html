@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pwlf.PiecewiseLinFit &#8212; pwlf 2.3.0 documentation</title>
+    <title>pwlf.PiecewiseLinFit &#8212; pwlf 2.4.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=c3c8ae58"></script>
+    <script src="../_static/documentation_options.js?v=4d935f96"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
@@ -123,8 +123,12 @@ Default lapack_driver=’gelsd’. Options are ‘gelsd’, ‘gelsy’,
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html</a>
 <a class="reference external" href="http://www.netlib.org/lapack/lug/node27.html">http://www.netlib.org/lapack/lug/node27.html</a></p>
 </dd>
-<dt><strong>degree</strong><span class="classifier">int, optional</span></dt><dd><p>The degree of polynomial to use. The default is degree=1 for
-linear models. Use degree=0 for constant models.</p>
+<dt><strong>degree</strong><span class="classifier">int, list, optional</span></dt><dd><p>The degree of polynomial to use. The default is degree=1 for
+linear models. Use degree=0 for constant models. Use a list for
+mixed degrees (only supports degrees 1 or 0). List should be read
+from left to right, degree=[1,0,1] corresponds to a mixed degree
+model, where the left most segment has degree 1, the middle
+segment degree 0, and the right most segment degree 1.</p>
 </dd>
 <dt><strong>weights</strong><span class="classifier">None, or array_like</span></dt><dd><p>The individual weights are typically the reciprocal of the
 standard deviation for each data point, where weights[i]
@@ -148,8 +152,9 @@ behavior is to not specify a seed.</p>
 </dd>
 <dt><strong>c_n</strong><span class="classifier">int</span></dt><dd><p>The number of constraint points. This is the same as len(x_c).</p>
 </dd>
-<dt><strong>degree: int</strong></dt><dd><p>The degree of polynomial to use. The default is degree=1 for
-linear models. Use degree=0 for constant models.</p>
+<dt><strong>degree: int, list</strong></dt><dd><p>The degree of polynomial to use. The default is degree=1 for
+linear models. Use degree=0 for constant models. This will be a
+list if the user provided a list.</p>
 </dd>
 <dt><strong>fit_breaks</strong><span class="classifier">ndarray (1-D)</span></dt><dd><p>breakpoint locations stored as a 1-D numpy array.</p>
 </dd>
