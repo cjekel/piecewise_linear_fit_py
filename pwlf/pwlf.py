@@ -219,7 +219,7 @@ class PiecewiseLinFit(object):
             # self.weights2 = weights*weights
             self.y_w = np.dot(self.y_data, np.eye(self.n_data) * self.weights)
 
-        if seed:
+        if seed is not None:
             np.random.seed(seed)
         self.seed = seed
 
