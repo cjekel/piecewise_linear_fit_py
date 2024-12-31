@@ -570,7 +570,7 @@ class TestEverything(unittest.TestCase):
             np.linspace(0, 10, 3, dtype=np.float32),
             np.random.random(3).astype(np.float32),
         )
-        fit1 = my_pwlf.fitfast(2)
+        _ = my_pwlf.fitfast(2)
         self.assertTrue(True)
 
     def test_float128(self):
@@ -578,8 +578,76 @@ class TestEverything(unittest.TestCase):
             np.linspace(0, 10, 3, dtype=np.float128),
             np.random.random(3).astype(np.float128),
         )
-        fit1 = my_pwlf.fitfast(2)
+        _ = my_pwlf.fitfast(2)
         self.assertTrue(True)
+
+    def test_mixed_degree1(self):
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        y = [1, 2, 3, 4, 4.25, 3.75, 4, 5, 6, 7]
+
+        degree_list = [1, 0, 1]
+        my_pwlf = pwlf.PiecewiseLinFit(x, y, degree=degree_list)
+        _ = my_pwlf.fit(3)
+
+        # generate predictions
+        x_hat = np.linspace(min(x), max(x), 1000)
+        _ = my_pwlf.predict(x_hat)
+
+    def test_mixed_degree2(self):
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        y = [1, 2, 3, 4, 4.25, 3.75, 4, 5, 6, 7]
+
+        degree_list = [1, 1, 1]
+        my_pwlf = pwlf.PiecewiseLinFit(x, y, degree=degree_list)
+        _ = my_pwlf.fit(3)
+
+        # generate predictions
+        x_hat = np.linspace(min(x), max(x), 1000)
+        _ = my_pwlf.predict(x_hat)
+
+    def test_mixed_degree3(self):
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        y = [1, 2, 3, 4, 4.25, 3.75, 4, 5, 6, 7]
+
+        degree_list = [1, 3]
+        try:
+            my_pwlf = pwlf.PiecewiseLinFit(x, y, degree=degree_list)
+            _ = my_pwlf.fit(3)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def test_mixed_degree_wrong_list(self):
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        y = [1, 2, 3, 4, 4.25, 3.75, 4, 5, 6, 7]
+        degree_list = [1, 1]
+        my_pwlf = pwlf.PiecewiseLinFit(x, y, degree=degree_list)
+        try:
+            _ = my_pwlf.fit(3)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+        try:
+            _ = my_pwlf.fitfast(3)
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+        try:
+            _ = my_pwlf.fit_with_breaks([0, 3, 4, 5])
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
+
+    def test_mixed_degree_force_point(self):
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        y = [1, 2, 3, 4, 4.25, 3.75, 4, 5, 6, 7]
+        degree_list = [1, 1]
+        my_pwlf = pwlf.PiecewiseLinFit(x, y, degree=degree_list)
+        try:
+            _ = my_pwlf.fit(2, x_c=[0,], y_c=[0,])
+            self.assertTrue(False)
+        except ValueError:
+            self.assertTrue(True)
 
 
 if __name__ == '__main__':
