@@ -544,13 +544,14 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(same_breaks.sum() == same_breaks.size)
 
     def test_random_seed_fitfast(self):
+        # specifically test for seed = 0
         np.random.seed(1)
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
-                                       seed=123)
+                                       seed=0)
         fit1 = my_pwlf.fitfast(2)
         np.random.seed(2)
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small,
-                                       seed=123)
+                                       seed=0)
         fit2 = my_pwlf.fitfast(2)
         same_breaks = np.isclose(fit1, fit2)
         self.assertTrue(same_breaks.sum() == same_breaks.size)
