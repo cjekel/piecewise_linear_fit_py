@@ -129,13 +129,10 @@ Removed TensorFlow code which can now be found
 Requirements
 ============
 
-Python 2.7+
-
 NumPy >= 1.14.0
 
-SciPy >= 1.2.0
+SciPy >= 1.8.0
 
-pyDOE >= 0.3.8
 
 License
 =======
