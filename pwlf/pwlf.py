@@ -985,7 +985,7 @@ class PiecewiseLinFit(object):
             bounds[:, 1] = self.break_n
 
         # perform latin hypercube sampling
-        lhs = stats.qmc.LatinHypercube(self.nVar)
+        lhs = stats.qmc.LatinHypercube(self.nVar, rng=self.seed)
         mypop = lhs.random(n=pop)
 
         # scale the sampling to my variable range
