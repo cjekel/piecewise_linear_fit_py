@@ -27,7 +27,6 @@ from scipy.optimize import differential_evolution
 from scipy.optimize import fmin_l_bfgs_b
 from scipy import linalg
 from scipy import stats
-from pyDOE import lhs
 
 # piecewise linear fit library
 
@@ -986,7 +985,9 @@ class PiecewiseLinFit(object):
             bounds[:, 1] = self.break_n
 
         # perform latin hypercube sampling
-        mypop = lhs(self.nVar, samples=pop, criterion="maximin")
+        lhs = stats.qmc.LatinHypercube(self.nVar)
+        mypop = lhs.random(n=pop)
+
         # scale the sampling to my variable range
         mypop = mypop * (self.break_n - self.break_0) + self.break_0
 
