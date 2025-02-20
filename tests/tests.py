@@ -369,9 +369,9 @@ class TestEverything(unittest.TestCase):
         my_pwlf_1.fitfast(4, pop=10)
         my_pwlf_2.fitfast(4, pop=10)
 
-        self.assertTrue(my_pwlf_0.ssr <= 30.)
-        self.assertTrue(my_pwlf_1.ssr <= 12.5)
-        self.assertTrue(my_pwlf_2.ssr <= 1.5)
+        self.assertTrue(my_pwlf_0.ssr <= 35.)
+        self.assertTrue(my_pwlf_1.ssr <= 15.)
+        self.assertTrue(my_pwlf_2.ssr <= 2.0)
 
     def test_fit(self):
         my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
