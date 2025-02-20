@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2025-02-19
+### Changed
+- remove pyDOE as a dependency in favor of scipy's own latin hypercube sampling. This change will effect results of the `fitfast` method, where previous versions of the `fitfast` results will no longer be reproducible with this version.
+
 ## [2.4.0] - 2024-12-31
 ### Added
 - Added support for mixing degree fits. You may now specify `degree=[0,1,0]` to fit a constant, then linear, then constant line. These are discontinuous piecewise linear.  Currently this only supports mixing degrees of 0 and 1. Thanks to [wonch002](https://github.com/wonch002) for resurrecting an old branch.

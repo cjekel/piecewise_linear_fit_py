@@ -354,19 +354,24 @@ class TestEverything(unittest.TestCase):
         self.assertTrue(np.isclose(0, y_predict_2[0]))
 
     def test_fitfast(self):
-        my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)
-        my_pwlf_1 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=1)
-        my_pwlf_2 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+        my_pwlf_0 = pwlf.PiecewiseLinFit(
+            self.x_sin, self.y_sin, degree=0, seed=123
+        )
+        my_pwlf_1 = pwlf.PiecewiseLinFit(
+            self.x_sin, self.y_sin, degree=1, seed=123,
+        )
+        my_pwlf_2 = pwlf.PiecewiseLinFit(
+            self.x_sin, self.y_sin, degree=2, seed=123,
+        )
 
         # fit the data for four line segments
-        np.random.seed(123123123)
         my_pwlf_0.fitfast(4, pop=10)
         my_pwlf_1.fitfast(4, pop=10)
         my_pwlf_2.fitfast(4, pop=10)
 
-        self.assertTrue(my_pwlf_0.ssr <= 30.)
-        self.assertTrue(my_pwlf_1.ssr <= 12.5)
-        self.assertTrue(my_pwlf_2.ssr <= 1.5)
+        self.assertTrue(my_pwlf_0.ssr <= 35.)
+        self.assertTrue(my_pwlf_1.ssr <= 15.)
+        self.assertTrue(my_pwlf_2.ssr <= 2.0)
 
     def test_fit(self):
         my_pwlf_0 = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=0)

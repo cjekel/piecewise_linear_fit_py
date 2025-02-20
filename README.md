@@ -66,13 +66,11 @@ All changes now stored in [CHANGELOG.md](https://github.com/cjekel/piecewise_lin
 New ```weights=``` keyword allows you to perform weighted pwlf fits! Removed TensorFlow code which can now be found [here](https://github.com/cjekel/piecewise_linear_fit_py_tf). 
 
 # Requirements
-Python 2.7+
 
 NumPy >= 1.14.0
 
-SciPy >= 1.2.0
+SciPy >= 1.8.0
 
-pyDOE >= 0.3.8
 
 # License
 MIT License
