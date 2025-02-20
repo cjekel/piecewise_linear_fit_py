@@ -20,15 +20,11 @@ setup(
     platforms=["any"],
     install_requires=[
         "numpy >= 1.14.0",
-        "scipy >= 1.2.0",
-        "pyDOE >= 0.3.8",
+        "scipy >= 1.15.0",
     ],
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
     python_requires=">3.5",
-    extras_require={
-        "PiecewiseLinFitTF": ["tensorflow < 2.0.0"],
-    },
 )
