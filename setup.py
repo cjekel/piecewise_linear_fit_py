@@ -20,7 +20,7 @@ setup(
     platforms=["any"],
     install_requires=[
         "numpy >= 1.14.0",
-        "scipy >= 1.15.0",
+        "scipy >= 1.8.0",
     ],
     classifiers=[
         "License :: OSI Approved :: MIT License",
