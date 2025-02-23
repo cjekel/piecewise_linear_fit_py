@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2025-02-23
+### Changed
+- Only test float128 support if numpy allows you to create float128 numbers. This should fix issues on aarch64 builds that do not support float128 or longdouble.
+
 ## [2.5.0] - 2025-02-19
 ### Changed
 - remove pyDOE as a dependency in favor of scipy's own latin hypercube sampling. This change will effect results of the `fitfast` method, where previous versions of the `fitfast` results will no longer be reproducible with this version.
