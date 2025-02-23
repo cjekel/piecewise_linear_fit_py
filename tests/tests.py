@@ -578,13 +578,16 @@ class TestEverything(unittest.TestCase):
         _ = my_pwlf.fitfast(2)
         self.assertTrue(True)
 
-    def test_float128(self):
-        my_pwlf = pwlf.PiecewiseLinFit(
-            np.linspace(0, 10, 3, dtype=np.float128),
-            np.random.random(3).astype(np.float128),
-        )
-        _ = my_pwlf.fitfast(2)
-        self.assertTrue(True)
+    def test_lfloat128(self):
+        try:
+            x = np.linspace(0, 10, 3, dtype=np.float128)
+            y = np.random.random(3).astype(np.float128)
+            my_pwlf = pwlf.PiecewiseLinFit(x, y)
+            _ = my_pwlf.fitfast(2)
+            self.assertTrue(True)
+        except AttributeError:
+            # this means that float128 is not supported
+            self.assertTrue(True)
 
     def test_mixed_degree1(self):
         x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
