@@ -1777,18 +1777,21 @@ class PiecewiseLinFit(object):
         """
         Invert a piecewise linear fit to get x as a function of y.
 
-        Caveats:
-        - y_values must be in codomain of pwlf_ fit. 
+        Warnings
+        --------
+        - y_values must be in codomain of pwlf fit. 
         - Will fail for m=0 lines. 
         - For many x to one y functions, smallest x value will be chosen.
 
+        Extended Summary
+        ----------------
         Usage:
         1. Fit the Model: Fit a piecewise linear model to your data.
         2. Apply the function to an array of y values to get the corresponding arrays of x values.
-
-        Explanation
-        -----------
-        The function `invert_pwlf` takes an array of y values, determines which segment each y value belongs to, and applies the corresponding inverse equation. It handles cases where the slope is zero by raising an error.
+                
+        The function `invert_pwlf` takes an array of y values, determines which segment each y value belongs to, and applies the corresponding inverse equation. 
+        It handles cases where the slope is zero by raising an error.
+        For many-to-one piecewise linear fits, the y value will always be assigned to the smallest matching x value.
 
         Parameters
         ----------
@@ -1826,7 +1829,7 @@ class PiecewiseLinFit(object):
         >>> plt.plot(xpd,ypd,label='pwlf fit')
         >>> plt.scatter(x_results,y_test_values,label='inverted test points')
         >>> plt.legend() 
-        ## Note that all data in the 0 to 1 range was put on first setgment, per documentation caveat 3.
+        ## Note that all data in the y=0 to 1 range was assigned to the first segment, per Warning 3.
         
         """
 
