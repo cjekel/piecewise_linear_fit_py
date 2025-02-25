@@ -1772,3 +1772,84 @@ class PiecewiseLinFit(object):
             L = np.inf
             # something went wrong...
         return L
+
+    def invert_pwlf(self, y_values : np.ndarray) -> np.ndarray:
+        """
+        Invert a piecewise linear fit to get x as a function of y.
+
+        Caveats:
+        - y_values must be in codomain of pwlf_ fit. 
+        - Will fail for m=0 lines. 
+        - For many x to one y functions, smallest x value will be chosen.
+
+        Usage:
+        1. Fit the Model: Fit a piecewise linear model to your data.
+        2. Apply the function to an array of y values to get the corresponding arrays of x values.
+
+        Explanation
+        -----------
+        The function `invert_pwlf` takes an array of y values, determines which segment each y value belongs to, and applies the corresponding inverse equation. It handles cases where the slope is zero by raising an error.
+
+        Parameters
+        ----------
+        y_values : numpy.ndarray
+            Array of y values to be inverted to x values.
+
+        Returns
+        -------
+        numpy.ndarray
+            Array of x values corresponding to the input y values.
+
+        Raises
+        ------
+        ValueError
+            If the slope of any segment is zero or if y_values are out of bounds.
+
+        Example
+        -------
+        Fit a piecewise linear model and invert it:
+
+        >>> import pwlf
+        >>> import numpy as np
+        >>> x = np.array([0, 1, 2, 3, 4, 5])
+        >>> y = np.array([0, 0.8, 0.9, 0.1, -0.8, -1])
+        >>> pwlf_ = pwlf.PiecewiseLinFit(x, y)
+        >>> breaks = pwlf_.fit(2)
+        >>> y_test_values = np.array([0.5, 1.1, 0.4, -0.5])
+        >>> x_results = pwlf_.invert_pwlf(y_test_values)
+        >>> print(x_results)
+        ## Plot original, fit, and results
+        >>> import matplotlib.pyplot as plt
+        >>> xpd = np.linspace(0,5,100)
+        >>> ypd = pwlf_.predict(xpd)
+        >>> plt.scatter(x,y,label='original data')
+        >>> plt.plot(xpd,ypd,label='pwlf fit')
+        >>> plt.scatter(x_results,y_test_values,label='inverted test points')
+        >>> plt.legend() 
+        ## Note that all data in the 0 to 1 range was put on first setgment, per documentation caveat 3.
+        
+        """
+
+        ybreaks = self.predict(self.fit_breaks)
+        
+        x_values = np.zeros_like(y_values)
+        for i in range(len(y_values)):
+            y_value = y_values[i]
+            # Determine which segment y_value falls into
+            for j in range(1, len(ybreaks)):
+                m = self.slopes[j-1]
+                if (m < 0):
+                    if ybreaks[j-1] >= y_value >= ybreaks[j]:
+                        b = self.intercepts[j-1]
+                        x_values[i] = (y_value - b) / m
+                        break
+                elif (m > 0):
+                    if ybreaks[j-1] <= y_value <= ybreaks[j]:
+                        b = self.intercepts[j-1]
+                        x_values[i] = (y_value - b) / m
+                        break
+                else:
+                    raise ValueError("Slope is zero, inversion not possible")
+            else:
+                raise ValueError("y_value is out of the bounds of the pwlf fit image.")
+        return x_values
