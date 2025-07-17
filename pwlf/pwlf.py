@@ -134,7 +134,7 @@ class PiecewiseLinFit(object):
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
         y_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
+            The y locations of the data points that the piecewise linear
             function will be forced to go through.
         x_data : ndarray (1-D)
             The inputted parameter x from the 1-D data set.
