@@ -1008,10 +1008,8 @@ class PiecewiseLinFit(object):
                     factr=1e2,
                     pgtol=1e-05,
                     epsilon=1e-08,
-                    iprint=-1,
                     maxfun=15000,
                     maxiter=15000,
-                    disp=None,
                     callback=None,
                 )
             else:
@@ -1128,10 +1126,8 @@ class PiecewiseLinFit(object):
                 factr=1e2,
                 pgtol=1e-05,
                 epsilon=1e-08,
-                iprint=-1,
                 maxfun=15000,
                 maxiter=15000,
-                disp=None,
                 callback=None,
             )
         else:
@@ -1660,14 +1656,14 @@ class PiecewiseLinFit(object):
             r = e * self.weights
             ssr = np.dot(r, r)
         if isinstance(ssr, list):
-            ssr = ssr[0]
+            ssr = ssr
         elif isinstance(ssr, np.ndarray):
             if ssr.size == 0:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
             else:
-                ssr = ssr[0]
+                ssr = ssr
         # save the beta parameters
         self.beta = beta
 

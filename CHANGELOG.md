@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.3] - 2026-06-28
+### Changed
+- set scipy version to be less than 1.18. scipy 1.18 has broken a lot of pwlf with the changes to the optimization packages which we heavily depended upon.
+
 ## [2.5.2] - 2025-07-26
 ### Changed
 - Minor typo in documentation. Thanks to [Berend-ASML](https://github.com/Berend-ASML) for the fix!
