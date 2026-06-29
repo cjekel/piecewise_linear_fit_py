@@ -20,7 +20,7 @@ setup(
     platforms=["any"],
     install_requires=[
         "numpy >= 1.14.0",
-        "scipy >= 1.8.0",
+        "scipy >= 1.8.0, <1.18.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
