@@ -1656,14 +1656,14 @@ class PiecewiseLinFit(object):
             r = e * self.weights
             ssr = np.dot(r, r)
         if isinstance(ssr, list):
-            ssr = ssr[0]
+            ssr = ssr
         elif isinstance(ssr, np.ndarray):
             if ssr.size == 0:
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
             else:
-                ssr = ssr[0]
+                ssr = ssr
         # save the beta parameters
         self.beta = beta
 
