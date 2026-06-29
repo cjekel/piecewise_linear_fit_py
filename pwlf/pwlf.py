@@ -1008,10 +1008,8 @@ class PiecewiseLinFit(object):
                     factr=1e2,
                     pgtol=1e-05,
                     epsilon=1e-08,
-                    iprint=-1,
                     maxfun=15000,
                     maxiter=15000,
-                    disp=None,
                     callback=None,
                 )
             else:
@@ -1128,10 +1126,8 @@ class PiecewiseLinFit(object):
                 factr=1e2,
                 pgtol=1e-05,
                 epsilon=1e-08,
-                iprint=-1,
                 maxfun=15000,
                 maxiter=15000,
-                disp=None,
                 callback=None,
             )
         else:
