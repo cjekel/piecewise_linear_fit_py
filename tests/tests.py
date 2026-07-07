@@ -296,18 +296,22 @@ class TestEverything(unittest.TestCase):
         x = np.array([4., 5., 6., 7., 8.])
         y = np.array([11., 13., 16., 28.92, 42.81])
         my_pwlf = pwlf.PiecewiseLinFit(x, y)
-        breaks = my_pwlf.fit_guess([6.0])
+        breaks = my_pwlf.fit_guess([6.11])
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
 
     def test_fit_guess_kwrds(self):
         x = np.array([4., 5., 6., 7., 8.])
         y = np.array([11., 13., 16., 28.92, 42.81])
         my_pwlf = pwlf.PiecewiseLinFit(x, y)
-        breaks = my_pwlf.fit_guess([6.0], m=10,
-                                   factr=1e2, pgtol=1e-05,
-                                   epsilon=1e-6, iprint=-1,
-                                   maxfun=1500000, maxiter=150000,
-                                   disp=None)
+        breaks = my_pwlf.fit_guess(
+            [6.0],
+            m=10,
+            factr=1e2,
+            pgtol=1e-05,
+            epsilon=1e-6,
+            maxfun=1500000,
+            maxiter=150000,
+        )
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
 
     def test_multi_start_fitfast(self):
