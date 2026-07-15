@@ -676,9 +676,10 @@ class PiecewiseLinFit(object):
             # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
             ssr = np.inf
-        if ssr is None:
+        if ssr is None or not np.isfinite(ssr):
+            # the fit is singular/degenerate (e.g. coincident breakpoints);
+            # return np.inf so the optimizer steers away from this location
             ssr = np.inf
-            # something went wrong...
         return ssr
 
     def fit_force_points_opt(self, var):
@@ -1658,7 +1659,12 @@ class PiecewiseLinFit(object):
         if isinstance(ssr, list):
             ssr = ssr
         elif isinstance(ssr, np.ndarray):
-            if ssr.size == 0:
+            # scipy.linalg.lstsq only returns the residual sum of squares
+            # when the system is overdetermined and full rank; otherwise it
+            # returns an empty array. As of scipy 1.18 it may also return
+            # NaN for rank-deficient/degenerate breakpoint locations even
+            # though beta is finite. In either case recompute ssr directly.
+            if ssr.size == 0 or not np.all(np.isfinite(ssr)):
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)

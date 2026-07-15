@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- Restored compatibility with scipy >= 1.18 and removed the `scipy < 1.18.0` upper bound. scipy 1.18 changed `scipy.linalg.lstsq` to return a NaN residual (instead of raising `LinAlgError`) for rank-deficient/degenerate breakpoint locations, which produced NaN objective values that broke `fit`/`fitfast` (`np.nanargmin` "All-NaN slice"). The least-squares residual is now recomputed from `beta` whenever scipy returns a non-finite residual, and the optimization objective returns `np.inf` for any non-finite fit so the optimizer steers away from degenerate breakpoints. Also dropped the removed `iprint`/`disp` kwargs from a `fmin_l_bfgs_b` keyword-passthrough test. Fixes #134.
+
 ## [2.5.3] - 2026-06-28
 ### Changed
 - set scipy version to be less than 1.18. scipy 1.18 has broken a lot of pwlf with the changes to the optimization packages which we heavily depended upon.
