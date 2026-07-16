@@ -1656,7 +1656,7 @@ class PiecewiseLinFit(object):
             r = e * self.weights
             ssr = np.dot(r, r)
         if isinstance(ssr, list):
-            ssr = ssr[0]
+            ssr = ssr
         elif isinstance(ssr, np.ndarray):
             if ssr.size == 0:
                 y_hat = np.dot(A, beta)
@@ -1670,8 +1670,6 @@ class PiecewiseLinFit(object):
         if calc_slopes:
             # save the slopes
             self.calc_slopes()
-        if np.isnan(ssr):
-            ssr = np.inf
         return ssr
 
     def conlstsq(self, A, calc_slopes=True):
