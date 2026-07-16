@@ -305,15 +305,26 @@ class TestEverything(unittest.TestCase):
         my_pwlf = pwlf.PiecewiseLinFit(x, y)
         breaks = my_pwlf.fit_guess([6.0], m=10,
                                    factr=1e2, pgtol=1e-05,
-                                   epsilon=1e-6, iprint=-1,
-                                   maxfun=1500000, maxiter=150000,
-                                   disp=None)
+                                   epsilon=1e-6,
+                                   maxfun=1500000, maxiter=150000)
         self.assertTrue(np.isclose(breaks[1], 6.0705297))
 
     def test_multi_start_fitfast(self):
         my_pwlf = pwlf.PiecewiseLinFit(self.x_small, self.y_small)
         my_pwlf.fitfast(4, 50)
         self.assertTrue(np.isclose(my_pwlf.ssr, 0.0))
+
+    def test_degenerate_breaks_finite_ssr(self):
+        # scipy >= 1.18 returns a NaN residual (instead of raising
+        # LinAlgError) from linalg.lstsq when a trial produces degenerate
+        # breakpoints, e.g. an interior breakpoint on the domain boundary.
+        # The objective must still yield a finite ssr computed from beta,
+        # otherwise the NaN poisons fitfast's np.nanargmin (All-NaN slice)
+        # and the global optimization in fit(). See issue #134.
+        my_pwlf = pwlf.PiecewiseLinFit(self.x_sin, self.y_sin, degree=2)
+        breaks = my_pwlf.fitfast(3)
+        self.assertTrue(np.all(np.isfinite(breaks)))
+        self.assertTrue(np.isfinite(my_pwlf.ssr))
 
     # =================================================
     # Start of degree tests
