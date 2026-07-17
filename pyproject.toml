@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pwlf"
+dynamic = ["version"]
+authors = [
+    { name = "Charles Jekel", email = "cjekel@gmail.com" },
+]
+description = "fit piecewise linear functions to data"
+readme = "README.md"
+license = { text = "MIT License" }
+requires-python = ">3.5"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "numpy >= 1.14.0",
+    "scipy >= 1.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "flake8",
+    "coverage",
+]
+
+[project.urls]
+Homepage = "https://github.com/cjekel/piecewise_linear_fit_py"
+
+[tool.setuptools]
+packages = ["pwlf"]
+platforms = ["any"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pwlf.version.__version__" }
