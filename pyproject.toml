@@ -26,6 +26,9 @@ dev = [
     "pytest-cov",
     "flake8",
     "coverage",
+    "build",
+    "sphinx",
+    "numpydoc",
 ]
 
 [project.urls]
