@@ -1,9 +1,12 @@
 
 #!/usr/bin/env bash
-pip install .
+
+set -e
+
+pip install .[dev]
 # clean docs and doctrees
-rm -r docs/*
-rm -r doctrees/*
+rm -rf docs/*
+rm -rf doctrees/*
 # make the documentation in gitignore folder
 cp examples/README.rst sphinxdocs/source/examples.rst
 cd sphinxdocs

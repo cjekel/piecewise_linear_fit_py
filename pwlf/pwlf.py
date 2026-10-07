@@ -134,7 +134,7 @@ class PiecewiseLinFit(object):
             The x locations of the data points that the piecewise linear
             function will be forced to go through.
         y_c : ndarray (1-D)
-            The x locations of the data points that the piecewise linear
+            The y locations of the data points that the piecewise linear
             function will be forced to go through.
         x_data : ndarray (1-D)
             The inputted parameter x from the 1-D data set.
@@ -676,9 +676,10 @@ class PiecewiseLinFit(object):
             # on an error, return ssr = np.inf
             # You might have a singular Matrix!!!
             ssr = np.inf
-        if ssr is None:
+        if ssr is None or not np.isfinite(ssr):
+            # the fit is singular/degenerate (e.g. coincident breakpoints);
+            # return np.inf so the optimizer steers away from this location
             ssr = np.inf
-            # something went wrong...
         return ssr
 
     def fit_force_points_opt(self, var):
@@ -1008,10 +1009,8 @@ class PiecewiseLinFit(object):
                     factr=1e2,
                     pgtol=1e-05,
                     epsilon=1e-08,
-                    iprint=-1,
                     maxfun=15000,
                     maxiter=15000,
-                    disp=None,
                     callback=None,
                 )
             else:
@@ -1128,10 +1127,8 @@ class PiecewiseLinFit(object):
                 factr=1e2,
                 pgtol=1e-05,
                 epsilon=1e-08,
-                iprint=-1,
                 maxfun=15000,
                 maxiter=15000,
-                disp=None,
                 callback=None,
             )
         else:
@@ -1660,14 +1657,19 @@ class PiecewiseLinFit(object):
             r = e * self.weights
             ssr = np.dot(r, r)
         if isinstance(ssr, list):
-            ssr = ssr[0]
+            ssr = ssr
         elif isinstance(ssr, np.ndarray):
-            if ssr.size == 0:
+            # scipy.linalg.lstsq only returns the residual sum of squares
+            # when the system is overdetermined and full rank; otherwise it
+            # returns an empty array. As of scipy 1.18 it may also return
+            # NaN for rank-deficient/degenerate breakpoint locations even
+            # though beta is finite. In either case recompute ssr directly.
+            if ssr.size == 0 or not np.all(np.isfinite(ssr)):
                 y_hat = np.dot(A, beta)
                 e = y_hat - self.y_data
                 ssr = np.dot(e, e)
             else:
-                ssr = ssr[0]
+                ssr = ssr
         # save the beta parameters
         self.beta = beta
 
@@ -1773,86 +1775,81 @@ class PiecewiseLinFit(object):
             # something went wrong...
         return L
 
-    def invert_pwlf(self, y_values : np.ndarray) -> np.ndarray:
+    def invert_pwlf(self, y_values):
         """
-        Invert a piecewise linear fit to get x as a function of y.
+        Find the smallest x in the fitted domain for each supplied y value.
 
-        Warnings
-        --------
-        - y_values must be in codomain of pwlf fit. 
-        - Will fail for m=0 lines. 
-        - For many x to one y functions, smallest x value will be chosen.
-
-        Extended Summary
-        ----------------
-        Usage:
-        1. Fit the Model: Fit a piecewise linear model to your data.
-        2. Apply the function to an array of y values to get the corresponding arrays of x values.
-                
-        The function `invert_pwlf` takes an array of y values, determines which segment each y value belongs to, and applies the corresponding inverse equation. 
-        It handles cases where the slope is zero by raising an error.
-        For many-to-one piecewise linear fits, the y value will always be assigned to the smallest matching x value.
+        Only continuous piecewise linear models with scalar ``degree=1``
+        are supported. For non-monotonic fits, multiple x values may give
+        the same y; the smallest matching x is returned. For a horizontal
+        segment, its left endpoint is a candidate. No extrapolation is used.
 
         Parameters
         ----------
-        y_values : numpy.ndarray
-            Array of y values to be inverted to x values.
+        y_values : array_like (1-D)
+            Finite y values to invert, within the range of the fitted model.
 
         Returns
         -------
-        numpy.ndarray
-            Array of x values corresponding to the input y values.
+        x_values : ndarray (1-D)
+            Floating-point x values, in the same order as y_values.
 
         Raises
         ------
         ValueError
-            If the slope of any segment is zero or if y_values are out of bounds.
+            If no model has been fitted, the model is not continuous and
+            piecewise linear, breakpoints are not finite and strictly
+            increasing, predictions are not finite, or y_values are not a
+            finite 1-D array within the fitted range.
 
-        Example
-        -------
-        Fit a piecewise linear model and invert it:
+        Notes
+        -----
+        A unique inverse exists for strictly monotonic fits. This method
+        does not impose monotonicity during fitting. For other fits it
+        selects the smallest solution within the first and last breakpoints.
 
-        >>> import pwlf
+        Examples
+        --------
         >>> import numpy as np
-        >>> x = np.array([0, 1, 2, 3, 4, 5])
-        >>> y = np.array([0, 0.8, 0.9, 0.1, -0.8, -1])
-        >>> pwlf_ = pwlf.PiecewiseLinFit(x, y)
-        >>> breaks = pwlf_.fit(2)
-        >>> y_test_values = np.array([0.5, 1.1, 0.4, -0.5])
-        >>> x_results = pwlf_.invert_pwlf(y_test_values)
-        >>> print(x_results)
-        ## Plot original, fit, and results
-        >>> import matplotlib.pyplot as plt
-        >>> xpd = np.linspace(0,5,100)
-        >>> ypd = pwlf_.predict(xpd)
-        >>> plt.scatter(x,y,label='original data')
-        >>> plt.plot(xpd,ypd,label='pwlf fit')
-        >>> plt.scatter(x_results,y_test_values,label='inverted test points')
-        >>> plt.legend() 
-        ## Note that all data in the y=0 to 1 range was assigned to the first segment, per Warning 3.
-        
+        >>> import pwlf
+        >>> model = pwlf.PiecewiseLinFit([0, 1, 2], [0, 2, 0])
+        >>> ssr = model.fit_with_breaks([0, 1, 2])
+        >>> model.invert_pwlf([1])
+        array([0.5])
         """
+        if self.fit_breaks is None or self.beta is None:
+            raise ValueError("Fit a model before calling invert_pwlf.")
+        if self.mixed_degree or self.degree != 1:
+            raise ValueError("invert_pwlf requires a scalar degree=1 model.")
 
-        ybreaks = self.predict(self.fit_breaks)
-        
-        x_values = np.zeros_like(y_values)
-        for i in range(len(y_values)):
-            y_value = y_values[i]
-            # Determine which segment y_value falls into
-            for j in range(1, len(ybreaks)):
-                m = self.slopes[j-1]
-                if (m < 0):
-                    if ybreaks[j-1] >= y_value >= ybreaks[j]:
-                        b = self.intercepts[j-1]
-                        x_values[i] = (y_value - b) / m
-                        break
-                elif (m > 0):
-                    if ybreaks[j-1] <= y_value <= ybreaks[j]:
-                        b = self.intercepts[j-1]
-                        x_values[i] = (y_value - b) / m
-                        break
-                else:
-                    raise ValueError("Slope is zero, inversion not possible")
+        y_values = np.asarray(y_values, dtype=float)
+        if y_values.ndim != 1 or not np.all(np.isfinite(y_values)):
+            raise ValueError("y_values must be a finite 1-D array.")
+        breaks = np.asarray(self.fit_breaks)
+        if (breaks.ndim != 1 or breaks.size < 2
+                or not np.all(np.isfinite(breaks))
+                or not np.all(np.diff(breaks) > 0)):
+            raise ValueError("Breakpoints must be finite and increasing.")
+        y_breaks = self.predict(breaks)
+        if not np.all(np.isfinite(y_breaks)):
+            raise ValueError("The fitted predictions must be finite.")
+
+        x_values = np.empty(y_values.shape, dtype=float)
+        unmatched = np.ones(y_values.shape, dtype=bool)
+        # Visit segments in increasing x order, keeping the first solution.
+        # Endpoint interpolation also works after predict(beta=..., breaks=...)
+        # without relying on cached slopes or intercepts from an older fit.
+        for i in range(breaks.size - 1):
+            y_left, y_right = y_breaks[i:i + 2]
+            matches = (unmatched & (y_values >= min(y_left, y_right))
+                       & (y_values <= max(y_left, y_right)))
+            if y_left == y_right:
+                x_values[matches] = breaks[i]
             else:
-                raise ValueError("y_value is out of the bounds of the pwlf fit image.")
+                fraction = (y_values[matches] - y_left) / (y_right - y_left)
+                x_values[matches] = (breaks[i]
+                                     + fraction * (breaks[i + 1] - breaks[i]))
+            unmatched[matches] = False
+        if np.any(unmatched):
+            raise ValueError("y_values are outside the fitted range.")
         return x_values
