@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-10-11
+### Added
+- Add PiecewiseLinFit.invert_pwlf(y_values) to return the smallest x within the fitted domain for each requested y. Thanks to [matt8s](https://github.com/matt8s)
+
 ## [2.6.0] - 2026-07-17
 ### Fixed
 - Restored compatibility with scipy >= 1.18 and removed the `scipy < 1.18.0` upper bound. scipy 1.18 changed `scipy.linalg.lstsq` to return a NaN residual (instead of raising `LinAlgError`) for rank-deficient/degenerate breakpoint locations, which produced NaN objective values that broke `fit`/`fitfast` (`np.nanargmin` "All-NaN slice"). The least-squares residual is now recomputed from `beta` whenever scipy returns a non-finite residual, and the optimization objective returns `np.inf` for any non-finite fit so the optimizer steers away from degenerate breakpoints. Also dropped the removed `iprint`/`disp` kwargs from a `fmin_l_bfgs_b` keyword-passthrough test. Fixes #134.
