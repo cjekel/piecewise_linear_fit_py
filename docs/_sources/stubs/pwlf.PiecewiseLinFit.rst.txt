@@ -24,6 +24,7 @@
       ~PiecewiseLinFit.fit_with_breaks_force_points
       ~PiecewiseLinFit.fit_with_breaks_opt
       ~PiecewiseLinFit.fitfast
+      ~PiecewiseLinFit.invert_pwlf
       ~PiecewiseLinFit.lstsq
       ~PiecewiseLinFit.p_values
       ~PiecewiseLinFit.predict

@@ -1,0 +1,40 @@
+﻿pwlf.PiecewiseLinFit
+====================
+
+.. currentmodule:: pwlf
+
+.. autoclass:: PiecewiseLinFit
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PiecewiseLinFit.__init__
+      ~PiecewiseLinFit.assemble_regression_matrix
+      ~PiecewiseLinFit.calc_slopes
+      ~PiecewiseLinFit.conlstsq
+      ~PiecewiseLinFit.fit
+      ~PiecewiseLinFit.fit_force_points_opt
+      ~PiecewiseLinFit.fit_guess
+      ~PiecewiseLinFit.fit_with_breaks
+      ~PiecewiseLinFit.fit_with_breaks_force_points
+      ~PiecewiseLinFit.fit_with_breaks_opt
+      ~PiecewiseLinFit.fitfast
+      ~PiecewiseLinFit.invert_pwlf
+      ~PiecewiseLinFit.lstsq
+      ~PiecewiseLinFit.p_values
+      ~PiecewiseLinFit.predict
+      ~PiecewiseLinFit.prediction_variance
+      ~PiecewiseLinFit.r_squared
+      ~PiecewiseLinFit.standard_errors
+      ~PiecewiseLinFit.use_custom_opt
+   
+   
+
+   
+   
+   
