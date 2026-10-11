@@ -669,5 +669,103 @@ class TestEverything(unittest.TestCase):
             self.assertTrue(True)
 
 
+class TestInverse(unittest.TestCase):
+    @staticmethod
+    def model(breaks, beta):
+        model = pwlf.PiecewiseLinFit(breaks, np.zeros(len(breaks)))
+        model.predict(np.asarray(breaks), beta=np.asarray(beta, dtype=float),
+                      breaks=np.asarray(breaks, dtype=float))
+        return model
+
+    def test_increasing_integer_inputs_and_list(self):
+        model = self.model([0, 1, 2], [0, 2, 2])
+        for values in ([0, 1, 2, 4, 6], np.array([0, 1, 2, 4, 6])):
+            result = model.invert_pwlf(values)
+            self.assertEqual(result.dtype.kind, 'f')
+            np.testing.assert_allclose(result, [0, .5, 1, 1.5, 2])
+            np.testing.assert_allclose(model.predict(result), values)
+
+    def test_decreasing_and_shifted_domain(self):
+        model = self.model([10, 11, 13], [6, -2, -2])
+        values = [6, 5, 4, 0, -4]
+        result = model.invert_pwlf(values)
+        np.testing.assert_allclose(result, [10, 10.5, 11, 12, 13])
+        np.testing.assert_allclose(model.predict(result), values)
+
+    def test_non_monotonic_smallest_solution(self):
+        model = self.model([0, 1, 2, 3], [0, 2, -4, 4])
+        values = [0, 1, 2, .5]
+        result = model.invert_pwlf(values)
+        np.testing.assert_allclose(result, [0, .5, 1, .25])
+        np.testing.assert_allclose(model.predict(result), values)
+        model = self.model([0, 1, 2, 3], [0, 2, -6, 8])
+        result = model.invert_pwlf([-1, -2, 0, 2])
+        np.testing.assert_allclose(result, [1.75, 2, 0, 1])
+        np.testing.assert_allclose(model.predict(result), [-1, -2, 0, 2])
+
+    def test_horizontal_segment(self):
+        model = self.model([0, 1, 2], [1, 0, 2])
+        np.testing.assert_allclose(model.invert_pwlf([1, 2, 3]), [0, 1.5, 2])
+        model = self.model([0, 1, 2], [0, 2, -2])
+        np.testing.assert_allclose(model.invert_pwlf([1, 2]), [.5, 1])
+        model = self.model([3, 5], [2, 0])
+        np.testing.assert_allclose(model.invert_pwlf([2, 2]), [3, 3])
+        with self.assertRaises(ValueError):
+            model.invert_pwlf([1])
+
+    def test_uses_current_parameters(self):
+        model = self.model([0, 2], [0, 1])
+        model.calc_slopes()
+        model.predict([0, 2], beta=np.array([0., 4.]),
+                      breaks=np.array([0., 2.]))
+        np.testing.assert_allclose(model.invert_pwlf([2]), [.5])
+
+    def test_fitted_model_round_trip(self):
+        x = np.array([0., .5, 1., 1.5, 2.])
+        y = np.array([0., 1., 2., 1., 0.])
+        model = pwlf.PiecewiseLinFit(x, y)
+        model.fit_with_breaks([0, 1, 2])
+        values = model.predict([.25, .5, .75])
+        result = model.invert_pwlf(values)
+        np.testing.assert_allclose(result, [.25, .5, .75])
+        np.testing.assert_allclose(model.predict(result), values)
+
+    def test_empty_array(self):
+        self.assertEqual(self.model([0, 1], [0, 1]).invert_pwlf([]).shape,
+                         (0,))
+
+    def test_invalid_inputs(self):
+        model = self.model([0, 1], [0, 1])
+        for values in ([np.nan], [np.inf], [-np.inf], [-1], [2],
+                       [0, 2], [[.5]], .5):
+            with self.subTest(values=values), self.assertRaises(ValueError):
+                model.invert_pwlf(values)
+
+    def test_unfitted_and_unsupported_models(self):
+        model = pwlf.PiecewiseLinFit([0, 1], [0, 1])
+        with self.assertRaisesRegex(ValueError, 'Fit a model'):
+            model.invert_pwlf([.5])
+        for degree in (0, 2, [0], [1], [0, 1]):
+            model = pwlf.PiecewiseLinFit([0, 1, 2], [0, 1, 2],
+                                         degree=degree)
+            breaks = [0, 1, 2] if degree == [0, 1] else [0, 2]
+            model.fit_with_breaks(breaks)
+            with self.subTest(degree=degree):
+                with self.assertRaisesRegex(ValueError, 'degree=1'):
+                    model.invert_pwlf([1])
+
+    def test_invalid_model_state(self):
+        for breaks in ([0, 0], [1, 0], [0, np.inf], [0, np.nan], [0]):
+            model = self.model([0, 1], [0, 1])
+            model.fit_breaks = np.array(breaks)
+            with self.subTest(breaks=breaks):
+                with self.assertRaisesRegex(ValueError, 'Breakpoints'):
+                    model.invert_pwlf([.5])
+        model = self.model([0, 1], [0, 1])
+        model.beta[0] = np.nan
+        with self.assertRaisesRegex(ValueError, 'predictions'):
+            model.invert_pwlf([.5])
+
+
 if __name__ == '__main__':
     unittest.main()

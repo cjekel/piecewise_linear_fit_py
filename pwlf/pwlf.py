@@ -1774,3 +1774,82 @@ class PiecewiseLinFit(object):
             L = np.inf
             # something went wrong...
         return L
+
+    def invert_pwlf(self, y_values):
+        """
+        Find the smallest x in the fitted domain for each supplied y value.
+
+        Only continuous piecewise linear models with scalar ``degree=1``
+        are supported. For non-monotonic fits, multiple x values may give
+        the same y; the smallest matching x is returned. For a horizontal
+        segment, its left endpoint is a candidate. No extrapolation is used.
+
+        Parameters
+        ----------
+        y_values : array_like (1-D)
+            Finite y values to invert, within the range of the fitted model.
+
+        Returns
+        -------
+        x_values : ndarray (1-D)
+            Floating-point x values, in the same order as y_values.
+
+        Raises
+        ------
+        ValueError
+            If no model has been fitted, the model is not continuous and
+            piecewise linear, breakpoints are not finite and strictly
+            increasing, predictions are not finite, or y_values are not a
+            finite 1-D array within the fitted range.
+
+        Notes
+        -----
+        A unique inverse exists for strictly monotonic fits. This method
+        does not impose monotonicity during fitting. For other fits it
+        selects the smallest solution within the first and last breakpoints.
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> import pwlf
+        >>> model = pwlf.PiecewiseLinFit([0, 1, 2], [0, 2, 0])
+        >>> ssr = model.fit_with_breaks([0, 1, 2])
+        >>> model.invert_pwlf([1])
+        array([0.5])
+        """
+        if self.fit_breaks is None or self.beta is None:
+            raise ValueError("Fit a model before calling invert_pwlf.")
+        if self.mixed_degree or self.degree != 1:
+            raise ValueError("invert_pwlf requires a scalar degree=1 model.")
+
+        y_values = np.asarray(y_values, dtype=float)
+        if y_values.ndim != 1 or not np.all(np.isfinite(y_values)):
+            raise ValueError("y_values must be a finite 1-D array.")
+        breaks = np.asarray(self.fit_breaks)
+        if (breaks.ndim != 1 or breaks.size < 2
+                or not np.all(np.isfinite(breaks))
+                or not np.all(np.diff(breaks) > 0)):
+            raise ValueError("Breakpoints must be finite and increasing.")
+        y_breaks = self.predict(breaks)
+        if not np.all(np.isfinite(y_breaks)):
+            raise ValueError("The fitted predictions must be finite.")
+
+        x_values = np.empty(y_values.shape, dtype=float)
+        unmatched = np.ones(y_values.shape, dtype=bool)
+        # Visit segments in increasing x order, keeping the first solution.
+        # Endpoint interpolation also works after predict(beta=..., breaks=...)
+        # without relying on cached slopes or intercepts from an older fit.
+        for i in range(breaks.size - 1):
+            y_left, y_right = y_breaks[i:i + 2]
+            matches = (unmatched & (y_values >= min(y_left, y_right))
+                       & (y_values <= max(y_left, y_right)))
+            if y_left == y_right:
+                x_values[matches] = breaks[i]
+            else:
+                fraction = (y_values[matches] - y_left) / (y_right - y_left)
+                x_values[matches] = (breaks[i]
+                                     + fraction * (breaks[i + 1] - breaks[i]))
+            unmatched[matches] = False
+        if np.any(unmatched):
+            raise ValueError("y_values are outside the fitted range.")
+        return x_values

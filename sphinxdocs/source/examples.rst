@@ -858,3 +858,19 @@ program is run, the results of the fit(2) should be the same.
    # Now the fit() method will be reproducible
    my_pwlf.fit(2)
 
+
+Inverting a piecewise linear fit
+---------------------------------------
+
+Use ``invert_pwlf`` to find x values for specified y values within the fitted
+domain. For a non-monotonic fit, the smallest matching x is returned. A
+horizontal segment contributes its left endpoint when its y value matches.
+Only continuous models with scalar ``degree=1`` are supported; the method
+does not extrapolate or impose monotonicity while fitting.
+
+.. code:: python
+
+   model = pwlf.PiecewiseLinFit([0, 1, 2], [0, 2, 0])
+   model.fit_with_breaks([0, 1, 2])
+   x_values = model.invert_pwlf([0.5, 1.0, 1.5])
+   # x_values is approximately [0.25, 0.5, 0.75].
