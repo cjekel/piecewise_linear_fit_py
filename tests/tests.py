@@ -487,6 +487,72 @@ class TestEverything(unittest.TestCase):
 
     # =================================================
     # Start weighted least squares tests
+    def test_weighted_standard_errors(self):
+        x = np.linspace(0.0, 3.0, 41)
+        y = np.sin(x) + 0.04 * np.cos(11.0 * x)
+        weights = np.linspace(0.5, 3.0, x.size)
+        breaks = [0.0, 0.7, 1.9, 3.0]
+        model = pwlf.PiecewiseLinFit(x, y, weights=weights)
+        model.fit_with_breaks(breaks)
+        design = np.column_stack((np.ones_like(x), x,
+                                  np.maximum(x - 0.7, 0.0),
+                                  np.maximum(x - 1.9, 0.0)))
+        residual = weights * (model.predict(x) - y)
+        for method in ('linear', 'non-linear'):
+            with self.subTest(method=method):
+                jacobian = design
+                if method == 'non-linear':
+                    jacobian = np.column_stack((
+                        design, -model.beta[2] * (x > 0.7),
+                        -model.beta[3] * (x > 1.9)))
+                _, r = np.linalg.qr(weights[:, None] * jacobian)
+                inverse_r = np.linalg.solve(r, np.eye(r.shape[0]))
+                covariance = (inverse_r @ inverse_r.T
+                              * np.dot(residual, residual)
+                              / (x.size - r.shape[0]))
+                np.testing.assert_allclose(
+                    model.standard_errors(method=method, step_size=1e-6),
+                    np.sqrt(covariance.diagonal()), rtol=1e-7)
+
+    def test_weighted_prediction_variance(self):
+        x = np.linspace(0.0, 3.0, 41)
+        y = np.sin(x) + 0.04 * np.cos(11.0 * x)
+        weights = np.linspace(0.5, 3.0, x.size)
+        model = pwlf.PiecewiseLinFit(x, y, weights=weights)
+        model.fit_with_breaks([0.0, 0.7, 1.9, 3.0])
+        design = np.column_stack((np.ones_like(x), x,
+                                  np.maximum(x - 0.7, 0.0),
+                                  np.maximum(x - 1.9, 0.0)))
+        _, r = np.linalg.qr(weights[:, None] * design)
+        inverse_r = np.linalg.solve(r, np.eye(r.shape[0]))
+        residual = weights * (model.predict(x) - y)
+        covariance = (inverse_r @ inverse_r.T * np.dot(residual, residual)
+                      / (x.size - r.shape[0]))
+        x_new = np.array([0.1, 0.9, 2.3, 2.9])
+        prediction = np.column_stack((np.ones_like(x_new), x_new,
+                                      np.maximum(x_new - 0.7, 0.0),
+                                      np.maximum(x_new - 1.9, 0.0)))
+        expected = np.einsum('ij,jk,ik->i', prediction, covariance, prediction)
+        np.testing.assert_allclose(model.prediction_variance(x_new), expected)
+
+    def test_uniform_weights_uncertainty_same_as_ols(self):
+        x = np.linspace(0.0, 3.0, 41)
+        y = np.sin(x) + 0.04 * np.cos(11.0 * x)
+        ordinary = pwlf.PiecewiseLinFit(x, y)
+        weighted = pwlf.PiecewiseLinFit(x, y, weights=np.full(x.size, 7.0))
+        breaks = [0.0, 0.7, 1.9, 3.0]
+        ordinary.fit_with_breaks(breaks)
+        weighted.fit_with_breaks(breaks)
+        np.testing.assert_allclose(weighted.predict(x), ordinary.predict(x))
+        for method in ('linear', 'non-linear'):
+            with self.subTest(method=method):
+                np.testing.assert_allclose(weighted.standard_errors(method),
+                                           ordinary.standard_errors(method))
+                np.testing.assert_allclose(weighted.p_values(method),
+                                           ordinary.p_values(method))
+        np.testing.assert_allclose(weighted.prediction_variance(x),
+                                   ordinary.prediction_variance(x))
+
     def test_weighted_same_as_ols(self):
         # test that weighted least squares is same as OLS
         # when the weight is equal to 1.0
