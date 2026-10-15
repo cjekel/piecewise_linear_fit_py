@@ -1299,6 +1299,10 @@ class PiecewiseLinFit(object):
         breakpoint locations (e.g. when using the fit, fitfast, and fit_guess
         functions).
 
+        Weighted fits use weighted residuals and a weighted regression
+        matrix (or Jacobian). A common rescaling of all weights does not
+        change the standard errors.
+
         References
         ----------
         .. [1] Coppe, A., Haftka, R. T., and Kim, N. H., “Uncertainty
@@ -1371,15 +1375,13 @@ class PiecewiseLinFit(object):
             raise ValueError(errmsg)
         # try to solve for the standard errors
         try:
-            variance = np.dot(e, e) / (ny - nb)
-            if self.weights is None:
-                # solve for the unbiased estimate of variance
-                A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
-                self.se = np.sqrt(variance * A2inv)
-            else:
+            if self.weights is not None:
+                e = e * self.weights
                 A = (A.T * self.weights).T
-                A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
-                self.se = np.sqrt(variance * A2inv)
+            variance = np.dot(e, e) / (ny - nb)
+            # solve for the unbiased estimate of variance
+            A2inv = np.abs(linalg.pinv(np.dot(A.T, A)).diagonal())
+            self.se = np.sqrt(variance * A2inv)
             return self.se
 
         except linalg.LinAlgError:
@@ -1419,6 +1421,9 @@ class PiecewiseLinFit(object):
         This assumes that your breakpoint locations are exact! and does
         not consider the uncertainty with your breakpoint locations.
 
+        For weighted fits, the residual variance and regression matrix
+        on the training data use the same weights as the fit.
+
         Examples
         --------
         Calculate the prediction variance at x_new after performing a simple
@@ -1454,6 +1459,9 @@ class PiecewiseLinFit(object):
         try:
             y_hat = np.dot(Ad, self.beta)
             e = y_hat - self.y_data
+            if self.weights is not None:
+                e = e * self.weights
+                Ad = (Ad.T * self.weights).T
             # solve for the unbiased estimate of variance
             variance = np.dot(e, e) / (ny - nb)
 
