@@ -487,6 +487,41 @@ class TestEverything(unittest.TestCase):
 
     # =================================================
     # Start weighted least squares tests
+    def test_weighted_fit_memory_budget(self):
+        import tracemalloc
+
+        x = np.linspace(0.0, 1.0, 2000)
+        y = np.sin(x)
+        weights = np.linspace(1.0, 3.0, x.size)
+        tracemalloc.start()
+        try:
+            model = pwlf.PiecewiseLinFit(x, y, weights=weights)
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        self.assertLess(peak, 8 * 1024 * 1024)
+        model.fit_with_breaks([0.0, 1.0])
+        design = np.column_stack((np.ones_like(x), x))
+        beta = np.linalg.lstsq(design * weights[:, None], y * weights,
+                               rcond=None)[0]
+        np.testing.assert_allclose(model.predict(x), design @ beta)
+
+    def test_weighted_input_precision(self):
+        x = np.linspace(0.0, 1.0, 21)
+        for dtype in (np.float16, np.float32, np.float64, np.int16, np.int32):
+            with self.subTest(dtype=dtype):
+                y = (2500.0 + 1000.0 * np.sin(x)).astype(dtype)
+                weights = np.linspace(1.0, 15.0, x.size).astype(dtype)
+                model = pwlf.PiecewiseLinFit(x, y, weights=weights)
+                expected = y.astype(np.float64) * weights.astype(np.float64)
+                self.assertEqual(model.y_w.dtype, np.dtype(np.float64))
+                np.testing.assert_array_equal(model.y_w, expected)
+                model.fit_with_breaks([0.0, 1.0])
+                design = np.column_stack((np.ones_like(x), x))
+                beta = np.linalg.lstsq(design * weights[:, None], expected,
+                                       rcond=None)[0]
+                np.testing.assert_allclose(model.predict(x), design @ beta)
+
     def test_weighted_same_as_ols(self):
         # test that weighted least squares is same as OLS
         # when the weight is equal to 1.0

@@ -240,7 +240,10 @@ class PiecewiseLinFit(object):
         if weights is not None:
             self.weights = self._switch_to_np_array(weights)
             # self.weights2 = weights*weights
-            self.y_w = np.dot(self.y_data, np.eye(self.n_data) * self.weights)
+            # Preserve the float64 promotion of the diagonal-matrix product.
+            y_w_dtype = np.result_type(
+                self.y_data.dtype, self.weights.dtype, np.float64)
+            self.y_w = np.multiply(self.y_data, self.weights, dtype=y_w_dtype)
 
         if seed is not None:
             np.random.seed(seed)
